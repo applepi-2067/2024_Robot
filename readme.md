@@ -1,8 +1,10 @@
 [![build](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml/badge.svg)](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml)
 
-# 2023_Robot
+# 2024_Robot
 
 Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/watch?v=9keeDyFxzY4)
+
+![cheat_sheet](img/cheat_sheet.jpg)
 
 [Controller button map](#TODO)
 
