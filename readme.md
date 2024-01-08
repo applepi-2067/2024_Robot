@@ -24,7 +24,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
     * [REV SPARK-MAX motor controller code examples](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java) ([position](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Position%20Closed%20Loop%20Control) control, [velocity](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Velocity%20Closed%20Loop%20Control) control)
       * [REV SPARK-MAX documentation](https://docs.revrobotics.com/sparkmax/)
     * [Photonlib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html)
-  * 2023 [Game manual](https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system)
+  * [2024 Game manual](https://firstfrc.blob.core.windows.net/frc2024/Manual/2024GameManual.pdf)
 
 ## Robot Subsystem Descriptions
 
