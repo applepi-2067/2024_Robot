@@ -51,22 +51,25 @@ The motors that move the robot chassis around the field.
 
 ### Software installation
 
-* Download and Install the [latest WPIlib 2023 release](https://github.com/wpilibsuite/allwpilib/releases)
+* Download and Install the [latest WPIlib 2024 release](https://github.com/wpilibsuite/allwpilib/releases)
   
-  * If you're on Windows, download the `.iso` file (e.g. `WPILib_Windows-2023.1.1.iso`).
+  * If you're on Windows, download the latest `.iso` file (e.g. `WPILib_Windows-2024.1.1.iso`).
   * While connected to the internet, open the ISO
     * run the `WPILibInstaller.exe` file
     * follow the on-screen instructions, to install vscode for your user
 
-* Other tools you need should install:
+* Other tools you need & should install:
   * [FRC Game tools](https://www.ni.com/en-us/support/downloads/drivers/download.frc-game-tools.html) 
     * You need this to control a robot (includes the driverstation application)
     * You can skip license entry / activation for the NI Vision component we won't 
-    * Open th driverstation and enter our team number (2067) from the `Setup` Tab on the left (gear) 
+    * Open the driverstation and enter our team number (2067) from the `Setup` Tab on the left (gear) 
   * [Radio configuration utility](https://firstfrc.blob.core.windows.net/frc2023/Radio/FRC_Radio_Configuration_23_0_2.zip)
   * [Phoenix Framework Installer](https://store.ctr-electronics.com/software/)
     * Software libraries for CTRE devices
     * Includes phoenix tuner for configuring/updating firmware on CTRE devices 
+  * [Phoenix Tuner X](https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/index.html)
+    * install from [windows](https://apps.microsoft.com/detail/9NVV4PWDW27Z?hl=en-us&gl=US) 
+      or [android](https://play.google.com/store/apps/details?id=com.ctre.phoenix_tuner) app store
   * [Rev Hardware Client](https://docs.revrobotics.com/rev-hardware-client/)
     For upgrading firmware on REV Robitics devices
 
