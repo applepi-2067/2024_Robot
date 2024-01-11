@@ -18,6 +18,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
   * documentation for software libraries and hardware we'll use:
     * [wpilib javadocs](https://github.wpilib.org/allwpilib/docs/release/java/index.html)
     * [Path Planner](https://pathplanner.dev/home.html)
+    * [Choreo](https://sleipnirgroup.github.io/Choreo/usage/editing-paths/)
     * [CTRE TalonFX motor controller code examples](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)) ([motion magic](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/MotionMagic), [velocity](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop) control)
       * [Closed loop primer](https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html)
       * [MotionMagic parameters / Pheonix Tuner](https://youtu.be/1b0BAV2jBd8) video
