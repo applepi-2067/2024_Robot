@@ -1,4 +1,4 @@
-[![build](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml/badge.svg)](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml)
+[![build](https://github.com/applepi-2067/2024_Robot/actions/workflows/build.yml/badge.svg)](https://github.com/applepi-2067/2024_Robot/actions/workflows/build.yml)
 
 # 2024_Robot
 
