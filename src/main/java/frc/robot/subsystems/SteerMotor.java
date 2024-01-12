@@ -69,6 +69,9 @@ public class SteerMotor {
         // Seed encoder w/ abs encoder (CAN Coder reading) + wheel zero offset.
         m_canCoder = new CANCoder(canCoderID);
 
+        m_motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, K_PID_LOOP, K_TIMEOUT_MS);
+        m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
+
         double initPositionTicks = Conversions.degreesToTicks(
             m_canCoder.getAbsolutePosition() - wheelZeroOffsetDegrees,
             TICKS_PER_REV
@@ -76,9 +79,6 @@ public class SteerMotor {
         m_motor.setSelectedSensorPosition(initPositionTicks);
 
         // Config position control.
-        m_motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, K_PID_LOOP, K_TIMEOUT_MS);
-        m_motor.configNeutralDeadband(PERCENT_DEADBAND, K_TIMEOUT_MS);
-
         PID_GAINS.setGains(m_motor, K_PID_SLOT, K_PID_LOOP, K_TIMEOUT_MS);
         Gains.configMotionMagic(m_motor, CRUISE_VELOCITY_TICKS_PER_100MS, MAX_ACCEL_TICKS_PER_100MS_PER_SEC, K_TIMEOUT_MS);
     }
