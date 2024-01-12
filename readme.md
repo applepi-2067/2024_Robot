@@ -18,6 +18,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
   * documentation for software libraries and hardware we'll use:
     * [wpilib javadocs](https://github.wpilib.org/allwpilib/docs/release/java/index.html)
     * [Path Planner](https://pathplanner.dev/home.html)
+    * [Choreo](https://sleipnirgroup.github.io/Choreo/usage/editing-paths/)
     * [CTRE TalonFX motor controller code examples](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)) ([motion magic](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/MotionMagic), [velocity](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java%20Talon%20FX%20(Falcon%20500)/VelocityClosedLoop) control)
       * [Closed loop primer](https://v5.docs.ctr-electronics.com/en/stable/ch16_ClosedLoop.html)
       * [MotionMagic parameters / Pheonix Tuner](https://youtu.be/1b0BAV2jBd8) video
@@ -51,22 +52,25 @@ The motors that move the robot chassis around the field.
 
 ### Software installation
 
-* Download and Install the [latest WPIlib 2023 release](https://github.com/wpilibsuite/allwpilib/releases)
+* Download and Install the [latest WPIlib 2024 release](https://github.com/wpilibsuite/allwpilib/releases)
   
-  * If you're on Windows, download the `.iso` file (e.g. `WPILib_Windows-2023.1.1.iso`).
+  * If you're on Windows, download the latest `.iso` file (e.g. `WPILib_Windows-2024.1.1.iso`).
   * While connected to the internet, open the ISO
     * run the `WPILibInstaller.exe` file
     * follow the on-screen instructions, to install vscode for your user
 
-* Other tools you need should install:
+* Other tools you need & should install:
   * [FRC Game tools](https://www.ni.com/en-us/support/downloads/drivers/download.frc-game-tools.html) 
     * You need this to control a robot (includes the driverstation application)
     * You can skip license entry / activation for the NI Vision component we won't 
-    * Open th driverstation and enter our team number (2067) from the `Setup` Tab on the left (gear) 
+    * Open the driverstation and enter our team number (2067) from the `Setup` Tab on the left (gear) 
   * [Radio configuration utility](https://firstfrc.blob.core.windows.net/frc2023/Radio/FRC_Radio_Configuration_23_0_2.zip)
   * [Phoenix Framework Installer](https://store.ctr-electronics.com/software/)
     * Software libraries for CTRE devices
     * Includes phoenix tuner for configuring/updating firmware on CTRE devices 
+  * [Phoenix Tuner X](https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/index.html)
+    * install from [windows](https://apps.microsoft.com/detail/9NVV4PWDW27Z?hl=en-us&gl=US) 
+      or [android](https://play.google.com/store/apps/details?id=com.ctre.phoenix_tuner) app store
   * [Rev Hardware Client](https://docs.revrobotics.com/rev-hardware-client/)
     For upgrading firmware on REV Robitics devices
 
@@ -85,14 +89,15 @@ The following steps will authorize vscode to access your github account through 
 This is in place of setting up ssh keys. If you'd rather do that, feel free to do so.     
 Similar steps to what we're doing [are covered here](https://adamtheautomator.com/visual-studio-code-github-setup/#Cloning_a_GitHub_Repository) if the below isn't clear enough.
 
-  * Open the `2023 WPILib VS Code` link (on your desktop?)
+  * Open the `2024 WPILib VS Code` link (on your desktop?)
   * Click the `Source Control` tab on the right ( Ctrl+Shift+G )
   * Click the `Clone Repository` button 
-    * This will open the `Command Palette` at the top middle. You will come to know this VS Code feature well...
+    * This will open the `Command Palette` at the top middle.   
+      You will come to know this VS Code feature well...
     * Click the `Clone from GitHub` option
     * Follow the on-screen steps to authorize vscode to access your github account
 
-  * Choose the `applepi-2067/2023_Robot` project
+  * Choose the `applepi-2067/2024_Robot` project
 
   * Choose a directory to clone the project into that you will remember (e.g. Documents\FRC\)
     a new subdirectory for the project will be created
