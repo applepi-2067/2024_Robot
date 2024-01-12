@@ -9,7 +9,6 @@ import frc.robot.constants.RobotMap;
 
 public class SwerveModule {
     // Reported CanCoder abs encoder position at wheel zero.
-    // TODO: bug where offset doubles?
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {344.97, 53.44, 330.47, 79.19};  // On [0, 360).
 
     // Motor inversions.
