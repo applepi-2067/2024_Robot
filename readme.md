@@ -10,11 +10,11 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
 
 ## Useful links:
 
-`TODO: update for 2024`
-
+  * [2024 Game manual](https://firstfrc.blob.core.windows.net/frc2024/Manual/2024GameManual.pdf)
   * [wpilib getting started](https://docs.wpilib.org/en/latest/index.html)
     covers how to [wire](https://docs.wpilib.org/en/latest/docs/zero-to-robot/step-1/how-to-wire-a-robot.html) and [program](https://docs.wpilib.org/en/latest/docs/zero-to-robot/step-2/index.html) a robot
 
+    * [Status Light Quick Reference](https://docs.wpilib.org/en/latest/docs/hardware/hardware-basics/status-lights-ref.html) - something is blinking at you... what does it mean?
   * documentation for software libraries and hardware we'll use:
     * [wpilib javadocs](https://github.wpilib.org/allwpilib/docs/release/java/index.html)
     * [Path Planner](https://pathplanner.dev/home.html)
@@ -26,7 +26,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
     * [REV SPARK-MAX motor controller code examples](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java) ([position](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Position%20Closed%20Loop%20Control) control, [velocity](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Velocity%20Closed%20Loop%20Control) control)
       * [REV SPARK-MAX documentation](https://docs.revrobotics.com/sparkmax/)
     * [Photonlib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html)
-  * [2024 Game manual](https://firstfrc.blob.core.windows.net/frc2024/Manual/2024GameManual.pdf)
+
 
 ## Robot Subsystem Descriptions
 
@@ -44,9 +44,12 @@ The motors that move the robot chassis around the field.
     * todo
     * Pigeon IMU for measuring robot heading and pitch
 
-### TODO
+### Shooter
 
-### TODO
+### Intake
+
+### Lift / Climber
+
 
 ## Getting Started
 
