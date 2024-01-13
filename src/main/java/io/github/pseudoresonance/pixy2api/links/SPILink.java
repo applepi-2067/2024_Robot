@@ -1,6 +1,7 @@
 package io.github.pseudoresonance.pixy2api.links;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SPI.Mode;
 import io.github.pseudoresonance.pixy2api.Pixy2.Checksum;
 
 /**
@@ -64,9 +65,10 @@ public class SPILink implements Link {
 		}
 		spi = new SPI(port);
 		spi.setClockRate(PIXY_SPI_CLOCKRATE);
-		spi.setMSBFirst();
-		spi.setSampleDataOnTrailingEdge();
-		spi.setClockActiveLow();
+		// spi.setMSBFirst();
+		// spi.setSampleDataOnTrailingEdge();
+		// spi.setClockActiveLow();
+		spi.setMode(Mode.kMode2);  //clock idle high / active low & sample data on trailing edge - should match previous implementation
 		spi.setChipSelectActiveLow();
 		return 0;
 	}
