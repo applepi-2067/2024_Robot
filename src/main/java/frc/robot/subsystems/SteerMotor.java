@@ -83,6 +83,7 @@ public class SteerMotor {
     }
 
     public Rotation2d getCANCoderPositionRotation2d() {
+        // FIXME: bug where zero offset changes. 
         double rotations = m_canCoder.getAbsolutePosition().getValueAsDouble() - (wheelZeroOffsetDegrees / 360.0);
         return Rotation2d.fromRotations(rotations);
     }
