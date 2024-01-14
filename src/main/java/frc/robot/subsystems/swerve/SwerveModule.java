@@ -11,7 +11,9 @@ import frc.robot.constants.RobotMap;
 
 public class SwerveModule {
     // Reported CANCoder abs encoder position at wheel zero.
-    // Back left, back right, front left, front right.
+    // Back left, back right, front left, front right convention.
+    // Calibration procedure: set all offsets to 0.0, redeploy, align all wheels to face forwards,
+    // use CANCoder reading as offset, add 180.0 if wheel drives backwards.
     private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {25.05, 246.27, 77.43, 213.93};
 
     private static final DecimalFormat rounder = new DecimalFormat("0.0000");
