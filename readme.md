@@ -36,20 +36,50 @@ todo: add picture of robot cad
 
 The motors that move the robot chassis around the field.
 
-  * Actuators:
-    * todo
-	* todo
-
-  * Sensors:
-    * todo
+  * Motors
+    * 4x - Falcon500 swere modules (2 Falcon500s per module) 
+  * Sensors
     * Pigeon IMU for measuring robot heading and pitch
 
-### Shooter
-
 ### Intake
+Picks up game pieces off the ground. Hands them off to the hopper
 
-### Lift / Climber
+  * Motors
+    * `tbd`x Falcon 500
+      * Velocity closed loop control
 
+  * Sensors
+    * `tbd`
+
+### Shooter
+Motors at the front of the shooter assembly that allow game pieces to be fired out of the robot.
+
+  * Motors
+    * `tbd`x - Falcon 500 
+      * Velocity closed loop control
+
+### Hopper
+Brings in game pieces from the intake. Stores them until the shooter is ready to be fired.
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * `tbd` - Velocity closed loop control 
+
+### Linear Lift
+
+Moves the shooter assembly vertically to differnt heights
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * Motion Magic - position closed loop control
+
+### Shoulder
+
+Rotates the shooter assembly to change pitch angle
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * Motion Magic - position closed loop control
 
 ## Getting Started
 
