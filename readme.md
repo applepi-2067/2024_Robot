@@ -1,4 +1,4 @@
-[![build](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml/badge.svg)](https://github.com/applepi-2067/2023_Robot/actions/workflows/build.yml)
+[![build](https://github.com/applepi-2067/2024_Robot/actions/workflows/main.yml/badge.svg)](https://github.com/applepi-2067/2024_Robot/actions)
 
 # 2024_Robot
 
@@ -10,11 +10,11 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
 
 ## Useful links:
 
-`TODO: update for 2024`
-
+  * [2024 Game manual](https://firstfrc.blob.core.windows.net/frc2024/Manual/2024GameManual.pdf)
   * [wpilib getting started](https://docs.wpilib.org/en/latest/index.html)
     covers how to [wire](https://docs.wpilib.org/en/latest/docs/zero-to-robot/step-1/how-to-wire-a-robot.html) and [program](https://docs.wpilib.org/en/latest/docs/zero-to-robot/step-2/index.html) a robot
 
+    * [Status Light Quick Reference](https://docs.wpilib.org/en/latest/docs/hardware/hardware-basics/status-lights-ref.html) - something is blinking at you... what does it mean?
   * documentation for software libraries and hardware we'll use:
     * [wpilib javadocs](https://github.wpilib.org/allwpilib/docs/release/java/index.html)
     * [Path Planner](https://pathplanner.dev/home.html)
@@ -26,7 +26,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
     * [REV SPARK-MAX motor controller code examples](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java) ([position](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Position%20Closed%20Loop%20Control) control, [velocity](https://github.com/REVrobotics/SPARK-MAX-Examples/tree/master/Java/Velocity%20Closed%20Loop%20Control) control)
       * [REV SPARK-MAX documentation](https://docs.revrobotics.com/sparkmax/)
     * [Photonlib](https://docs.photonvision.org/en/latest/docs/programming/photonlib/adding-vendordep.html)
-  * [2024 Game manual](https://firstfrc.blob.core.windows.net/frc2024/Manual/2024GameManual.pdf)
+
 
 ## Robot Subsystem Descriptions
 
@@ -36,17 +36,50 @@ todo: add picture of robot cad
 
 The motors that move the robot chassis around the field.
 
-  * Actuators:
-    * todo
-	* todo
-
-  * Sensors:
-    * todo
+  * Motors
+    * 4x - Falcon500 swere modules (2 Falcon500s per module) 
+  * Sensors
     * Pigeon IMU for measuring robot heading and pitch
 
-### TODO
+### Intake
+Picks up game pieces off the ground. Hands them off to the hopper
 
-### TODO
+  * Motors
+    * `tbd`x Falcon 500
+      * Velocity closed loop control
+
+  * Sensors
+    * `tbd`
+
+### Shooter
+Motors at the front of the shooter assembly that allow game pieces to be fired out of the robot.
+
+  * Motors
+    * `tbd`x - Falcon 500 
+      * Velocity closed loop control
+
+### Hopper
+Brings in game pieces from the intake. Stores them until the shooter is ready to be fired.
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * `tbd` - Velocity closed loop control 
+
+### Linear Lift
+
+Moves the shooter assembly vertically to differnt heights
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * Motion Magic - position closed loop control
+
+### Shoulder
+
+Rotates the shooter assembly to change pitch angle
+
+  * Motors
+    * `tbd`x - Falcon 500
+      * Motion Magic - position closed loop control
 
 ## Getting Started
 
