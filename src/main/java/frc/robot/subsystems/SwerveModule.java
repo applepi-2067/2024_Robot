@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 
+import java.text.DecimalFormat;
+
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
@@ -8,29 +10,24 @@ import frc.robot.constants.RobotMap;
 
 
 public class SwerveModule {
-    // Reported CanCoder abs encoder position at wheel zero.
-    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {344.97, 53.44, 330.47, 79.19};  // On [0, 360).
+    // Reported CANCoder abs encoder position at wheel zero.
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {25.05, 246.27, 77.43, 213.93};
 
-    // Motor inversions.
-    private static final boolean[] INVERT_DRIVE_MOTORS = {false, false, false, false};  // Drive motor inversion unnecessay (flip steer offset).
-    private static final boolean[] INVERT_STEER_MOTORS = {true, true, true, true};
+    private static final DecimalFormat rounder = new DecimalFormat("0.0000");
 
-    // Motors.
     private final DriveMotor m_driveMotor;
     private final SteerMotor m_steerMotor;
 
+    private final int location;
     
     public SwerveModule(int location) {
-        // Create motors.
-        m_driveMotor = new DriveMotor(
-            RobotMap.canIDs.Drivetrain.DRIVE[location],
-            INVERT_DRIVE_MOTORS[location]
-        );
+        this.location = location;
+
+        m_driveMotor = new DriveMotor(RobotMap.canIDs.Drivetrain.DRIVE[location]);
         m_steerMotor = new SteerMotor(
             RobotMap.canIDs.Drivetrain.STEER[location],
             RobotMap.canIDs.Drivetrain.DRIVE[location],
-            STEER_WHEEL_ZERO_OFFSET_DEGREES[location],
-            INVERT_STEER_MOTORS[location]
+            STEER_WHEEL_ZERO_OFFSET_DEGREES[location]
         );
     }
 
@@ -63,5 +60,15 @@ public class SwerveModule {
             m_steerMotor.getPositionRotation2d()
         );
         return position;
+    }
+
+    public String toString() {
+        String desc = "Loc " + location + ": ";
+        
+        SwerveModuleState currState = getState();
+        desc += "v (m/s)=" + rounder.format(currState.speedMetersPerSecond) + "   ";
+        desc += "angle (deg)=" + rounder.format(currState.angle.getDegrees());
+        
+        return desc;
     }
 }

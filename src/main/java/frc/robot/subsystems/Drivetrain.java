@@ -28,8 +28,7 @@ import frc.robot.constants.RobotMap;
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
-  // Rounder for pretty descriptions.
-  private static final DecimalFormat rounder = new DecimalFormat("0.000000");
+  private static final DecimalFormat rounder = new DecimalFormat("0.0000");
 
   // Swerve module offsets from center. +x = front of robot, +y = left of robot. 
   private static final double centerToWheelOffsetMeters = Units.inchesToMeters(13.0 - 2.5);
@@ -41,14 +40,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   );
 
   // Max speeds.
-  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 4.57;
+  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.55;  // TODO: test top speed.
   public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_TRANSLATION_SPEED_METERS_PER_SEC * 2.0;
 
   public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4.0;
   public static final double MAX_ROTATION_ACCEL_RADIANS_PER_SEC_SQUARED = MAX_ROTATION_SPEED_RADIANS_PER_SEC * 2.0;
-
   
-  // Swerve modules.
   private final SwerveModule[] m_swerveModules;
   
   // Odometry.
@@ -56,7 +53,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
-
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -177,22 +173,22 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Log state.
   @Log (name="Swerve Module 0")
   public String getSwerveModule0Description() {
-    return m_swerveModules[0].getState().toString();
+    return m_swerveModules[0].toString();
   }
 
   @Log (name="Swerve Module 1")
   public String getSwerveModule1Description() {
-    return m_swerveModules[1].getState().toString();
+    return m_swerveModules[1].toString();
   }
 
   @Log (name="Swerve Module 2")
   public String getSwerveModule2Description() {
-    return m_swerveModules[2].getState().toString();
+    return m_swerveModules[2].toString();
   }
 
   @Log (name="Swerve Module 3")
   public String getSwerveModule3Description() {
-    return m_swerveModules[3].getState().toString();
+    return m_swerveModules[3].toString();
   }
 
   @Log (name="Gyro (deg)")
