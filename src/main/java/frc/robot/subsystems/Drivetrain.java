@@ -23,6 +23,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
+import frc.robot.subsystems.swerve.SwerveModule;
 
 
 public class Drivetrain extends SubsystemBase implements Loggable {
