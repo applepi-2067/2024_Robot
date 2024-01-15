@@ -41,7 +41,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   );
 
   // Max speeds.
-  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.55;  // TODO: test top speed.
+  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.55;
   public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_TRANSLATION_SPEED_METERS_PER_SEC * 2.0;
 
   public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4.0;
