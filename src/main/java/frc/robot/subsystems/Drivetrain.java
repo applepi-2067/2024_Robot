@@ -2,9 +2,15 @@ package frc.robot.subsystems;
 
 
 import java.text.DecimalFormat;
+import java.util.Optional;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +21,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -86,6 +94,29 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     SmartDashboard.putData("Field", m_field);
 
     m_pose = getRobotPose2d();
+
+    // PathPlanner.
+    AutoBuilder.configureHolonomic(
+      this::getRobotPose2d,
+      this::setRobotPose2d,
+      this::getRobotRelativeChassisSpeeds,
+      this::driveRobotRelative,
+      new HolonomicPathFollowerConfig(
+        new PIDConstants(0.0),  // TODO: tune PIDs + Ramsette controller.
+        new PIDConstants(0.0),
+        MAX_TRANSLATION_SPEED_METERS_PER_SEC,
+        centerToWheelOffsetMeters,
+        new ReplanningConfig()
+      ),
+      () -> {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this
+    );
   }
 
   public SwerveModulePosition[] getSwerveModulePositions() {
@@ -94,6 +125,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       swerveModulePositions[i] = m_swerveModules[i].getPosition();
     }
     return swerveModulePositions;
+  }
+
+  public SwerveModuleState[] getSwerveModuleStates() {
+    SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i++) {
+      swerveModuleStates[i] = m_swerveModules[i].getState();
+    }
+    return swerveModuleStates;
+  }
+
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
+    return SWERVE_DRIVE_KINEMATICS.toChassisSpeeds(getSwerveModuleStates());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    // Convert to swerve module states, and set states.
+    SwerveModuleState[] states = SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setSwerveModuleStates(states);
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
@@ -109,16 +158,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
     // Robot to field oriented speeds.
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+    ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
       xVelocityMetersPerSecond,
       yVelocityMetersPerSecond,
       rotationVelocityRadiansPerSecond,
       Rotation2d.fromDegrees(getHeadingDegrees())
     );
 
-    // Convert to swerve module states, and set states.
-    SwerveModuleState[] states = SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
-    setSwerveModuleStates(states);
+    driveRobotRelative(chassisSpeeds);
   }
 
   public double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
@@ -165,10 +212,20 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return robotPose2d; 
   }
 
+  public void setRobotPose2d(Pose2d pose) {
+    m_odometry.resetPosition(
+      Rotation2d.fromDegrees(getHeadingDegrees()),
+      getSwerveModulePositions(),
+      pose
+    );
+  }
+
   @Override
   public void periodic() {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
+
+    SmartDashboard.putString("Robot pose", getPoseDescription());
   }
 
   // Log state.

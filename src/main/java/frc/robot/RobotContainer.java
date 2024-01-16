@@ -1,6 +1,10 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +23,7 @@ public class RobotContainer {
   private static final int DRIVER_CONTROLLER_PORT = 0;
   private final CommandXboxController m_driverController;
 
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
@@ -27,6 +32,9 @@ public class RobotContainer {
     configureBindings();
 
     Logger.configureLoggingAndConfig(this, false);
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -50,6 +58,6 @@ public class RobotContainer {
 
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.getSelected();
   }
 }
