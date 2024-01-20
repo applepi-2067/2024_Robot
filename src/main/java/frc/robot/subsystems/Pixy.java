@@ -20,7 +20,7 @@ public class Pixy extends SubsystemBase {
         pixy.setLED(0, 0, 0);
 
         int blockCount = pixy.getCCC().getBlocks(false, Pixy2CCC.CCC_SIG1, 25);
-        System.out.println(blockCount);
+        System.out.println("Blocks " + blockCount);
         if (blockCount <= 0) {
             return null;
         }

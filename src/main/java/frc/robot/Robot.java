@@ -79,12 +79,14 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    Pixy.initialize();
+   
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() { 
+    Pixy.initialize();
+  }
 
   @Override
   public void testInit() {
