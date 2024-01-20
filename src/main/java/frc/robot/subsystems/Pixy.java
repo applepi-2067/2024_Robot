@@ -12,7 +12,7 @@ public class Pixy extends SubsystemBase {
         Link link = new SPILink();
         Pixy2 pixy = Pixy2.createInstance(link);
         pixy.init();
-        pixy.setLamp((byte) 1, (byte) 1);
-        pixy.setLED(200, 30, 255);
+        pixy.setLamp((byte) 0, (byte) 1);
+        pixy.setLED(0, 0, 0);
     }
 }
