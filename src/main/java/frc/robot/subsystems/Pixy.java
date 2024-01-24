@@ -13,25 +13,34 @@ import io.github.pseudoresonance.pixy2api.links.SPILink;
 
 public class Pixy extends SubsystemBase {
     private static Pixy instance = null;
+    private Pixy2 m_pixy;
+    private Link m_link;
+
     public static Pixy getInstance() {
         if (instance == null) {
             instance = new Pixy();
         }
         return instance;
     }
-    public static Block initialize() {
-        Link link = new SPILink();
-        Pixy2 pixy = Pixy2.createInstance(link);
-        pixy.init();
-        pixy.setLamp((byte) 0, (byte) 1);
-        pixy.setLED(0, 0, 0);
 
-        int blockCount = pixy.getCCC().getBlocks(true, Pixy2CCC.CCC_SIG_ALL, 25);
+    private Pixy() {
+        m_link = new SPILink();
+        m_pixy = Pixy2.createInstance(m_link);
+    }
+
+    public void initialize() {
+        m_pixy.init();
+        m_pixy.setLamp((byte) 0, (byte) 1);
+        m_pixy.setLED(0, 0, 0);
+    }
+
+    public Block findBlocks() {
+        int blockCount = m_pixy.getCCC().getBlocks(true, Pixy2CCC.CCC_SIG_ALL, 25);
         System.out.println("Blocks " + blockCount);
         if (blockCount <= 0) {
             return null;
         }
-        ArrayList<Block> blocks = pixy.getCCC().getBlockCache();
+        ArrayList<Block> blocks = m_pixy.getCCC().getBlockCache();
         Block largestBlock = null;
         for (Block block : blocks) {
             if (largestBlock == null) {
