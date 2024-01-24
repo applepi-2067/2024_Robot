@@ -12,6 +12,13 @@ import io.github.pseudoresonance.pixy2api.links.Link;
 import io.github.pseudoresonance.pixy2api.links.SPILink;
 
 public class Pixy extends SubsystemBase {
+    private static Pixy instance = null;
+    public static Pixy getInstance() {
+        if (instance == null) {
+            instance = new Pixy();
+        }
+        return instance;
+    }
     public static Block initialize() {
         Link link = new SPILink();
         Pixy2 pixy = Pixy2.createInstance(link);
