@@ -31,8 +31,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    m_pixy.initialize();
     // Configure the trigger bindings
     configureBindings();
   }

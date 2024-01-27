@@ -26,6 +26,7 @@ public class Pixy extends SubsystemBase {
     private Pixy() {
         m_link = new SPILink();
         m_pixy = Pixy2.createInstance(m_link);
+        initialize();
     }
 
     public void initialize() {
@@ -59,6 +60,10 @@ public class Pixy extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(findBiggestBlock().getX());
+        if (!(findBiggestBlock() == null)) {
+            System.out.println(findBiggestBlock().getX());
+        } else {
+            System.out.println("No blocks found :(");
+        }
     }
 }
