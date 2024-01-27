@@ -16,11 +16,13 @@ import frc.robot.subsystems.Pixy;
  * project.
  */
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
-  private Pixy m_pixy = Pixy.getInstance();
+  private final Pixy m_pixy = Pixy.getInstance();
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -87,7 +89,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() { 
-    Pixy.initialize();
   }
 
   @Override

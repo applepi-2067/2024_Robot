@@ -34,12 +34,17 @@ public class Pixy extends SubsystemBase {
         m_pixy.setLED(0, 0, 0);
     }
 
-    public Block findBlocks() {
+    public void setLEDColor(int r, int g, int b) {
+        m_pixy.setLamp((byte) 0, (byte) 1);
+        m_pixy.setLED(r, g, b);
+    }
+
+    public int countBlocks() {
         int blockCount = m_pixy.getCCC().getBlocks(true, Pixy2CCC.CCC_SIG_ALL, 25);
-        System.out.println("Blocks " + blockCount);
-        if (blockCount <= 0) {
-            return null;
-        }
+        return blockCount;
+    }
+
+    public Block findBiggestBlock() {
         ArrayList<Block> blocks = m_pixy.getCCC().getBlockCache();
         Block largestBlock = null;
         for (Block block : blocks) {
@@ -50,5 +55,10 @@ public class Pixy extends SubsystemBase {
 			}
         }
         return largestBlock;
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println(findBiggestBlock().getX());
     }
 }
