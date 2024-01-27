@@ -60,6 +60,7 @@ public class Pixy extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("Found " + countBlocks() + " blocks");
         if (!(findBiggestBlock() == null)) {
             System.out.println(findBiggestBlock().getX());
         } else {
