@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.swerve;
+package frc.robot.subsystems.elevator;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -14,14 +14,14 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Conversions;
 
-public class Climber extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   // TODO MEASUREMENTS
+  private static final double MAX_EXTENDER_LENGTH_METERS = 1.0;
   private static final double METERS_PER_REV = 1.0;
   private static final double CLIMBER_RADIUS_METERS = 1.0;
   private static final double GEAR_RATIO = 1.0;
 
-
-  private Climber instance;
+  private Elevator instance;
 
   private final TalonFX m_motor_1;
   private final TalonFX m_motor_2;
@@ -30,7 +30,7 @@ public class Climber extends SubsystemBase {
   private final Slot0Configs PID_GAINS = new Slot0Configs();
   private final Follower m_follower;
 
-  private Climber() {
+  private Elevator() {
     // TODO CHECK IDS
     m_motor_1 = new TalonFX(9);
     m_motor_2 = new TalonFX(10);
@@ -53,9 +53,9 @@ public class Climber extends SubsystemBase {
     // m_motor_2.getConfigurator().apply(PID_GAINS, 0.050);
   }
 
-  public Climber getInstance() {
+  public static Elevator getInstance() {
     if (instance == null) {
-      instance = new Climber();
+      instance = new Elevator();
     }
     return instance;
   }
@@ -80,6 +80,10 @@ public class Climber extends SubsystemBase {
 
   public void setTargetPositionMeters(double meters) {
     setTargetPositionRotations(metersToMotorRotations(meters));
+  }
+
+  public void setTargetPositionMax() {
+    setTargetPositionMeters(CLIMBER_RADIUS_METERS);
   }
 
   public double getTargetPositionRotations() {
