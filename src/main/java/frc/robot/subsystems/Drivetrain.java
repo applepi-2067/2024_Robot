@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 
 import java.text.DecimalFormat;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -70,8 +69,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     // Create and reset gyro.
-    TalonSRX gyroController = new TalonSRX(RobotMap.canIDs.Drivetrain.GYRO);
-    m_gyro = new PigeonIMU(gyroController);
+    m_gyro = new PigeonIMU(RobotMap.canIDs.Drivetrain.GYRO);
     resetGyro();
 
     // Odometry.
