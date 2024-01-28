@@ -10,7 +10,7 @@ public final class RobotMap {
             public static final int[] STEER = {5, 6, 7, 8};
             public static final int[] CANCoder = {1, 2, 3, 4};
 
-            public static final int GYRO = 9;
+            public static final int GYRO = 1;
         }
 
         public static final int INTAKE = 9;
