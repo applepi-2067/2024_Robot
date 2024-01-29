@@ -21,7 +21,7 @@ public class Elevator extends SubsystemBase {
   private static final double CLIMBER_RADIUS_METERS = 1.0;
   private static final double GEAR_RATIO = 1.0;
 
-  private Elevator instance;
+  private static Elevator instance;
 
   private final TalonFX m_motor_1;
   private final TalonFX m_motor_2;
