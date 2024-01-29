@@ -49,8 +49,6 @@ public class Elevator extends SubsystemBase {
       .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
       .withSensorToMechanismRatio(GEAR_RATIO)
     );
-
-    // m_motor_2.getConfigurator().apply(PID_GAINS, 0.050);
   }
 
   public static Elevator getInstance() {
