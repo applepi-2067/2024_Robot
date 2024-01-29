@@ -7,13 +7,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-
+import frc.robot.commands.SetIntakePercentOutput;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 
 public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
+  private final Intake m_intake;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -22,6 +24,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
+    m_intake = Intake.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
@@ -46,6 +49,9 @@ public class RobotContainer {
         () -> m_drivetrain.resetGyro()
       )
     );
+
+    m_driverController.b().onTrue(new SetIntakePercentOutput(1.0));
+    m_driverController.b().onFalse(new SetIntakePercentOutput(0.0));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.

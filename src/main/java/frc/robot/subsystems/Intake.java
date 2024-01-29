@@ -10,7 +10,8 @@ import frc.robot.constants.RobotMap;
 public class Intake extends SubsystemBase {
     private static Intake instance = null;
 
-    private static final boolean INVERT_MOTOR = false;
+    private static final boolean INVERT_MOTOR = true;
+    private static final int CURRENT_LIMIT_AMPS = 30;
 
     private final CANSparkMax m_motor;
     
@@ -24,6 +25,8 @@ public class Intake extends SubsystemBase {
     private Intake() {
         m_motor = new CANSparkMax(RobotMap.canIDs.INTAKE, MotorType.kBrushless);
         m_motor.restoreFactoryDefaults();
+
+        m_motor.setSmartCurrentLimit(CURRENT_LIMIT_AMPS);
         m_motor.setInverted(INVERT_MOTOR);
     }
 
