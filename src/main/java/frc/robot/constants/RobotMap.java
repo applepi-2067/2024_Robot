@@ -12,5 +12,10 @@ public final class RobotMap {
 
             public static final int GYRO = 1;
         }
+        public static class Shooter {
+            public static final int TOP_SHOOTER = 9;
+            public static final int BOTTOMSHOOTER = 10;
+            public static final int FEEDER = 11;
+        }
     }
 }
