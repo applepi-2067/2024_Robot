@@ -10,7 +10,7 @@ import frc.robot.subsystems.Shooter;
 public class SetFeederVelocity extends Command {
   private static Shooter m_shooter;
   
-  private static double velocity = 0.0;
+  private double velocity = 0.0;
 
   /** Creates a new SetFeederVelocity. */
   public SetFeederVelocity(double setVelocity) {
@@ -37,6 +37,6 @@ public class SetFeederVelocity extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

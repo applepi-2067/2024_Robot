@@ -108,7 +108,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     public boolean isGamePieceInClaw() {
-        return m_gamePieceSensor.get();
+        return !m_gamePieceSensor.get();
     }
 
     public void setTargetMotorRPM(double motorRPM) {
