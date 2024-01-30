@@ -11,7 +11,7 @@ public class Intake extends SubsystemBase {
     private static Intake instance = null;
 
     private static final boolean INVERT_MOTOR = true;
-    private static final int CURRENT_LIMIT_AMPS = 30;
+    private static final int CURRENT_LIMIT_AMPS = 40;
 
     private final CANSparkMax m_motor;
     
