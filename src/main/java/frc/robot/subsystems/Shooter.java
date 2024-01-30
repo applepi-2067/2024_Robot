@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
@@ -24,6 +25,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     private final TalonFX m_shooterTop;
     private final TalonFX m_shooterBottom;
     private final TalonFX m_feeder;
+    private final DigitalInput m_gamePieceSensor;
 
     private static Shooter instance = null;
 
@@ -52,6 +54,7 @@ public class Shooter extends SubsystemBase implements Loggable {
         m_shooterTop = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
         m_shooterBottom = new TalonFX(RobotMap.canIDs.Shooter.BOTTOMSHOOTER);
         m_feeder = new TalonFX(RobotMap.canIDs.Shooter.FEEDER);
+        m_gamePieceSensor = new DigitalInput(RobotMap.canIDs.Shooter.SENSOR);
         setupMotor(m_shooterTop);
         setupMotor(m_shooterBottom);
         setupMotor(m_feeder);
@@ -102,6 +105,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     @Log (name = "motor v (rpm)")
     public double getMotorVelocityRPM() {
         return getWheelVelocityRPS() * 60.0 * GEAR_RATIO;
+    }
+
+    public boolean isGamePieceInClaw() {
+        return m_gamePieceSensor.get();
     }
 
     public void setTargetMotorRPM(double motorRPM) {

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-
+import frc.robot.commands.RunFeederUntilPieceDetected;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 
@@ -71,6 +71,9 @@ public class RobotContainer {
       new InstantCommand(
         () -> m_shooter.setFeederSpeed(0)
       )
+    );
+    m_driverController.y().onTrue(
+      new RunFeederUntilPieceDetected()
     );
   }
 
