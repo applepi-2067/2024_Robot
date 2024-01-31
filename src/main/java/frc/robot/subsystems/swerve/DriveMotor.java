@@ -41,6 +41,13 @@ public class DriveMotor {
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
+    // Max speeds.
+    public static final double MAX_SPEED_METERS_PER_SEC = Conversions.rotationsToArcLength(  // 5.546 m/s.
+        FALCON_500_MAX_SPEED_RPS / GEAR_RATIO,
+        WHEEL_RADIUS_METERS
+    );
+    public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_SPEED_METERS_PER_SEC * 2.0;
+
     public DriveMotor(int canID) {
         m_motor = new TalonFX(canID);
         m_motor.getConfigurator().apply(new TalonFXConfiguration());

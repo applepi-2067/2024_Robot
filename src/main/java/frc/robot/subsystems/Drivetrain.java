@@ -30,7 +30,9 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
+import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.utils.Conversions;
 
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -39,19 +41,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private static final DecimalFormat rounder = new DecimalFormat("0.0000");
 
   // Swerve module offsets from center. +x = front of robot, +y = left of robot. 
-  private static final double centerToWheelOffsetMeters = Units.inchesToMeters(13.0 - 2.5);
+  private static final double CENTER_TO_WHEEL_OFFSET_METERS = Units.inchesToMeters(13.0 - 2.5);
   public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-    new Translation2d(-centerToWheelOffsetMeters, centerToWheelOffsetMeters),
-    new Translation2d(-centerToWheelOffsetMeters, -centerToWheelOffsetMeters),
-    new Translation2d(centerToWheelOffsetMeters, centerToWheelOffsetMeters),
-    new Translation2d(centerToWheelOffsetMeters, -centerToWheelOffsetMeters)
+    new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(CENTER_TO_WHEEL_OFFSET_METERS, CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS)
   );
 
   // Max speeds.
-  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.55;
-  public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_TRANSLATION_SPEED_METERS_PER_SEC * 2.0;
-
-  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4.0;
+  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Units.rotationsToRadians(  // 20.794 rad/sec.
+    Conversions.arcLengthToRotations(
+      DriveMotor.MAX_SPEED_METERS_PER_SEC,
+      CENTER_TO_WHEEL_OFFSET_METERS
+    )
+  );
   public static final double MAX_ROTATION_ACCEL_RADIANS_PER_SEC_SQUARED = MAX_ROTATION_SPEED_RADIANS_PER_SEC * 2.0;
   
   private final SwerveModule[] m_swerveModules;
@@ -100,10 +104,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       this::getRobotRelativeChassisSpeeds,
       this::driveRobotRelative,
       new HolonomicPathFollowerConfig(
-        new PIDConstants(0.0),  // TODO: tune PIDs + Ramsette controller.
+        new PIDConstants(0.0),  // TODO: tune PIDs.
         new PIDConstants(0.0),
-        MAX_TRANSLATION_SPEED_METERS_PER_SEC,
-        centerToWheelOffsetMeters,
+        DriveMotor.MAX_SPEED_METERS_PER_SEC,
+        CENTER_TO_WHEEL_OFFSET_METERS,
         new ReplanningConfig()
       ),
       () -> {
@@ -151,8 +155,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     rightStickX = deadbandSquareStickInput(rightStickX, absDeadbandThreshold);
 
     // Speeds in robot coords. Negatives account for stick signs.
-    double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double yVelocityMetersPerSecond = -1.0 * leftStickX * DriveMotor.MAX_SPEED_METERS_PER_SEC;
+    double xVelocityMetersPerSecond = -1.0 * leftStickY * DriveMotor.MAX_SPEED_METERS_PER_SEC;
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
     // Robot to field oriented speeds.
@@ -183,7 +187,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void setSwerveModuleStates(SwerveModuleState[] states) {
     // Normalize swerve module states.
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_TRANSLATION_SPEED_METERS_PER_SEC);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveMotor.MAX_SPEED_METERS_PER_SEC);
 
     // Pass states to each module.
     for (int location = 0; location < 4; location++) {
