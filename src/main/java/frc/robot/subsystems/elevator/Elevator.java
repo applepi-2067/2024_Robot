@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setTargetPositionMax() {
-    setTargetPositionMeters(CLIMBER_RADIUS_METERS);
+    setTargetPositionMeters(MAX_EXTENDER_LENGTH_METERS);
   }
 
   public double getTargetPositionRotations() {
