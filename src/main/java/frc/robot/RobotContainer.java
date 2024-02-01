@@ -7,8 +7,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-import frc.robot.commands.RunFeederUntilPieceDetected;
-import frc.robot.commands.SetFeederVelocity;
+import frc.robot.commands.FeedAndShootGamePiece;
+import frc.robot.commands.FeedGamePiece;
+import frc.robot.commands.SetFeederPower;
+import frc.robot.commands.ShootGamePiece;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 
@@ -45,32 +47,41 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.a().onTrue(
-      new InstantCommand(
-        () -> m_drivetrain.resetGyro()
-      )
-    );
+    // m_driverController.a().onTrue(
+    //   new InstantCommand(
+    //     () -> m_drivetrain.resetGyro()
+    //   )
+    // );
 
-    m_driverController.b().onTrue(
-      new InstantCommand(
-        () -> m_shooter.setTargetMotorRPM(4200.0)
-      )
-    );
+    // m_driverController.b().onTrue(
+    //   new InstantCommand(
+    //     () -> m_shooter.setTargetMotorRPM(4200.0)
+    //   )
+    // );
 
-    m_driverController.b().onFalse(
-      new InstantCommand(
-        () -> m_shooter.setTargetMotorRPM(0.0)
-      )
-    );
+    // m_driverController.b().onFalse(
+    //   new InstantCommand(
+    //     () -> m_shooter.setTargetMotorRPM(0.0)
+    //   )
+    // );
 
+    // m_driverController.x().onTrue(
+    //   new SetFeederPower(0.2)
+    // );
+    // m_driverController.x().onFalse(
+    //   new SetFeederPower(0.0)
+    // );
     m_driverController.x().onTrue(
-      new SetFeederVelocity(0.2)
+      new FeedGamePiece(false)
     );
-    m_driverController.x().onFalse(
-      new SetFeederVelocity(0.0)
+    m_driverController.b().onTrue(
+      new FeedGamePiece(true)
     );
     m_driverController.y().onTrue(
-      new RunFeederUntilPieceDetected()
+      new ShootGamePiece()
+    );
+    m_driverController.a().onTrue(
+      new FeedAndShootGamePiece()
     );
   }
 

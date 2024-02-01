@@ -7,15 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class SetFeederVelocity extends Command {
-  private static Shooter m_shooter;
-  
-  private double velocity = 0.0;
+public class RampUpShooter extends Command {
+  private Shooter m_shooter;
 
-  /** Creates a new SetFeederVelocity. */
-  public SetFeederVelocity(double setVelocity) {
-    velocity = setVelocity;
-
+  public RampUpShooter() {
     m_shooter = Shooter.getInstance();
     addRequirements(m_shooter);
   }
@@ -27,7 +22,7 @@ public class SetFeederVelocity extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setFeederSpeed(velocity);
+    m_shooter.rampUpTargetMotor();
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +32,6 @@ public class SetFeederVelocity extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return m_shooter.shootingVelocityReached();
   }
 }

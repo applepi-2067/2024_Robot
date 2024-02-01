@@ -5,21 +5,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RunFeederUntilPieceDetected extends SequentialCommandGroup {
+public class FeedGamePiece extends SequentialCommandGroup {
   /** Creates a new RunFeederUntilPieceDetected. */
-  public RunFeederUntilPieceDetected() {
+  public FeedGamePiece(boolean reverse) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    double feederMultipler = 1;
+    double feederRotations = 0;
+    if (reverse) {
+      feederMultipler = -1;
+      feederRotations = 100;
+    }
+
     addCommands(
-      new SetFeederVelocity(0.2),
-      new WaitForGamePieceInShooter(),
-      new WaitCommand(0.3),
-      new SetFeederVelocity(0.0)
+      new SetFeederPower(0.3 * feederMultipler),
+      new WaitUntilGamePieceInFeeder(),
+      new WaitForFeederRotations(feederRotations),
+      new SetFeederPower(0.0)
     );
   }
 }

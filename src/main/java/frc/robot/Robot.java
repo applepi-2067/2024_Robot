@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Shooter;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -80,6 +82,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    // Stop any previous motor command which may still be active from a previous tele-op or auto session
+    Shooter.getInstance().setTargetMotorRPM(0.0);
+    Feeder.getInstance().setFeederSpeed(0.0);
   }
 
   /** This function is called periodically during operator control. */
