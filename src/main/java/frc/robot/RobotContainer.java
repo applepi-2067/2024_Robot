@@ -3,16 +3,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
-import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.FeedAndShootGamePiece;
 import frc.robot.commands.FeedGamePiece;
-import frc.robot.commands.SetFeederPower;
 import frc.robot.commands.ShootGamePiece;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
+import io.github.oblarg.oblog.Logger;
 
 
 public class RobotContainer {
@@ -81,7 +78,7 @@ public class RobotContainer {
       new ShootGamePiece()
     );
     m_driverController.a().onTrue(
-      new FeedAndShootGamePiece()
+      new FeedAndShootGamePiece().repeatedly()  // repeatedly will loop the command -- useful for testing the shooter
     );
   }
 
