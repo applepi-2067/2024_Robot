@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     private static final double GEAR_RATIO = 1;
     private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
     
-    private static final double SPEED_FOR_SHOOTING_RPM = 4800.0;
+    private static final double SPEED_FOR_SHOOTING_RPM = 5200.0;
     private static final double SPEED_FOR_SHOOTING_THRESHOLD = 0.05; // Percent
 
     private Shooter() {
