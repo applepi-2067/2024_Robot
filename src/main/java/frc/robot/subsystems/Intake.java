@@ -5,13 +5,15 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Loggable {
     private static Intake instance = null;
 
     private static final boolean INVERT_MOTOR = true;
-    private static final int CURRENT_LIMIT_AMPS = 30;
+    private static final int CURRENT_LIMIT_AMPS = 60;
 
     private final CANSparkMax m_motor;
     
@@ -32,5 +34,10 @@ public class Intake extends SubsystemBase {
 
     public void setPercentOutput(double percentOutput) {
         m_motor.set(percentOutput);
+    }
+
+    @Log (name="intakecurrent")
+    public double getCurrent() {
+        return m_motor.getOutputCurrent();
     }
 }
