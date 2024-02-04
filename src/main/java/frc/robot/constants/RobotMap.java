@@ -14,8 +14,8 @@ public final class RobotMap {
         }
 
         public static class Elevator {
-            public static final int MASTER = 10;
-            public static final int FOLLOWER = 11;
+            public static final int MASTER = 9;
+            public static final int FOLLOWER = 10;
         }
     }
 }
