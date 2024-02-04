@@ -11,9 +11,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
+
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -21,9 +23,9 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static Elevator instance;
   
   // Physical properties.
-  public static final double MAX_EXTENSION_METERS = 1.0;
-  private static final double OUTPUT_SPROCKET_RADIUS_METERS = 1.0;  // TODO: measure physical properties.
-  private static final double GEAR_RATIO = 1.0;
+  public static final double MAX_EXTENSION_METERS = Units.inchesToMeters(16.0);
+  private static final double OUTPUT_SPROCKET_PITCH_RADIUS_METERS = Units.inchesToMeters(1.751 / 2.0);
+  private static final double GEAR_RATIO = 5.0 * 3.0;
 
   // Motors.
   private final TalonFX m_masterMotor;
@@ -75,7 +77,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   }
 
   public void setTargetPositionMeters(double meters) {
-    double rotations = Conversions.arcLengthToRotations(meters, OUTPUT_SPROCKET_RADIUS_METERS);
+    double rotations = Conversions.arcLengthToRotations(meters, OUTPUT_SPROCKET_PITCH_RADIUS_METERS);
     m_masterMotor.setControl(new MotionMagicVoltage(rotations));
   }
 
@@ -86,6 +88,11 @@ public class Elevator extends SubsystemBase implements Loggable {
 
   @Log (name = "Position (meters)")
   public double getPositionMeters() {
-    return Conversions.rotationsToArcLength(getPositionRotations(), OUTPUT_SPROCKET_RADIUS_METERS);
+    return Conversions.rotationsToArcLength(getPositionRotations(), OUTPUT_SPROCKET_PITCH_RADIUS_METERS);
+  }
+
+  @Log (name = "Position (in)")
+  public double getPositionInches() {
+    return Units.metersToInches(getPositionMeters());
   }
 }
