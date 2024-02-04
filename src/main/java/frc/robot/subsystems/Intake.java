@@ -3,11 +3,14 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Loggable {
     private static Intake instance = null;
 
     private static final boolean INVERT_MOTOR = true;
@@ -32,5 +35,10 @@ public class Intake extends SubsystemBase {
 
     public void setPercentOutput(double percentOutput) {
         m_motor.set(percentOutput);
+    }
+
+    @Log (name="Output Current (A)")
+    public double getCurrent() {
+        return m_motor.getOutputCurrent();
     }
 }
