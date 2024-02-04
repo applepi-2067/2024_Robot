@@ -11,7 +11,7 @@ public class FeedGamePiece extends SequentialCommandGroup {
     addCommands(
       new SetFeederPercentOutput(0.3),
       new WaitUntilCommand(feeder::gamePieceDetected),
-      new SetFeederRotations(100.0)  // TODO: check that note is stowed in feeder.
+      new SetFeederPercentOutput(0.0)
     );
 
     addRequirements(feeder);
