@@ -14,9 +14,13 @@ public final class RobotMap {
         }
         public static class Shooter {
             public static final int TOP_SHOOTER = 9;
-            public static final int BOTTOMSHOOTER = 10;
-            public static final int FEEDER = 11;
-            public static final int SENSOR = 0;
+            public static final int BOTTOM_SHOOTER = 10;
         }
+
+        public static final int FEEDER = 11;
+    }
+
+    public static class dios {
+        public static final int FEEDER_SENSOR = 0;
     }
 }

@@ -1,30 +1,31 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
-import frc.robot.utils.ShooterSetupMotor;
 
 public class Feeder extends SubsystemBase {
+  private static Feeder instance;
+
   private final TalonFX m_feeder;
   private final DigitalInput m_gamePieceSensor;
 
   private static final double GEAR_RATIO = 18.0 / 30.0;
 
-  private static Feeder instance;
 
   private Feeder() {
-    m_feeder = new TalonFX(RobotMap.canIDs.Shooter.FEEDER);
-    m_gamePieceSensor = new DigitalInput(RobotMap.canIDs.Shooter.SENSOR);
-    ShooterSetupMotor.setupMotor(m_feeder, GEAR_RATIO);
-
-    m_feeder.setInverted(true);
+    m_gamePieceSensor = new DigitalInput(RobotMap.dios.FEEDER_SENSOR);
+    
+    m_feeder = new TalonFX(RobotMap.canIDs.FEEDER);
+    m_feeder.getConfigurator().apply(new TalonFXConfiguration());
+    m_feeder.getConfigurator().apply(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO));
+    m_feeder.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
   }
 
   public static Feeder getInstance() {
@@ -34,20 +35,15 @@ public class Feeder extends SubsystemBase {
     return instance;
   }
 
-  public void setFeederSpeed(double speed){
-    m_feeder.set(speed);
+  public void setPercentOutput(double percentOutput){
+    m_feeder.set(percentOutput);
   }
 
-  public double getMotorPosition() {
-    return m_feeder.getPosition().getValueAsDouble() / GEAR_RATIO; // TODO CHECK
+  public double getWheelPositionRotations() {
+    return m_feeder.getPosition().getValueAsDouble();
   }
 
-  public boolean isGamePieceDetected() {
+  public boolean gamePieceDetected() {
     return !m_gamePieceSensor.get();
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
   }
 }

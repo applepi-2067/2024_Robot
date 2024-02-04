@@ -3,13 +3,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.FeedAndShootGamePiece;
+
+import io.github.oblarg.oblog.Logger;
+
 import frc.robot.commands.FeedGamePiece;
 import frc.robot.commands.ShootGamePiece;
+
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
-import io.github.oblarg.oblog.Logger;
 
 
 public class RobotContainer {
@@ -44,42 +47,10 @@ public class RobotContainer {
       )
     );
 
-    // m_driverController.a().onTrue(
-    //   new InstantCommand(
-    //     () -> m_drivetrain.resetGyro()
-    //   )
-    // );
+    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    // m_driverController.b().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shooter.setTargetMotorRPM(4200.0)
-    //   )
-    // );
-
-    // m_driverController.b().onFalse(
-    //   new InstantCommand(
-    //     () -> m_shooter.setTargetMotorRPM(0.0)
-    //   )
-    // );
-
-    // m_driverController.x().onTrue(
-    //   new SetFeederPower(0.2)
-    // );
-    // m_driverController.x().onFalse(
-    //   new SetFeederPower(0.0)
-    // );
-    m_driverController.x().onTrue(
-      new FeedGamePiece(false)
-    );
-    m_driverController.b().onTrue(
-      new FeedGamePiece(true)
-    );
-    m_driverController.y().onTrue(
-      new ShootGamePiece()
-    );
-    m_driverController.a().onTrue(
-      new FeedAndShootGamePiece().repeatedly()  // repeatedly will loop the command -- useful for testing the shooter
-    );
+    m_driverController.b().onTrue(new FeedGamePiece());
+    m_driverController.x().onTrue(new ShootGamePiece());
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.

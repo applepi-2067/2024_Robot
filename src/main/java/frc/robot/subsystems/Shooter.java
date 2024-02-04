@@ -1,45 +1,51 @@
 package frc.robot.subsystems;
 
 
-// import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-// import com.ctre.phoenix6.configs.FeedbackConfigs;
-// import com.ctre.phoenix6.configs.MotionMagicConfigs;
-// import com.ctre.phoenix6.configs.MotorOutputConfigs;
-// import com.ctre.phoenix6.configs.Slot0Configs;
-// import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-// import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-// import com.ctre.phoenix6.signals.NeutralModeValue;
-import frc.robot.utils.ShooterSetupMotor;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.RobotMap;
-import frc.robot.utils.Conversions;
+
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+import frc.robot.constants.RobotMap;
+
 
 public class Shooter extends SubsystemBase implements Loggable {
+    private static Shooter instance = null;
+
     private final TalonFX m_shooterTop;
     private final TalonFX m_shooterBottom;
 
-    private static Shooter instance = null;
+    // PIDs.
+    private static final int K_TIMEOUT_MS = 10;
+    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.01).withKV(0.12);
 
-    // Conversion constants.
-    private static final double GEAR_RATIO = 1;
-    private static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3.0 / 2.0);
+    private static final double PERCENT_DEADBAND = 0.001;
+    private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
+
+    private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+        .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)
+        .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
+
+    private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
+        .withSupplyCurrentThreshold(60)
+        .withSupplyTimeThreshold(0.5)
+        .withSupplyCurrentLimit(40);
     
-    private static final double SPEED_FOR_SHOOTING_RPM = 5200.0;
-    private static final double SPEED_FOR_SHOOTING_THRESHOLD = 0.05; // Percent
-
-    private Shooter() {
-        m_shooterTop = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
-        m_shooterBottom = new TalonFX(RobotMap.canIDs.Shooter.BOTTOMSHOOTER);
-        ShooterSetupMotor.setupMotor(m_shooterTop, GEAR_RATIO);
-        ShooterSetupMotor.setupMotor(m_shooterBottom, GEAR_RATIO);
-    }
+    // Speeds for shooting.
+    public static final double SHOOTING_SPEED_RPM = 5200.0;
+    private static final double SHOOTING_SPEED_TOLERANCE_PERCENT = 0.05;
 
     public static Shooter getInstance(){
         if (instance == null) {
@@ -48,42 +54,46 @@ public class Shooter extends SubsystemBase implements Loggable {
         return instance;
     }
 
-    @Log (name = "wheel v (m/s)")
-    public double getVelocityMPS() {
-        return Conversions.rotationsToArcLength(getMotorVelocityRPS(), WHEEL_RADIUS_METERS);
+    private Shooter() {
+        m_shooterTop = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
+        m_shooterBottom = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
+        setupMotor(m_shooterTop);
+        setupMotor(m_shooterBottom);
     }
 
-    @Log (name = "wheel v (rps)")
-    public double getMotorVelocityRPS() {
-        return m_shooterTop.getVelocity().getValueAsDouble();
+    public void setupMotor(TalonFX motor){
+        motor.getConfigurator().apply(new TalonFXConfiguration());
+        motor.setNeutralMode(NeutralModeValue.Brake);
+
+        motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS, K_TIMEOUT_MS);
+
+        motor.getConfigurator().apply(
+            new FeedbackConfigs().withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor),
+            K_TIMEOUT_MS
+        );
+        motor.getConfigurator().apply(
+            new MotorOutputConfigs().withDutyCycleNeutralDeadband(PERCENT_DEADBAND),
+            K_TIMEOUT_MS
+        );
+            
+        motor.getConfigurator().apply(PID_GAINS, K_TIMEOUT_MS);   
+        motor.getConfigurator().apply(MOTION_MAGIC_CONFIGS, K_TIMEOUT_MS);
     }
 
     @Log (name = "motor v (rpm)")
     public double getMotorVelocityRPM() {
-        return getMotorVelocityRPS() * 60.0;
+        return m_shooterTop.getVelocity().getValueAsDouble() * 60.0;
     }
 
-    public double getMotorRotations() {
-        return m_shooterTop.getRotorPosition().getValueAsDouble(); // TODO CHECK
-    }
-
-    public boolean shootingVelocityReached() {
-        double error = Math.abs(Math.abs(getMotorVelocityRPM()) - SPEED_FOR_SHOOTING_RPM);
-        return error < SPEED_FOR_SHOOTING_RPM * SPEED_FOR_SHOOTING_THRESHOLD;
+    public boolean velocityReached(double targetVelocityRPM) {
+        double error = Math.abs(Math.abs(getMotorVelocityRPM()) - targetVelocityRPM);
+        return error < (targetVelocityRPM * SHOOTING_SPEED_TOLERANCE_PERCENT);
     }
 
     public void setTargetMotorRPM(double motorRPM) {
-        double wheelRPM = motorRPM;
-        double wheelRPS = wheelRPM / 60.0;
-        setTargetMotorRPS(wheelRPS);
-    }
+        double motorRPS = motorRPM / 60.0;
 
-    public void setTargetMotorRPS(double motorRPS) {
-        m_shooterTop.setControl(new MotionMagicVelocityVoltage(-motorRPS).withSlot(0));
+        m_shooterTop.setControl(new MotionMagicVelocityVoltage(-1.0 * motorRPS).withSlot(0));
         m_shooterBottom.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
-    }
-
-    public void rampUpTargetMotor() {
-        setTargetMotorRPM(SPEED_FOR_SHOOTING_RPM);
     }
 }

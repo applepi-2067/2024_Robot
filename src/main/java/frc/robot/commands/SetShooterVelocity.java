@@ -1,40 +1,34 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
 public class SetShooterVelocity extends Command {
-  private Shooter m_shooter;
+  private final Shooter m_shooter;
 
-  private double velocityRPM;
+  private final double m_velocityRPM;
+  private final boolean m_block;
 
-  public SetShooterVelocity(double _velocityRPM) {
+  public SetShooterVelocity(double velocityRPM, boolean block) {
+    m_velocityRPM = velocityRPM;
+    m_block = block;
+
     m_shooter = Shooter.getInstance();
-    velocityRPM = _velocityRPM;
     addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_shooter.setTargetMotorRPM(velocityRPM);
+  public void initialize() {
+    m_shooter.setTargetMotorRPM(m_velocityRPM);
   }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_block) {
+      return m_shooter.velocityReached(m_velocityRPM);
+    }
     return true;
   }
 }
