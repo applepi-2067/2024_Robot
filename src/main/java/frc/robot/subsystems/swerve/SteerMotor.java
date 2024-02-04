@@ -64,7 +64,7 @@ public class SteerMotor {
         m_motor.getConfigurator().apply(
             new MotorOutputConfigs()
                 .withDutyCycleNeutralDeadband(PERCENT_DEADBAND)
-                .withInverted(InvertedValue.Clockwise_Positive),
+                .withInverted(InvertedValue.CounterClockwise_Positive),
             K_TIMEOUT_MS
         );
 

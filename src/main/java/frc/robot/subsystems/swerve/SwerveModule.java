@@ -14,7 +14,7 @@ public class SwerveModule {
     // Back left, back right, front left, front right convention.
     // Calibration procedure: set all offsets to 0.0, redeploy, align all wheels to face forwards,
     // use CANCoder reading as offset, add 180.0 if wheel drives backwards.
-    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {-178.24, 32.93, -14.94, 180.0};
+    private static final double[] STEER_WHEEL_ZERO_OFFSET_DEGREES = {298.04, -85.78, 161.37, -0.44};
 
     private static final DecimalFormat rounder = new DecimalFormat("0.0000");
 
