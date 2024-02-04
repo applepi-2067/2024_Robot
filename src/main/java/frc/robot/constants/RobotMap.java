@@ -12,5 +12,10 @@ public final class RobotMap {
 
             public static final int GYRO = 9;
         }
+
+        public static class Elevator {
+            public static final int MASTER = 10;
+            public static final int FOLLOWER = 11;
+        }
     }
 }

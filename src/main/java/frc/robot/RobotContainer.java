@@ -7,13 +7,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 
 
 public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
+  private final Elevator m_elevator;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -22,6 +23,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
+    m_elevator = Elevator.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
@@ -44,6 +46,19 @@ public class RobotContainer {
     m_driverController.a().onTrue(
       new InstantCommand(
         () -> m_drivetrain.resetGyro()
+      )
+    );
+
+    m_driverController.b().onTrue(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionMeters(1.0),
+        m_elevator
+      )
+    );
+    m_driverController.b().onFalse(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionMeters(0.0),
+        m_elevator
       )
     );
   }
