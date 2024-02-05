@@ -35,7 +35,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final int K_TIMEOUT_MS = 10;
   private static final double PERCENT_DEADBAND = 0.001;
 
-  private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.0).withKV(0.0);
+  private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.0).withKV(0.0); // TODO: tune PIDs.
 
   private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -66,7 +66,7 @@ public class Elevator extends SubsystemBase implements Loggable {
 
     m_masterMotor.getConfigurator().apply(
       new MotorOutputConfigs()
-        .withInverted(InvertedValue.Clockwise_Positive)
+        .withInverted(InvertedValue.Clockwise_Positive)  // TODO: check inversion.
         .withDutyCycleNeutralDeadband(PERCENT_DEADBAND)
     );
 
