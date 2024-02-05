@@ -1,8 +1,5 @@
 package frc.robot;
 
-
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -12,7 +9,6 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.subsystems.BlinkinLeds;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.BlinkinLeds.LEDMode;
-import frc.robot.subsystems.BlinkinLeds;
 
 public class RobotContainer {
   // Subsystems.
