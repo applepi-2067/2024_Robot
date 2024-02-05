@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shoulder;
 
 
 public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
+  private final Shoulder m_shoulder;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -22,6 +24,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
+    m_shoulder = Shoulder.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
@@ -44,6 +47,24 @@ public class RobotContainer {
     m_driverController.a().onTrue(
       new InstantCommand(
         () -> m_drivetrain.resetGyro()
+      )
+    );
+
+    m_driverController.b().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setTargetVoltage(2.0)
+      )
+    );
+
+    m_driverController.x().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPositionDegrees(90.0)
+      )
+    );
+
+    m_driverController.x().onFalse(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPositionDegrees(0.0)
       )
     );
   }
