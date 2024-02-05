@@ -1,20 +1,23 @@
 package frc.robot;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-
+import frc.robot.subsystems.BlinkinLeds;
 import frc.robot.subsystems.Drivetrain;
-
+import frc.robot.subsystems.BlinkinLeds.LEDMode;
+import frc.robot.subsystems.BlinkinLeds;
 
 public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
-
+  private final BlinkinLeds m_blinkinLeds;
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
   private final CommandXboxController m_driverController;
@@ -22,7 +25,8 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
-    
+    m_blinkinLeds = BlinkinLeds.getInstance();
+
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
 
@@ -44,6 +48,12 @@ public class RobotContainer {
     m_driverController.a().onTrue(
       new InstantCommand(
         () -> m_drivetrain.resetGyro()
+      )
+    );
+
+    m_driverController.povUp().onTrue(
+      new InstantCommand(
+        () -> m_blinkinLeds.setMode(LEDMode.blue)
       )
     );
   }
