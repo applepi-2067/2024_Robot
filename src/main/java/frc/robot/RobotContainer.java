@@ -14,10 +14,10 @@ public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
   private final BlinkinLeds m_blinkinLeds;
+  
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
   private final CommandXboxController m_driverController;
-
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
@@ -49,8 +49,14 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(
       new InstantCommand(
-        () -> m_blinkinLeds.setMode(LEDMode.blue)
+        () -> m_blinkinLeds.setMode(LEDMode.orange)
       )
+    );
+
+    m_driverController.povUp().onTrue(
+     new InstantCommand(
+      () -> m_blinkinLeds.setMode(LEDMode.blinking)
+     ) 
     );
   }
 
