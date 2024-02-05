@@ -12,6 +12,7 @@ import frc.robot.commands.FeedGamePiece;
 import frc.robot.commands.ShootGamePiece;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 
 
@@ -19,6 +20,7 @@ public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
   private final Shooter m_shooter;
+  private final Feeder m_feeder;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -28,6 +30,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
     m_shooter = Shooter.getInstance();
+    m_feeder = Feeder.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
