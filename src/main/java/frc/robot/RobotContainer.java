@@ -51,7 +51,7 @@ public class RobotContainer {
 
     m_driverController.b().onTrue(
       new InstantCommand(
-        () -> m_elevator.setTargetPositionMeters(1.0),
+        () -> m_elevator.setTargetPositionMeters(Elevator.MAX_EXTENSION_METERS),
         m_elevator
       )
     );
