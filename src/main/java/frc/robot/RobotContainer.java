@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
-import frc.robot.commands.SetIntakePercentOutput;
+
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 
@@ -50,8 +50,8 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.b().onTrue(new SetIntakePercentOutput(1.0));
-    m_driverController.b().onFalse(new SetIntakePercentOutput(0.0));
+    m_driverController.b().onTrue(new InstantCommand(() -> m_intake.setPercentOutput(0.5)));
+    m_driverController.b().onTrue(new InstantCommand(() -> m_intake.setPercentOutput(0.0)));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
