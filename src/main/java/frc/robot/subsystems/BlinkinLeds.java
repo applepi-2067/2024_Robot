@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BlinkinLeds extends SubsystemBase {
-   private Spark m_leds;
+   private Spark m_blinkinLeds;
    private double m_currentLedMode;
-   public BlinkinLeds m_blinkin;
+   public static BlinkinLeds instance = null;
 
    public BlinkinLeds(){
-    m_leds = new Spark(8);
+    m_blinkinLeds = new Spark(8);
     m_currentLedMode = LEDMode.rainbow.value;
       
    }
@@ -19,7 +19,10 @@ public class BlinkinLeds extends SubsystemBase {
    }
    
    public enum LEDMode {
-      rainbow(-0.97);
+      //colors
+      rainbow(-0.97), blue(0.00), white(0.00), green(0.00), orange(0.65), 
+      //paterns
+      blinking(0.07), solid(0.00);
 
       public final double value;
       private LEDMode(double value){
@@ -27,8 +30,16 @@ public class BlinkinLeds extends SubsystemBase {
       }
    }
 
+   public static BlinkinLeds getInstance() {
+      if (instance == null) {
+        instance = new BlinkinLeds();
+      }
+      return instance;
+    }
+
    @Override
    public void periodic() {
-     m_leds.set(m_currentLedMode);
+     m_blinkinLeds.set(m_currentLedMode);
    }
+
 }
