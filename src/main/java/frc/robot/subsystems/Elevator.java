@@ -11,7 +11,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
@@ -23,9 +22,11 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static Elevator instance;
   
   // Physical properties.
-  public static final double MAX_EXTENSION_METERS = Units.inchesToMeters(16.0);
-  private static final double OUTPUT_SPROCKET_PITCH_RADIUS_METERS = Units.inchesToMeters(1.751 / 2.0);
+  public static final double MAX_EXTENSION_INCHES = 16.0;
+  private static final double OUTPUT_SPROCKET_PITCH_RADIUS_INCHES = 1.751 / 2.0;
   private static final double GEAR_RATIO = 5.0 * 3.0;
+
+  private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
 
   // Motors.
   private final TalonFX m_masterMotor;
@@ -40,7 +41,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);
+      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 2.0);
 
   public static Elevator getInstance() {
     if (instance == null) {
@@ -57,7 +58,7 @@ public class Elevator extends SubsystemBase implements Loggable {
     m_followerMotor.setControl(follower);
 
     m_masterMotor.getConfigurator().apply(new TalonFXConfiguration(), K_TIMEOUT_MS);
-    m_masterMotor.setNeutralMode(NeutralModeValue.Coast);
+    m_masterMotor.setNeutralMode(NeutralModeValue.Brake);
 
     m_masterMotor.getConfigurator().apply(
       new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO),
@@ -66,7 +67,7 @@ public class Elevator extends SubsystemBase implements Loggable {
 
     m_masterMotor.getConfigurator().apply(
       new MotorOutputConfigs()
-        .withInverted(InvertedValue.Clockwise_Positive)  // TODO: check inversion.
+        .withInverted(InvertedValue.Clockwise_Positive)
         .withDutyCycleNeutralDeadband(PERCENT_DEADBAND)
     );
 
@@ -76,9 +77,14 @@ public class Elevator extends SubsystemBase implements Loggable {
     m_masterMotor.setPosition(0.0, K_TIMEOUT_MS);
   }
 
-  public void setTargetPositionMeters(double meters) {
-    double rotations = Conversions.arcLengthToRotations(meters, OUTPUT_SPROCKET_PITCH_RADIUS_METERS);
-    m_masterMotor.setControl(new MotionMagicVoltage(rotations));
+  public void setTargetPositionInches(double inches) {
+    double rotations = Conversions.arcLengthToRotations(inches, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
+    MotionMagicVoltage request = new MotionMagicVoltage(rotations);
+
+    if (inches > getPositionInches()) {
+      request = request.withFeedForward(HOLD_POSITION_VOLTAGE);
+    }
+    m_masterMotor.setControl(request);
   }
 
   @Log (name = "Position (rotations)")
@@ -86,13 +92,8 @@ public class Elevator extends SubsystemBase implements Loggable {
     return m_masterMotor.getPosition().getValueAsDouble();
   }
 
-  @Log (name = "Position (meters)")
-  public double getPositionMeters() {
-    return Conversions.rotationsToArcLength(getPositionRotations(), OUTPUT_SPROCKET_PITCH_RADIUS_METERS);
-  }
-
   @Log (name = "Position (in)")
   public double getPositionInches() {
-    return Units.metersToInches(getPositionMeters());
+    return Conversions.rotationsToArcLength(getPositionRotations(), OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
   }
 }
