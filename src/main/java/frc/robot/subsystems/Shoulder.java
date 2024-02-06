@@ -45,7 +45,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);
 
-    private static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = 1.0;  // TODO: find voltage needed to hold shoulder at 90 degrees.
+    public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = 1.0;  // TODO: find voltage needed to hold shoulder at 90 degrees, make private.
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -58,7 +58,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_motor = new TalonFX(RobotMap.canIDs.SHOULDER);
 
         m_motor.getConfigurator().apply(new TalonFXConfiguration());
-        m_motor.setNeutralMode(NeutralModeValue.Coast);
+        m_motor.setNeutralMode(NeutralModeValue.Brake);
         m_motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS, K_TIMEOUT_MS);
 
         m_motor.getConfigurator().apply(
@@ -97,15 +97,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public void setTargetPositionDegrees(double degrees) {
         double rotations = degrees / 360.0;
-        MotionMagicVoltage request = new MotionMagicVoltage(
-            rotations,
-            false,
-            getFeedForwardVoltage(),
-            0,
-            false,
-            false,
-            false
-        );
+        MotionMagicVoltage request = new MotionMagicVoltage(rotations).withFeedForward(getFeedForwardVoltage());
         m_motor.setControl(request);
     }
 
