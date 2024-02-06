@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
@@ -34,6 +35,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
         m_motor.getConfigurator().apply(new TalonFXConfiguration());
         m_motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS);
+        m_motor.setNeutralMode(NeutralModeValue.Coast);
         m_motor.getConfigurator().apply(
             new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)  // TODO: check inversion.
         );
