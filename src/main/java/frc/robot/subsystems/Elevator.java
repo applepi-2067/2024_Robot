@@ -16,6 +16,7 @@ import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Elevator extends SubsystemBase implements Loggable {
@@ -36,7 +37,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final int K_TIMEOUT_MS = 10;
   private static final double PERCENT_DEADBAND = 0.001;
 
-  private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.0).withKV(0.0); // TODO: tune PIDs.
+  private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(600.0).withKV(2.0); // TODO: tune PIDs.
 
   private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -87,13 +88,15 @@ public class Elevator extends SubsystemBase implements Loggable {
     m_masterMotor.setControl(request);
   }
 
-  @Log (name = "Position (rotations)")
-  public double getPositionRotations() {
-    return m_masterMotor.getPosition().getValueAsDouble();
-  }
-
   @Log (name = "Position (in)")
   public double getPositionInches() {
-    return Conversions.rotationsToArcLength(getPositionRotations(), OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
+    double rotations = m_masterMotor.getPosition().getValueAsDouble();
+    return Conversions.rotationsToArcLength(rotations, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
+  }
+
+  @Config (name = "PIDs")
+  public void setPIDs(double kV, double kP) {
+    Slot0Configs gains = new Slot0Configs().withKV(kV).withKP(kP);
+    m_masterMotor.getConfigurator().apply(gains, K_TIMEOUT_MS);
   }
 }
