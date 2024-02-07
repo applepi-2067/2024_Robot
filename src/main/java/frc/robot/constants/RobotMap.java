@@ -13,6 +13,6 @@ public final class RobotMap {
             public static final int GYRO = 1;
         }
 
-        public static final int SHOULDER = 9;
+        public static final int SHOULDER = 15;
     }
 }
