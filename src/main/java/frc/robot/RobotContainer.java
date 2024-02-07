@@ -51,7 +51,7 @@ public class RobotContainer {
     );
 
     m_driverController.b().onTrue(new InstantCommand(() -> m_intake.setPercentOutput(0.5), m_intake));
-    m_driverController.b().onTrue(new InstantCommand(() -> m_intake.setPercentOutput(0.0), m_intake));
+    m_driverController.b().onFalse(new InstantCommand(() -> m_intake.setPercentOutput(0.0), m_intake));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
