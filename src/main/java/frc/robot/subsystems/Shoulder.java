@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
@@ -34,7 +34,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final double PERCENT_DEADBAND = 0.001;
     
     // Conversion constants.
-    private static final double GEAR_RATIO = 1.0;  // TODO: find gear ratio.
+    private static final double GEAR_RATIO = (54.0 / 17.0) * (5.0 * 4.0);
 
     // PID.
     private static final int K_TIMEOUT_MS = 10;
@@ -43,9 +43,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 2.0);
 
-    public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = 1.0;  // TODO: find voltage needed to hold shoulder at 90 degrees, make private.
+    private static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
+
+    private static final double ZERO_POSITION_DEGREES = 148.5;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -70,7 +72,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_motor.getConfigurator().apply(
             new MotorOutputConfigs()
                 .withDutyCycleNeutralDeadband(PERCENT_DEADBAND)
-                .withInverted(InvertedValue.CounterClockwise_Positive),  // TODO: check inversion.
+                .withInverted(InvertedValue.CounterClockwise_Positive),
             K_TIMEOUT_MS
         );
 
@@ -78,7 +80,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_motor.getConfigurator().apply(PID_GAINS, K_TIMEOUT_MS);
         m_motor.getConfigurator().apply(MOTION_MAGIC_CONFIGS, K_TIMEOUT_MS);
 
-        m_motor.setPosition(0.0, K_TIMEOUT_MS);
+        m_motor.setPosition(Units.degreesToRotations(ZERO_POSITION_DEGREES), K_TIMEOUT_MS);
     }
 
     @Log (name = "Position (rot)")
@@ -91,17 +93,19 @@ public class Shoulder extends SubsystemBase implements Loggable {
         return getPositionRotations() * 360.0;
     }
 
-    private double getFeedForwardVoltage() {
-        return Math.sin(Units.degreesToRadians(getPositionDegrees())) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
+    private double getFeedForwardVoltage(double degrees) {
+        return Math.sin(Units.degreesToRadians(degrees)) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
     }
 
     public void setTargetPositionDegrees(double degrees) {
         double rotations = degrees / 360.0;
-        MotionMagicVoltage request = new MotionMagicVoltage(rotations).withFeedForward(getFeedForwardVoltage());
+        MotionMagicVoltage request = new MotionMagicVoltage(rotations)
+            .withFeedForward(getFeedForwardVoltage(degrees));
         m_motor.setControl(request);
     }
 
-    public void setTargetVoltage(double voltage) {
-        m_motor.setControl(new VoltageOut(voltage));
+    @Config
+    public void setPIDs(double kV, double kP) {
+        m_motor.getConfigurator().apply(new Slot0Configs().withKV(kV).withKP(kP), K_TIMEOUT_MS);
     }
 }
