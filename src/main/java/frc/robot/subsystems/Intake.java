@@ -49,4 +49,9 @@ public class Intake extends SubsystemBase implements Loggable {
     public double getCurrent() {
         return m_motor.getSupplyCurrent().getValueAsDouble();
     }
+
+    @Log (name="Voltage (V)")
+    public double getVoltage() {
+        return m_motor.getSupplyVoltage().getValueAsDouble();
+    }
 }
