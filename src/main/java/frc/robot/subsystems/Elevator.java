@@ -80,11 +80,7 @@ public class Elevator extends SubsystemBase implements Loggable {
 
   public void setTargetPositionInches(double inches) {
     double rotations = Conversions.arcLengthToRotations(inches, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
-    MotionMagicVoltage request = new MotionMagicVoltage(rotations);
-
-    if (inches > getPositionInches()) {
-      request = request.withFeedForward(HOLD_POSITION_VOLTAGE);
-    }
+    MotionMagicVoltage request = new MotionMagicVoltage(rotations).withFeedForward(HOLD_POSITION_VOLTAGE);
     m_masterMotor.setControl(request);
   }
 
