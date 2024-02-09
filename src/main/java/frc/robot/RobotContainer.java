@@ -59,7 +59,7 @@ public class RobotContainer {
 
     m_driverController.b().onFalse(
       new InstantCommand(
-        () -> m_shoulder.setTargetPositionDegrees(135.0),
+        () -> m_shoulder.setTargetPositionDegrees(110.0),
         m_shoulder
       )
     );

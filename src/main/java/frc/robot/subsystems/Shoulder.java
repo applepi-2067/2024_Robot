@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
+// import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
@@ -38,14 +38,16 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     // PID.
     private static final int K_TIMEOUT_MS = 10;
-    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.0).withKV(0.0);  // TODO: tune PIDs.
+    private static final Slot0Configs PID_GAINS = new Slot0Configs()
+        .withKP(90.0)
+        .withKV(4.0);  // TODO: better PID tuning.
 
     private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 2.0);
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 16.0);
 
-    private static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
+    public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
     private static final double ZERO_POSITION_DEGREES = 148.5;
 
@@ -104,8 +106,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_motor.setControl(request);
     }
 
-    @Config
-    public void setPIDs(double kV, double kP) {
-        m_motor.getConfigurator().apply(new Slot0Configs().withKV(kV).withKP(kP), K_TIMEOUT_MS);
-    }
+    // @Config
+    // public void setPIDs(double kV, double kP) {
+    //     m_motor.getConfigurator().apply(new Slot0Configs().withKV(kV).withKP(kP), K_TIMEOUT_MS);
+    // }
 }
