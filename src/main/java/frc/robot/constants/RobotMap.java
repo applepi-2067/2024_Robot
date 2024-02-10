@@ -12,10 +12,12 @@ public final class RobotMap {
 
             public static final int GYRO = 1;
         }
-
+        
         public static class Elevator {
             public static final int LEFT = 9;
             public static final int RIGHT = 10;
         }
+
+        public static final int SHOULDER = 15;
     }
 }
