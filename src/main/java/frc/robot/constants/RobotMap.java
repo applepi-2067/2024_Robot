@@ -17,7 +17,12 @@ public final class RobotMap {
             public static final int LEFT = 9;
             public static final int RIGHT = 10;
         }
+        
+        public static class Intake {
+            public static final int RIGHT = 14;
+            public static final int LEFT = 15;
+        }
 
-        public static final int SHOULDER = 15;
+        public static final int SHOULDER = 16;
     }
 }
