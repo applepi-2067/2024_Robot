@@ -6,11 +6,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 
-public class Feeder extends SubsystemBase {
+public class Feeder extends SubsystemBase implements Loggable {
   private static Feeder instance;
 
   private final TalonFX m_feeder;
@@ -43,6 +46,7 @@ public class Feeder extends SubsystemBase {
     return m_feeder.getPosition().getValueAsDouble();
   }
 
+  @Log (name = "Game piece sensor")
   public boolean gamePieceDetected() {
     return !m_gamePieceSensor.get();
   }
