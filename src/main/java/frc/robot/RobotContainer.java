@@ -10,12 +10,14 @@ import io.github.oblarg.oblog.Logger;
 
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Elevator;
 
 
 public class RobotContainer {
   // Subsystems.
   private final Drivetrain m_drivetrain;
   private final Shoulder m_shoulder;
+  private final Elevator m_elevator;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -25,6 +27,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
     m_shoulder = Shoulder.getInstance();
+    m_elevator = Elevator.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     configureBindings();
@@ -56,11 +59,23 @@ public class RobotContainer {
         m_shoulder
       )
     );
-
     m_driverController.b().onFalse(
       new InstantCommand(
         () -> m_shoulder.setTargetPositionDegrees(110.0),
         m_shoulder
+      )
+    );
+
+    m_driverController.x().onTrue(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionInches(Elevator.MAX_EXTENSION_INCHES / 2.0),
+        m_elevator
+      )
+    );
+    m_driverController.x().onFalse(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionInches(0.0),
+        m_elevator
       )
     );
   }
