@@ -64,9 +64,6 @@ public class RobotContainer {
     m_driverController.x().onTrue(new FeedGamePiece());
     m_driverController.y().onTrue(new ShootGamePiece());
 
-    m_driverController.b().onTrue(new InstantCommand(() -> m_intake.setPercentOutput(0.75), m_intake));
-    m_driverController.b().onFalse(new InstantCommand(() -> m_intake.setPercentOutput(0.0), m_intake));
-
     // m_driverController.b().onTrue(
     //   new InstantCommand(
     //     () -> m_shoulder.setTargetPositionDegrees(45.0),
