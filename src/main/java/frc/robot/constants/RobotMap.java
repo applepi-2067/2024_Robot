@@ -12,12 +12,25 @@ public final class RobotMap {
 
             public static final int GYRO = 1;
         }
+        
+        public static class Elevator {
+            public static final int LEFT = 9;
+            public static final int RIGHT = 10;
+        }
         public static class Shooter {
-            public static final int TOP_SHOOTER = 9;
-            public static final int BOTTOM_SHOOTER = 10;
+            public static final int TOP_SHOOTER = 11;
+            public static final int BOTTOM_SHOOTER = 12;
         }
 
-        public static final int FEEDER = 11;
+        public static final int FEEDER = 13;
+
+        
+        public static class Intake {
+            public static final int RIGHT = 14;
+            public static final int LEFT = 15;
+        }
+        
+        public static final int SHOULDER = 16;
     }
 
     public static class dios {
