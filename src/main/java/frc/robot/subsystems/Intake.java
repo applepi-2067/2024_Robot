@@ -16,7 +16,9 @@ import frc.robot.constants.RobotMap;
 
 public class Intake extends SubsystemBase implements Loggable {
     private static Intake instance = null;
-    private final TalonFX m_motor;
+
+    private final TalonFX m_rightMotor;
+    private final TalonFX m_leftMotor;
 
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
         .withSupplyCurrentThreshold(60)
@@ -31,27 +33,34 @@ public class Intake extends SubsystemBase implements Loggable {
     }
 
     private Intake() {
-        m_motor = new TalonFX(RobotMap.canIDs.INTAKE);
+        m_rightMotor = new TalonFX(RobotMap.canIDs.Intake.RIGHT);
+        m_leftMotor = new TalonFX(RobotMap.canIDs.Intake.LEFT);
 
-        m_motor.getConfigurator().apply(new TalonFXConfiguration());
-        m_motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS);
-        m_motor.setNeutralMode(NeutralModeValue.Coast);
-        m_motor.getConfigurator().apply(
-            new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)  // TODO: check inversion.
+        setUpMotor(m_rightMotor, InvertedValue.Clockwise_Positive);
+        setUpMotor(m_leftMotor, InvertedValue.CounterClockwise_Positive);
+    }
+
+    private void setUpMotor(TalonFX motor, InvertedValue invert) { 
+        motor.getConfigurator().apply(new TalonFXConfiguration());
+        motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS);
+        motor.setNeutralMode(NeutralModeValue.Coast);
+        motor.getConfigurator().apply(
+            new MotorOutputConfigs().withInverted(invert)
         );
     }
 
     public void setPercentOutput(double percentOutput) {
-        m_motor.setControl(new DutyCycleOut(percentOutput));
+        m_rightMotor.setControl(new DutyCycleOut(percentOutput));
+        m_leftMotor.setControl(new DutyCycleOut(percentOutput));
     }
 
-    @Log (name="Current (A)")
-    public double getCurrent() {
-        return m_motor.getSupplyCurrent().getValueAsDouble();
+    @Log (name="Right Current (A)")
+    public double getRightCurrent() {
+        return m_rightMotor.getSupplyCurrent().getValueAsDouble();
     }
 
-    @Log (name="Voltage (V)")
-    public double getVoltage() {
-        return m_motor.getSupplyVoltage().getValueAsDouble();
+    @Log (name="Left Current (A)")
+    public double getleftCurrent() {
+        return m_leftMotor.getSupplyCurrent().getValueAsDouble();
     }
 }
