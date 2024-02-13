@@ -6,13 +6,14 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
+// import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -29,12 +30,12 @@ public class Feeder extends SubsystemBase implements Loggable {
     .withSupplyTimeThreshold(0.5)
     .withSupplyCurrentLimit(40);
 
-  private static final double GEAR_RATIO = 18.0 / 30.0; // TODO: check gear ratio
-  private static final double WHEEL_RADIUS_INCHES = 1.0;  // TODO: check wheel radius.
+  private static final double GEAR_RATIO = 30.0 / 18.0;
+  private static final double WHEEL_RADIUS_INCHES = 0.75;
   
-  private static final Slot0Configs PID_GAINS = new Slot0Configs()  // TODO: tune feeder PIDs.
-    .withKV(0.0)
-    .withKP(0.0);
+  private static final Slot0Configs PID_GAINS = new Slot0Configs()
+    .withKV(0.19)
+    .withKP(10.0);
 
   private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -69,11 +70,12 @@ public class Feeder extends SubsystemBase implements Loggable {
   }
 
   public void setPercentOutput(double percentOutput){
-    m_motor.set(percentOutput);
+    m_motor.setControl(new DutyCycleOut(percentOutput));
   }
 
   public void setTargetRPM(double rpm) {
-    m_motor.setControl(new MotionMagicVelocityVoltage(rpm));
+    double rps = rpm / 60.0;
+    m_motor.setControl(new MotionMagicVelocityVoltage(rps));
   }
 
   public void setTargetPositionInches(double inches) {
@@ -83,7 +85,7 @@ public class Feeder extends SubsystemBase implements Loggable {
 
   @Log (name="Velocity (rpm))")
   public double getVelocityRPM() {
-    return m_motor.getVelocity().getValueAsDouble();
+    return m_motor.getVelocity().getValueAsDouble() * 60.0;
   }
 
   @Log (name="Position (in))")
@@ -102,9 +104,9 @@ public class Feeder extends SubsystemBase implements Loggable {
       return m_motor.getSupplyCurrent().getValueAsDouble();
   }
 
-  @Config (name="PIDs")
-  public void configPIDs(double kV, double kP) {
-    Slot0Configs pids = new Slot0Configs().withKV(kV).withKP(kP);
-    m_motor.getConfigurator().apply(pids);
-  }
+  // @Config (name="PIDs")
+  // public void configPIDs(double kV, double kP) {
+  //   Slot0Configs pids = new Slot0Configs().withKV(kV).withKP(kP);
+  //   m_motor.getConfigurator().apply(pids);
+  // }
 }
