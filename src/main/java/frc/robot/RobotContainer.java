@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.FeedGamePiece;
+import frc.robot.commands.SetFeederPercentOutput;
+import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.ShootGamePiece;
 
 import frc.robot.subsystems.Drivetrain;
@@ -32,6 +34,8 @@ public class RobotContainer {
   private static final int DRIVER_CONTROLLER_PORT = 0;
   private final CommandXboxController m_driverController;
 
+  private static final int OPERATOR_CONTROLLER_PORT = 1;
+  private final CommandXboxController m_operatorController;
 
   public RobotContainer() {
     m_drivetrain = Drivetrain.getInstance();
@@ -42,6 +46,8 @@ public class RobotContainer {
     m_elevator = Elevator.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
+    m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
+
     configureBindings();
 
     Logger.configureLoggingAndConfig(this, false);
@@ -61,34 +67,66 @@ public class RobotContainer {
 
     m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_driverController.x().onTrue(new FeedGamePiece());
-    m_driverController.y().onTrue(new ShootGamePiece());
+    m_operatorController.x().onTrue(new FeedGamePiece());
+    m_operatorController.y().onTrue(new ShootGamePiece());
 
-    // m_driverController.b().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPositionDegrees(45.0),
-    //     m_shoulder
-    //   )
-    // );
-    // m_driverController.b().onFalse(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPositionDegrees(110.0),
-    //     m_shoulder
+    m_operatorController.rightTrigger().onTrue(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPositionDegrees(85.0),
+        m_shoulder
+      )
+    );
+    m_operatorController.rightTrigger().onFalse(
+      new InstantCommand(
+        () -> m_shoulder.setTargetPositionDegrees(145.0),
+        m_shoulder
+      )
+    );
+
+    m_operatorController.b().onTrue(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionInches(Elevator.MAX_EXTENSION_INCHES),  // 8.0 for amp.
+        m_elevator
+      )
+    );
+    m_operatorController.b().onFalse(
+      new InstantCommand(
+        () -> m_elevator.setTargetPositionInches(0.0),
+        m_elevator
+      )
+    );
+
+    m_operatorController.a().onTrue(
+      new SetFeederPercentOutput(-0.3)
+    );
+    m_operatorController.a().onFalse(
+      new SetFeederPercentOutput(0.0)
+    );
+
+    // m_shooter.setDefaultCommand(
+    //   Commands.run(
+    //     () -> m_shooter.setPercentOutput(-1.0 * m_operatorController.getRightY()),
+    //     m_shooter
     //   )
     // );
 
-    // m_driverController.x().onTrue(
+    // m_operatorController.b().onTrue(
     //   new InstantCommand(
-    //     () -> m_elevator.setTargetPositionInches(Elevator.MAX_EXTENSION_INCHES / 2.0),
-    //     m_elevator
+    //     () -> m_shooter.setPercentOutput(1.0),
+    //     m_shooter
     //   )
     // );
-    // m_driverController.x().onFalse(
+    // m_operatorController.b().onFalse(
     //   new InstantCommand(
-    //     () -> m_elevator.setTargetPositionInches(0.0),
-    //     m_elevator
+    //     () -> m_shooter.setPercentOutput(0.0),
+    //     m_shooter
     //   )
     // );
+
+    // m_operatorController.a().onTrue(
+    //   new SetShooterVelocity(3_500, false)
+    // );
+
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.

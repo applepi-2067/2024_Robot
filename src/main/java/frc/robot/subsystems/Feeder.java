@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -16,7 +17,12 @@ import frc.robot.constants.RobotMap;
 public class Feeder extends SubsystemBase implements Loggable {
   private static Feeder instance;
 
-  private final TalonFX m_feeder;
+  private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
+    .withSupplyCurrentThreshold(60)
+    .withSupplyTimeThreshold(0.5)
+    .withSupplyCurrentLimit(40);
+
+  private final TalonFX m_motor;
   private final DigitalInput m_gamePieceSensor;
 
   private static final double GEAR_RATIO = 18.0 / 30.0;
@@ -25,10 +31,11 @@ public class Feeder extends SubsystemBase implements Loggable {
   private Feeder() {
     m_gamePieceSensor = new DigitalInput(RobotMap.dios.FEEDER_SENSOR);
     
-    m_feeder = new TalonFX(RobotMap.canIDs.FEEDER);
-    m_feeder.getConfigurator().apply(new TalonFXConfiguration());
-    m_feeder.getConfigurator().apply(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO));
-    m_feeder.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+    m_motor = new TalonFX(RobotMap.canIDs.FEEDER);
+    m_motor.getConfigurator().apply(new TalonFXConfiguration());
+    m_motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS);
+    m_motor.getConfigurator().apply(new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO));
+    m_motor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
   }
 
   public static Feeder getInstance() {
@@ -39,15 +46,20 @@ public class Feeder extends SubsystemBase implements Loggable {
   }
 
   public void setPercentOutput(double percentOutput){
-    m_feeder.set(percentOutput);
+    m_motor.set(percentOutput);
   }
 
   public double getWheelPositionRotations() {
-    return m_feeder.getPosition().getValueAsDouble();
+    return m_motor.getPosition().getValueAsDouble();
   }
 
   @Log (name = "Game piece sensor")
   public boolean gamePieceDetected() {
     return !m_gamePieceSensor.get();
+  }
+
+  @Log (name = "Current amps")
+  public double getCurrent() {
+      return m_motor.getSupplyCurrent().getValueAsDouble();
   }
 }

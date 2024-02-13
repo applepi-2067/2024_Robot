@@ -10,7 +10,7 @@ public class ShootGamePiece extends SequentialCommandGroup {
   public ShootGamePiece() {
     addCommands(
       new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, true),
-      new SetFeederPercentOutput(0.3),
+      new SetFeederPercentOutput(0.85),
       
       new WaitUntilCommand(() -> !Feeder.getInstance().gamePieceDetected()),
       new WaitCommand(0.5),  // Piece should be gone by now!
