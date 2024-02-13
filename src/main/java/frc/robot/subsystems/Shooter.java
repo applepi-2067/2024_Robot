@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,7 +46,7 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
-    public static final double SHOOTING_SPEED_RPM = 3_800.0;
+    public static final double SHOOTING_SPEED_RPM = 3_800.0;  // TODO: increase shooting speed.
     private static final double SHOOTING_SPEED_TOLERANCE_PERCENT = 0.05;
 
     public static Shooter getInstance() {
@@ -58,11 +59,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     private Shooter() {
         m_shooterTop = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
         m_shooterBottom = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
-        setupMotor(m_shooterTop);
-        setupMotor(m_shooterBottom);
+        setupMotor(m_shooterTop, InvertedValue.CounterClockwise_Positive);  // TODO: check inversion.
+        setupMotor(m_shooterBottom, InvertedValue.Clockwise_Positive);
     }
 
-    public void setupMotor(TalonFX motor){
+    public void setupMotor(TalonFX motor, InvertedValue invert){
         motor.getConfigurator().apply(new TalonFXConfiguration());
         motor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -73,7 +74,9 @@ public class Shooter extends SubsystemBase implements Loggable {
             K_TIMEOUT_MS
         );
         motor.getConfigurator().apply(
-            new MotorOutputConfigs().withDutyCycleNeutralDeadband(PERCENT_DEADBAND),
+            new MotorOutputConfigs()
+                .withDutyCycleNeutralDeadband(PERCENT_DEADBAND)
+                .withInverted(invert),
             K_TIMEOUT_MS
         );
             
@@ -82,7 +85,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     public void setPercentOutput(double percentOutput) {
-        m_shooterTop.setControl(new DutyCycleOut(-1.0 * percentOutput));
+        m_shooterTop.setControl(new DutyCycleOut(percentOutput));
         m_shooterBottom.setControl(new DutyCycleOut(percentOutput));
     }
 
@@ -114,7 +117,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     public void setTargetMotorRPM(double motorRPM) {
         double motorRPS = motorRPM / 60.0;
 
-        m_shooterTop.setControl(new MotionMagicVelocityVoltage(-1.0 * motorRPS).withSlot(0));
+        m_shooterTop.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
         m_shooterBottom.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
     }
 }
