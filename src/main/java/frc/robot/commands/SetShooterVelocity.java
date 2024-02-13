@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
+import frc.robot.utils.Utils;
 
 public class SetShooterVelocity extends Command {
   private final Shooter m_shooter;
@@ -26,9 +27,14 @@ public class SetShooterVelocity extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_block) {
-      return m_shooter.velocityReached(m_velocityRPM);
+    if (!m_block) {
+      return true;
     }
-    return true;
+    
+    return Utils.withinThreshold(
+      m_shooter.getMotorVelocityRPM(),
+      m_velocityRPM,
+      Shooter.PERCENT_ALLOWABLE_ERROR
+    );
   }
 }

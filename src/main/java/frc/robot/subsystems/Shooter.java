@@ -20,6 +20,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
+import frc.robot.utils.Utils;
 
 
 public class Shooter extends SubsystemBase implements Loggable {
@@ -46,7 +47,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     
     // Speeds for shooting.
     public static final double SHOOTING_SPEED_RPM = 3_800.0;  // TODO: increase shooting speed.
-    private static final double SHOOTING_SPEED_TOLERANCE_PERCENT = 0.05;
+    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;  // TODO: check allowable error.
 
     private final TalonFX m_topMotor;
     private final TalonFX m_bottomMotor;
@@ -98,11 +99,6 @@ public class Shooter extends SubsystemBase implements Loggable {
         m_bottomMotor.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
     }
 
-    public boolean velocityReached(double targetVelocityRPM) {
-        double error = Math.abs(Math.abs(getMotorVelocityRPM()) - targetVelocityRPM);
-        return error < (targetVelocityRPM * SHOOTING_SPEED_TOLERANCE_PERCENT);
-    }
-
     @Log (name = "motor v (rpm)")
     public double getMotorVelocityRPM() {
         return m_topMotor.getVelocity().getValueAsDouble() * 60.0;
@@ -110,7 +106,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     @Log (name = "Shooting v reached")
     public boolean shootingVelocityReached() {
-        return velocityReached(SHOOTING_SPEED_RPM);
+        return Utils.withinThreshold(getMotorVelocityRPM(), SHOOTING_SPEED_RPM, PERCENT_ALLOWABLE_ERROR);
     }
 
     @Log (name = "Current amps top")
