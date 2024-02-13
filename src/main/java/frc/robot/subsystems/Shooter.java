@@ -25,12 +25,11 @@ import frc.robot.constants.RobotMap;
 public class Shooter extends SubsystemBase implements Loggable {
     private static Shooter instance = null;
 
-    private final TalonFX m_shooterTop;
-    private final TalonFX m_shooterBottom;
-
     // PIDs.
     private static final int K_TIMEOUT_MS = 10;
-    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(0.01).withKV(0.12);
+    private static final Slot0Configs PID_GAINS = new Slot0Configs()
+        .withKP(0.01)
+        .withKV(0.12);
 
     private static final double PERCENT_DEADBAND = 0.001;
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
@@ -49,6 +48,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     public static final double SHOOTING_SPEED_RPM = 3_800.0;  // TODO: increase shooting speed.
     private static final double SHOOTING_SPEED_TOLERANCE_PERCENT = 0.05;
 
+    private final TalonFX m_topMotor;
+    private final TalonFX m_bottomMotor;
+
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -57,10 +59,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     private Shooter() {
-        m_shooterTop = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
-        m_shooterBottom = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
-        setupMotor(m_shooterTop, InvertedValue.CounterClockwise_Positive);  // TODO: check inversion.
-        setupMotor(m_shooterBottom, InvertedValue.Clockwise_Positive);
+        m_topMotor = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
+        m_bottomMotor = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
+        setupMotor(m_topMotor, InvertedValue.CounterClockwise_Positive);  // TODO: check inversion.
+        setupMotor(m_bottomMotor, InvertedValue.Clockwise_Positive);
     }
 
     public void setupMotor(TalonFX motor, InvertedValue invert){
@@ -85,13 +87,25 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
 
     public void setPercentOutput(double percentOutput) {
-        m_shooterTop.setControl(new DutyCycleOut(percentOutput));
-        m_shooterBottom.setControl(new DutyCycleOut(percentOutput));
+        m_topMotor.setControl(new DutyCycleOut(percentOutput));
+        m_bottomMotor.setControl(new DutyCycleOut(percentOutput));
+    }
+
+    public void setTargetMotorRPM(double motorRPM) {
+        double motorRPS = motorRPM / 60.0;
+
+        m_topMotor.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
+        m_bottomMotor.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
+    }
+
+    public boolean velocityReached(double targetVelocityRPM) {
+        double error = Math.abs(Math.abs(getMotorVelocityRPM()) - targetVelocityRPM);
+        return error < (targetVelocityRPM * SHOOTING_SPEED_TOLERANCE_PERCENT);
     }
 
     @Log (name = "motor v (rpm)")
     public double getMotorVelocityRPM() {
-        return m_shooterTop.getVelocity().getValueAsDouble() * 60.0;
+        return m_topMotor.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Log (name = "Shooting v reached")
@@ -101,23 +115,11 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     @Log (name = "Current amps top")
     public double getCurrentTop() {
-        return m_shooterTop.getSupplyCurrent().getValueAsDouble();
+        return m_topMotor.getSupplyCurrent().getValueAsDouble();
     }
 
     @Log (name = "Current amps bottom")
     public double getCurrentBottom() {
-        return m_shooterBottom.getSupplyCurrent().getValueAsDouble();
-    }
-
-    public boolean velocityReached(double targetVelocityRPM) {
-        double error = Math.abs(Math.abs(getMotorVelocityRPM()) - targetVelocityRPM);
-        return error < (targetVelocityRPM * SHOOTING_SPEED_TOLERANCE_PERCENT);
-    }
-
-    public void setTargetMotorRPM(double motorRPM) {
-        double motorRPS = motorRPM / 60.0;
-
-        m_shooterTop.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
-        m_shooterBottom.setControl(new MotionMagicVelocityVoltage(motorRPS).withSlot(0));
+        return m_bottomMotor.getSupplyCurrent().getValueAsDouble();
     }
 }
