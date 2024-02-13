@@ -42,7 +42,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         .withKP(90.0)
         .withKV(4.0);  // TODO: better PID tuning.
 
-    private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
+    private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 16.0);
@@ -50,6 +50,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
     private static final double ZERO_POSITION_DEGREES = 148.5;
+
+    public static final double PERCENT_ALLOWABLE_ERROR = 0.99;  // TODO: check allowable percent error.
 
     public static Shoulder getInstance() {
         if (instance == null) {

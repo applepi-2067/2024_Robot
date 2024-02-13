@@ -28,6 +28,8 @@ public class Elevator extends SubsystemBase implements Loggable {
 
   private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
 
+  public static final double PERCENT_ALLOWABLE_ERROR = 0.99; // TODO: find percent allowable error.
+
   // Motors.
   private final TalonFX m_leftMotor;
   private final TalonFX m_rightMotor;
@@ -40,7 +42,7 @@ public class Elevator extends SubsystemBase implements Loggable {
     .withKP(200.0)
     .withKV(1.85);
 
-  private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
+  private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
       .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 2.0);
