@@ -9,9 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.FeedGamePiece;
-import frc.robot.commands.SetFeederVelocity;
-import frc.robot.commands.SetIntakeVelocity;
-import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.ShootGamePiece;
 
 import frc.robot.subsystems.Drivetrain;
@@ -70,32 +67,6 @@ public class RobotContainer {
 
     m_operatorController.x().onTrue(new FeedGamePiece());
     m_operatorController.y().onTrue(new ShootGamePiece());
-
-    // m_operatorController.rightTrigger().onTrue(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPositionDegrees(85.0),
-    //     m_shoulder
-    //   )
-    // );
-    // m_operatorController.rightTrigger().onFalse(
-    //   new InstantCommand(
-    //     () -> m_shoulder.setTargetPositionDegrees(145.0),
-    //     m_shoulder
-    //   )
-    // );
-
-    // m_operatorController.b().onTrue(
-    //   new InstantCommand(
-    //     () -> m_elevator.setTargetPositionInches(Elevator.MAX_EXTENSION_INCHES),  // 8.0 for amp.
-    //     m_elevator
-    //   )
-    // );
-    // m_operatorController.b().onFalse(
-    //   new InstantCommand(
-    //     () -> m_elevator.setTargetPositionInches(0.0),
-    //     m_elevator
-    //   )
-    // );
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
