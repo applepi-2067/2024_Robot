@@ -49,7 +49,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    private static final double ZERO_POSITION_DEGREES = 148.5;
+private static final double ZERO_POSITION_DEGREES = 148.5;  // TODO: measure new zero position.
 
     public static final double PERCENT_ALLOWABLE_ERROR = 0.01;  // TODO: check allowable percent error.
 
