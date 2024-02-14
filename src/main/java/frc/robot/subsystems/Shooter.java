@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)  // TODO: tune accel.
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
