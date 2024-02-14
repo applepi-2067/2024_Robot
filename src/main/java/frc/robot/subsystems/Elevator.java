@@ -28,7 +28,7 @@ public class Elevator extends SubsystemBase implements Loggable {
 
   private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
 
-  public static final double PERCENT_ALLOWABLE_ERROR = 0.99; // TODO: find percent allowable error.
+  public static final double PERCENT_ALLOWABLE_ERROR = 0.01; // TODO: find percent allowable error.
 
   // Motors.
   private final TalonFX m_leftMotor;

@@ -51,7 +51,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     private static final double ZERO_POSITION_DEGREES = 148.5;
 
-    public static final double PERCENT_ALLOWABLE_ERROR = 0.99;  // TODO: check allowable percent error.
+    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;  // TODO: check allowable percent error.
 
     public static Shoulder getInstance() {
         if (instance == null) {
