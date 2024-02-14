@@ -3,12 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 
-public class SetIntakePercentOutput extends InstantCommand {
+public class SetIntakeVelocity extends InstantCommand {
   private final Intake m_intake;
-  private final double m_percentOutput;
+  private final double m_rpm;
 
-  public SetIntakePercentOutput(double percentOutput) {
-    m_percentOutput = percentOutput;
+  public SetIntakeVelocity(double rpm) {
+    m_rpm = rpm;
 
     m_intake = Intake.getInstance();
     addRequirements(m_intake);
@@ -17,6 +17,6 @@ public class SetIntakePercentOutput extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.setPercentOutput(m_percentOutput);
+    m_intake.setTargetVelocityRPM(m_rpm);
   }
 }    
