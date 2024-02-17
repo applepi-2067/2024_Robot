@@ -17,6 +17,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
+// import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
@@ -29,15 +30,15 @@ public class Shooter extends SubsystemBase implements Loggable {
     // PIDs.
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
-        .withKP(0.01)
-        .withKV(0.12);
+        .withKP(0.015)
+        .withKV(0.116);
 
     private static final double PERCENT_DEADBAND = 0.001;
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
 
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)  // TODO: tune accel.
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 4.0)
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
@@ -46,8 +47,8 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
-    public static final double SHOOTING_SPEED_RPM = 3_800.0;  // TODO: increase shooting speed.
-    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;  // TODO: check allowable error.
+    public static final double SHOOTING_SPEED_RPM = 5_200.0;
+    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;
 
     private final TalonFX m_topMotor;
     private final TalonFX m_bottomMotor;
@@ -62,8 +63,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     private Shooter() {
         m_topMotor = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
         m_bottomMotor = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
-        setupMotor(m_topMotor, InvertedValue.CounterClockwise_Positive);  // TODO: check inversion.
-        setupMotor(m_bottomMotor, InvertedValue.Clockwise_Positive);
+        setupMotor(m_topMotor, InvertedValue.Clockwise_Positive);
+        setupMotor(m_bottomMotor, InvertedValue.CounterClockwise_Positive);
     }
 
     public void setupMotor(TalonFX motor, InvertedValue invert){
@@ -118,4 +119,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     public double getCurrentBottom() {
         return m_bottomMotor.getSupplyCurrent().getValueAsDouble();
     }
+
+    // @Config
+    // public void setPIDs(double kV, double kP) {
+    //     Slot0Configs newPIDs = new Slot0Configs().withKV(kV).withKP(kP);
+    //     m_topMotor.getConfigurator().apply(newPIDs, K_TIMEOUT_MS);
+    //     m_bottomMotor.getConfigurator().apply(newPIDs, K_TIMEOUT_MS);
+    // }
 }
