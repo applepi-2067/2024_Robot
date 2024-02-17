@@ -4,12 +4,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.FeedGamePiece;
 import frc.robot.commands.ScoreAmp;
+import frc.robot.commands.SetShooterVelocity;
+import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
 
 import frc.robot.subsystems.Drivetrain;
@@ -67,8 +70,23 @@ public class RobotContainer {
     m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
     m_operatorController.x().onTrue(new FeedGamePiece());
-    m_operatorController.y().onTrue(new ShootGamePiece());
+
     m_operatorController.a().onTrue(new ScoreAmp());
+    
+    m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
+
+    m_operatorController.leftTrigger().onTrue(
+      new ParallelCommandGroup(
+        new SetShoulderPosition(117.0, false),  // 136.5 subwoofer, 117.0 podium.
+        new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
+      )
+    );
+    m_operatorController.leftTrigger().onFalse(
+      new ParallelCommandGroup(
+        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
+        new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter)
+      )
+    );
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
