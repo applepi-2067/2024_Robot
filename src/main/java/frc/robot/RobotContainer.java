@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.FeedGamePiece;
+import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.ShootGamePiece;
 
 import frc.robot.subsystems.Drivetrain;
@@ -67,6 +68,7 @@ public class RobotContainer {
 
     m_operatorController.x().onTrue(new FeedGamePiece());
     m_operatorController.y().onTrue(new ShootGamePiece());
+    m_operatorController.a().onTrue(new ScoreAmp());
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
