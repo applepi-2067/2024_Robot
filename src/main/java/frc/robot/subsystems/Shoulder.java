@@ -51,7 +51,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
     public static final double ZERO_POSITION_DEGREES = 180.0 - 27.6;
-    public static final double ALLOWABLE_ERROR_DEGREES = 0.5;
+    public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
 
     public static Shoulder getInstance() {
         if (instance == null) {
