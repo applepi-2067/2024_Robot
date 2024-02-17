@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
+// import frc.robot.utils.Utils;
 
 import io.github.oblarg.oblog.Loggable;
 // import io.github.oblarg.oblog.annotations.Config;
@@ -28,7 +29,7 @@ public class Elevator extends SubsystemBase implements Loggable {
 
   private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
 
-  public static final double PERCENT_ALLOWABLE_ERROR = 0.01; // TODO: find percent allowable error.
+  public static final double ALLOWABLE_ERROR_INCHES = 0.1;
 
   // Motors.
   private final TalonFX m_leftMotor;
@@ -45,7 +46,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 2.0);
+      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 4.0);
 
   public static Elevator getInstance() {
     if (instance == null) {
@@ -94,6 +95,11 @@ public class Elevator extends SubsystemBase implements Loggable {
     double rotations = m_leftMotor.getPosition().getValueAsDouble();
     return Conversions.rotationsToArcLength(rotations, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
   }
+
+  // @Log (name = "Max extension reached")
+  // public boolean elevatorPositionReached() {
+  //     return Utils.withinThreshold(getPositionInches(), MAX_EXTENSION_INCHES / 2.0, ALLOWABLE_ERROR_INCHES);
+  // }
 
   // @Config (name = "PIDs")
   // public void setPIDs(double kV, double kP) {

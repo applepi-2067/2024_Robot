@@ -34,7 +34,7 @@ public class SetElevatorPosition extends Command {
         return Utils.withinThreshold(
             m_elevator.getPositionInches(),
             m_positionInches,
-            Elevator.PERCENT_ALLOWABLE_ERROR
+            Elevator.ALLOWABLE_ERROR_INCHES
         );
     }
 }

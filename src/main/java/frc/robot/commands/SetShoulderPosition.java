@@ -34,7 +34,7 @@ public class SetShoulderPosition extends Command {
         return Utils.withinThreshold(
             m_shoulder.getPositionDegrees(),
             m_positionDegrees,
-            Shoulder.PERCENT_ALLOWABLE_ERROR
+            Shoulder.ALLOWABLE_ERROR_DEGREES
         );
     }
 }

@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     
     // Speeds for shooting.
     public static final double SHOOTING_SPEED_RPM = 5_200.0;
-    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;
+    public static final double ALLOWABLE_ERROR_RPM = 50.0;
 
     private final TalonFX m_topMotor;
     private final TalonFX m_bottomMotor;
@@ -107,7 +107,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     @Log (name = "Shooting v reached")
     public boolean shootingVelocityReached() {
-        return Utils.withinThreshold(getMotorVelocityRPM(), SHOOTING_SPEED_RPM, PERCENT_ALLOWABLE_ERROR);
+        return Utils.withinThreshold(getMotorVelocityRPM(), SHOOTING_SPEED_RPM, ALLOWABLE_ERROR_RPM);
     }
 
     @Log (name = "Current amps top")

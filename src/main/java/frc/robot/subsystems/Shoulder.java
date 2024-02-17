@@ -19,6 +19,7 @@ import io.github.oblarg.oblog.Loggable;
 // import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
+// import frc.robot.utils.Utils;
 import frc.robot.constants.RobotMap;
 
 public class Shoulder extends SubsystemBase implements Loggable {
@@ -49,9 +50,8 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-private static final double ZERO_POSITION_DEGREES = 148.5;  // TODO: measure new zero position.
-
-    public static final double PERCENT_ALLOWABLE_ERROR = 0.01;  // TODO: check allowable percent error.
+    public static final double ZERO_POSITION_DEGREES = 180.0 - 27.6;
+    public static final double ALLOWABLE_ERROR_DEGREES = 0.5;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -107,6 +107,11 @@ private static final double ZERO_POSITION_DEGREES = 148.5;  // TODO: measure new
             .withFeedForward(getFeedForwardVoltage(degrees));
         m_motor.setControl(request);
     }
+
+    // @Log (name = "90 deg reached")
+    // public boolean shoulderAngleReached() {
+    //     return Utils.withinThreshold(getPositionDegrees(), 90.0, ALLOWABLE_ERROR_DEGREES);
+    // }
 
     // @Config
     // public void setPIDs(double kV, double kP) {
