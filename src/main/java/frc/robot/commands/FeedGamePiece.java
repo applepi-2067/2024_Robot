@@ -14,12 +14,11 @@ public class FeedGamePiece extends SequentialCommandGroup {
 
     addCommands(
       new ParallelCommandGroup(
-        new SetFeederVelocity(2_000.0),
+        new SetFeederVelocity(1_000.0),
         new SetIntakeVelocity(3_000.0)
       ),
 
       new WaitUntilCommand(feeder::gamePieceDetected),
-      // TODO: tune note position in feeder.
 
       new ParallelCommandGroup(
         new SetFeederVelocity(0.0),

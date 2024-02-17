@@ -40,7 +40,8 @@ public class Feeder extends SubsystemBase implements Loggable {
   private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
     .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-    .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);  // TODO: tune accel and jerk.
+    .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 8.0)
+    .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 8.0 * 4.0);
 
   private final TalonFX m_motor;
   private final DigitalInput m_gamePieceSensor;
