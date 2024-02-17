@@ -6,19 +6,18 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shoulder;
 
 public class FeedGamePiece extends SequentialCommandGroup {
   public FeedGamePiece() {
-    Feeder feeder = Feeder.getInstance();
-    Intake intake = Intake.getInstance();
-
     addCommands(
       new ParallelCommandGroup(
         new SetFeederVelocity(1_000.0),
-        new SetIntakeVelocity(3_000.0)
+        new SetIntakeVelocity(3_000.0),
+        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, true)
       ),
 
-      new WaitUntilCommand(feeder::gamePieceDetected),
+      new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
 
       new ParallelCommandGroup(
         new SetFeederVelocity(0.0),
@@ -26,6 +25,10 @@ public class FeedGamePiece extends SequentialCommandGroup {
       )
     );
 
-    addRequirements(feeder, intake);
+    addRequirements(
+      Feeder.getInstance(),
+      Intake.getInstance(),
+      Shoulder.getInstance()
+    );
   }
 }
