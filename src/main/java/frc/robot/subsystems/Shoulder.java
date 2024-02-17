@@ -40,7 +40,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     // PID.
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
-        .withKP(90.0)
+        .withKP(100.0)
         .withKV(4.0);  // TODO: better PID tuning.
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
@@ -106,6 +106,11 @@ public class Shoulder extends SubsystemBase implements Loggable {
         MotionMagicVoltage request = new MotionMagicVoltage(rotations)
             .withFeedForward(getFeedForwardVoltage(degrees));
         m_motor.setControl(request);
+    }
+
+    @Log (name = "Current (A)")
+    public double getCurrentAmps() {
+        return m_motor.getSupplyCurrent().getValueAsDouble();
     }
 
     // @Log (name = "90 deg reached")
