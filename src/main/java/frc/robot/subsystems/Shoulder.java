@@ -19,6 +19,7 @@ import io.github.oblarg.oblog.Loggable;
 // import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
+// import frc.robot.utils.Utils;
 import frc.robot.constants.RobotMap;
 
 public class Shoulder extends SubsystemBase implements Loggable {
@@ -39,17 +40,18 @@ public class Shoulder extends SubsystemBase implements Loggable {
     // PID.
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
-        .withKP(90.0)
+        .withKP(100.0)
         .withKV(4.0);  // TODO: better PID tuning.
 
-    private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
+    private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 16.0);
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    private static final double ZERO_POSITION_DEGREES = 148.5;
+    public static final double ZERO_POSITION_DEGREES = 180.0 - 27.6;
+    public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -105,6 +107,16 @@ public class Shoulder extends SubsystemBase implements Loggable {
             .withFeedForward(getFeedForwardVoltage(degrees));
         m_motor.setControl(request);
     }
+
+    @Log (name = "Current (A)")
+    public double getCurrentAmps() {
+        return m_motor.getSupplyCurrent().getValueAsDouble();
+    }
+
+    // @Log (name = "90 deg reached")
+    // public boolean shoulderAngleReached() {
+    //     return Utils.withinThreshold(getPositionDegrees(), 90.0, ALLOWABLE_ERROR_DEGREES);
+    // }
 
     // @Config
     // public void setPIDs(double kV, double kP) {
