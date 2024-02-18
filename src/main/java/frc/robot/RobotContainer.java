@@ -20,6 +20,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shoulder;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Elevator;
 
 
@@ -31,6 +32,7 @@ public class RobotContainer {
   private final Intake m_intake;
   private final Shoulder m_shoulder;
   private final Elevator m_elevator;
+  private final Vision m_vision;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -46,6 +48,7 @@ public class RobotContainer {
     m_intake = Intake.getInstance();
     m_shoulder = Shoulder.getInstance();
     m_elevator = Elevator.getInstance();
+    m_vision = Vision.getInstance();
     
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
