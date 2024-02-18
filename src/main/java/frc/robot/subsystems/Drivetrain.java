@@ -11,12 +11,14 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -33,6 +35,7 @@ import frc.robot.constants.RobotMap;
 import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.swerve.SwerveModule;
 import frc.robot.utils.Conversions;
+import frc.robot.utils.Utils;
 
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -61,7 +64,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final SwerveModule[] m_swerveModules;
   
   // Odometry.
-  private final SwerveDriveOdometry m_odometry;
+  private final SwerveDrivePoseEstimator m_odometry;
+  private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
+  private static final double[] visionStds = {0.0408, 1.2711, 0.1};  // TODO: find pose stds.
+
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
@@ -85,11 +91,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     resetGyro();
 
     // Odometry.
-    m_odometry = new SwerveDriveOdometry(
+    m_odometry = new SwerveDrivePoseEstimator(
       SWERVE_DRIVE_KINEMATICS,
       Rotation2d.fromDegrees(getHeadingDegrees()),
       getSwerveModulePositions(),
-      new Pose2d()
+      new Pose2d(),
+      new Matrix<>(Nat.N3(), Nat.N1(), drivetrainStds),
+      new Matrix<>(Nat.N3(), Nat.N1(), visionStds)
     );
 
     m_field = new Field2d();
@@ -221,13 +229,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       pose
     );
   }
+  
+  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
+    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+  }
 
   @Override
   public void periodic() {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
 
-    SmartDashboard.putString("Robot pose", getPoseDescription());
+    SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
   }
 
   // Log state.
@@ -258,13 +270,5 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     description += "Pitch=" + rounder.format(m_gyro.getPitch()) + "    ";
     description += "Roll=" + rounder.format(m_gyro.getRoll());
     return description;
-  }
-
-  @Log (name="Robot Pose")
-  public String getPoseDescription() {
-    String poseString = "x (m)=" + rounder.format(m_pose.getX()) + "    ";
-    poseString += "y (m)=" + rounder.format(m_pose.getY()) + "    ";
-    poseString += "rotation (deg)=" + rounder.format(m_pose.getRotation().getDegrees());
-    return poseString;
   }
 }
