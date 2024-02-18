@@ -25,6 +25,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
 import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.utils.Utils;
 
 
 public class Drivetrain extends SubsystemBase implements Loggable {
@@ -52,8 +53,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.0, 0.0, 0.0};  // x, y, heading.
-  private static final double[] visionStds = {0.0, 0.0, 0.0};  // TODO: find pose stds.
+  private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
+  private static final double[] visionStds = {0.0408, 1.2711, 0.1};  // TODO: find pose stds.
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -178,6 +179,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void periodic() {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
+
+    SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
   }
 
   // Log state.
@@ -208,13 +211,5 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     description += "Pitch=" + rounder.format(m_gyro.getPitch()) + "    ";
     description += "Roll=" + rounder.format(m_gyro.getRoll());
     return description;
-  }
-
-  @Log (name="Robot Pose")
-  public String getPoseDescription() {
-    String poseString = "x (m)=" + rounder.format(m_pose.getX()) + "    ";
-    poseString += "y (m)=" + rounder.format(m_pose.getY()) + "    ";
-    poseString += "rotation (deg)=" + rounder.format(m_pose.getRotation().getDegrees());
-    return poseString;
   }
 }

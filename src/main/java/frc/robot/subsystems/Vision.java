@@ -8,22 +8,27 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
+import frc.robot.utils.Utils;
 
-public class Vision extends SubsystemBase implements Loggable {
+public class Vision extends SubsystemBase {
   public static Vision instance = null;
 
   public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-  private static final Transform3d ROBOT_TO_CAMERA_TRANSFORM3D = new Transform3d();  // TODO: find robot to camera transform 3d.
+  private static final Transform3d ROBOT_TO_CAMERA_TRANSFORM3D = new Transform3d(
+    new Translation3d(Units.inchesToMeters(11.25), 0.0, Units.inchesToMeters(20.75)),
+    new Rotation3d(0.0, 0.0, 0.0)
+  );
 
   private final PhotonCamera m_camera;
   private final PhotonPoseEstimator m_photonPoseEstimator;
@@ -38,7 +43,7 @@ public class Vision extends SubsystemBase implements Loggable {
   }
 
   private Vision() {
-    m_camera = new PhotonCamera("Arducam_1");
+    m_camera = new PhotonCamera("Arducam_0");
 
     m_photonPoseEstimator = new PhotonPoseEstimator(
       APRIL_TAG_FIELD_LAYOUT,
@@ -65,11 +70,8 @@ public class Vision extends SubsystemBase implements Loggable {
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);
     SmartDashboard.putData("Vision field", m_field);
-  }
 
-  @Log (name = "Seeing AprilTag")
-  public boolean aprilTagDetected() {
-    return m_photonPoseEstimator.update().isPresent();
+    SmartDashboard.putString("Vision pose", Utils.getPose2dDescription(estimatedRobotPose2d));
   }
 }
 
