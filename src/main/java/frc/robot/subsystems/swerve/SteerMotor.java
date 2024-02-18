@@ -40,7 +40,7 @@ public class SteerMotor {
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(100.0);
 
-    private static final double FALCON_500_MAX_SPEED_RPS = 100.0;  // 6380 rpm.
+    private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);
