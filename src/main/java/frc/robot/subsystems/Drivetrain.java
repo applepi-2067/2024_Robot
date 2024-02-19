@@ -52,6 +52,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     new Translation2d(CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS)
   );
 
+  private final SwerveModule[] m_swerveModules;
+
   // Max speeds.
   public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Units.rotationsToRadians(  // 20.794 rad/sec.
     Conversions.arcLengthToRotations(
@@ -59,9 +61,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       CENTER_TO_WHEEL_OFFSET_METERS
     )
   );
-  public static final double MAX_ROTATION_ACCEL_RADIANS_PER_SEC_SQUARED = MAX_ROTATION_SPEED_RADIANS_PER_SEC * 2.0;
-  
-  private final SwerveModule[] m_swerveModules;
+    
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;

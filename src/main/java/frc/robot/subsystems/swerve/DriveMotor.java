@@ -33,20 +33,18 @@ public class DriveMotor {
 
     // PID.
     private static final int K_TIMEOUT_MS = 10;
-    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.0).withKV(0.75);
+    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.0).withKV(0.8);
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)
-        .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS);
 
     // Max speeds.
     public static final double MAX_SPEED_METERS_PER_SEC = Conversions.rotationsToArcLength(  // 5.546 m/s.
         FALCON_500_MAX_SPEED_RPS / GEAR_RATIO,
         WHEEL_RADIUS_METERS
     );
-    public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_SPEED_METERS_PER_SEC * 2.0;
 
     public DriveMotor(int canID) {
         m_motor = new TalonFX(canID);
