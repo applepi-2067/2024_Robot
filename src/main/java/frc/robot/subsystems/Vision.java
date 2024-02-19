@@ -54,6 +54,7 @@ public class Vision extends SubsystemBase {
     m_photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
     m_field = new Field2d();
+    SmartDashboard.putData("Vision field", m_field);
   }
 
   @Override
@@ -69,8 +70,6 @@ public class Vision extends SubsystemBase {
 
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);
-    SmartDashboard.putData("Vision field", m_field);
-
     SmartDashboard.putString("Vision pose", Utils.getPose2dDescription(estimatedRobotPose2d));
   }
 }

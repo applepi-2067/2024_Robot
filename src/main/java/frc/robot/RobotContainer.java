@@ -80,7 +80,7 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(
       new ParallelCommandGroup(
-        new SetShoulderPosition(117.0, false),
+        new SetShoulderPosition(true, false),
         new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
       )
     );

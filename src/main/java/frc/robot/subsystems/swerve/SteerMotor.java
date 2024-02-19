@@ -89,8 +89,7 @@ public class SteerMotor {
 
     public Rotation2d getPositionRotation2d() {        
         // Log CANCoder position for debugging.
-        // TODO: remove to reduce CAN utilization.
-        SmartDashboard.putNumber("CANCoder " + canCoderID + ": ", getCANCoderPositionRotation2d().getDegrees());
+        // SmartDashboard.putNumber("CANCoder " + canCoderID + ": ", getCANCoderPositionRotation2d().getDegrees());
 
         double rotations = m_motor.getPosition().getValueAsDouble() % 1.0;
         return Rotation2d.fromRotations(rotations);
