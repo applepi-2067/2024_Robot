@@ -1,7 +1,6 @@
 package frc.robot;
 
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -79,11 +78,9 @@ public class RobotContainer {
     
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
 
-    SmartDashboard.putNumber("Dev angle degrees", 0.0);
-
     m_operatorController.leftTrigger().onTrue(
       new ParallelCommandGroup(
-        new SetShoulderPosition(118.0, false, true),
+        new SetShoulderPosition(117.0, false),  // 136.5 subwoofer, 117.0 podium.
         new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
       )
     );
