@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
 
+import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.FeedGamePiece;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetShooterVelocity;
@@ -80,7 +81,7 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(
       new ParallelCommandGroup(
-        new SetShoulderPosition(true, false),
+        new AutoAimShoulder(),
         new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
       )
     );
