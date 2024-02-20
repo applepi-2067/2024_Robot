@@ -13,7 +13,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Conversions;
 
 
@@ -39,7 +39,7 @@ public class DriveMotor {
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS);
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * (100.0 / 15.0));
 
     // Max speeds.
     public static final double MAX_SPEED_METERS_PER_SEC = Conversions.rotationsToArcLength(  // 5.546 m/s.
@@ -84,8 +84,8 @@ public class DriveMotor {
         double velocityRotationsPerSecond = m_motor.getVelocity().getValueAsDouble();
         double velocityMetersPerSecond = Conversions.rotationsToArcLength(velocityRotationsPerSecond, WHEEL_RADIUS_METERS);
         
-        // TODO: remove dev accel logging.
-        SmartDashboard.putNumber("Drive motor accel (rps^2)" + m_canID, m_motor.getAcceleration().getValueAsDouble());
+        // SmartDashboard.putNumber("Drive motor accel (rps^2)" + m_canID, m_motor.getAcceleration().getValueAsDouble());
+        // SmartDashboard.putNumber("Drive motor velocity (rps)" + m_canID, m_motor.getVelocity().getValueAsDouble());
 
         return velocityMetersPerSecond;
     }
