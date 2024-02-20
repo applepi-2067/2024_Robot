@@ -13,12 +13,13 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Conversions;
 
 
 public class DriveMotor {
     private final TalonFX m_motor;
+    private final int m_canID;
 
     // Motor settings.
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
@@ -47,7 +48,10 @@ public class DriveMotor {
     );
 
     public DriveMotor(int canID) {
-        m_motor = new TalonFX(canID);
+        m_canID = canID;
+
+        m_motor = new TalonFX(m_canID);
+
         m_motor.getConfigurator().apply(new TalonFXConfiguration());
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 
@@ -79,6 +83,10 @@ public class DriveMotor {
     public double getVelocityMetersPerSecond() {
         double velocityRotationsPerSecond = m_motor.getVelocity().getValueAsDouble();
         double velocityMetersPerSecond = Conversions.rotationsToArcLength(velocityRotationsPerSecond, WHEEL_RADIUS_METERS);
+        
+        // TODO: remove dev accel logging.
+        SmartDashboard.putNumber("Drive motor accel (rps^2)" + m_canID, m_motor.getAcceleration().getValueAsDouble());
+
         return velocityMetersPerSecond;
     }
     
