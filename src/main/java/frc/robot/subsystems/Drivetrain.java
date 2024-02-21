@@ -55,7 +55,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final SwerveModule[] m_swerveModules;
 
   // Max speeds.
-  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Units.rotationsToRadians(  // 20.794 rad/sec.
+  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Units.rotationsToRadians(
     Conversions.arcLengthToRotations(
       DriveMotor.MAX_SPEED_METERS_PER_SEC,
       CENTER_TO_WHEEL_OFFSET_METERS
@@ -112,8 +112,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       this::getRobotRelativeChassisSpeeds,
       this::driveRobotRelative,
       new HolonomicPathFollowerConfig(
-        new PIDConstants(0.0),  // TODO: tune PIDs.
-        new PIDConstants(0.0),
+        new PIDConstants(2.5),  // TODO: tune PIDs.
+        new PIDConstants(10.0),
         DriveMotor.MAX_SPEED_METERS_PER_SEC,
         CENTER_TO_WHEEL_OFFSET_METERS,
         new ReplanningConfig()
