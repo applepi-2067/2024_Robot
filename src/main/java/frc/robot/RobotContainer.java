@@ -1,8 +1,16 @@
 package frc.robot;
 
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import java.util.Optional;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +33,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.Elevator;
 
 
@@ -48,6 +57,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   
   public RobotContainer() {
+    // Subsystem init.
     m_drivetrain = Drivetrain.getInstance();
     m_shooter = Shooter.getInstance();
     m_feeder = Feeder.getInstance();
@@ -55,16 +65,42 @@ public class RobotContainer {
     m_shoulder = Shoulder.getInstance();
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
-    
+  
+    // PathPlanner.
+    NamedCommands.registerCommand("FeedGamePiece", new FeedGamePiece());
+
+    AutoBuilder.configureHolonomic(
+      m_drivetrain::getRobotPose2d,
+      m_drivetrain::setRobotPose2d,
+      m_drivetrain::getRobotRelativeChassisSpeeds,
+      m_drivetrain::driveRobotRelative,
+      new HolonomicPathFollowerConfig(
+        new PIDConstants(2.5),  // TODO: tune PIDs.
+        new PIDConstants(10.0),
+        DriveMotor.MAX_SPEED_METERS_PER_SEC,
+        Drivetrain.CENTER_TO_WHEEL_OFFSET_METERS,
+        new ReplanningConfig()
+      ),
+      () -> {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      m_drivetrain
+    );
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto chooser", autoChooser);
+
+    // Controls init.
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
 
     configureBindings();
 
     Logger.configureLoggingAndConfig(this, false);
-
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto chooser", autoChooser);
   }
 
   private void configureBindings() {

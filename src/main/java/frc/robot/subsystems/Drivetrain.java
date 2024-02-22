@@ -2,14 +2,7 @@ package frc.robot.subsystems;
 
 
 import java.text.DecimalFormat;
-import java.util.Optional;
-
 import com.ctre.phoenix.sensors.PigeonIMU;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -22,8 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,7 +35,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private static final DecimalFormat rounder = new DecimalFormat("0.0000");
 
   // Swerve module offsets from center. +x = front of robot, +y = left of robot. 
-  private static final double CENTER_TO_WHEEL_OFFSET_METERS = Units.inchesToMeters(13.0 - 2.5);
+  public static final double CENTER_TO_WHEEL_OFFSET_METERS = Units.inchesToMeters(13.0 - 2.5);
   public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
     new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, CENTER_TO_WHEEL_OFFSET_METERS),
     new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS),
@@ -61,7 +52,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       CENTER_TO_WHEEL_OFFSET_METERS
     )
   );
-    
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
@@ -104,29 +94,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     SmartDashboard.putData("Field", m_field);
 
     m_pose = getRobotPose2d();
-
-    // PathPlanner.
-    AutoBuilder.configureHolonomic(
-      this::getRobotPose2d,
-      this::setRobotPose2d,
-      this::getRobotRelativeChassisSpeeds,
-      this::driveRobotRelative,
-      new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5),  // TODO: tune PIDs.
-        new PIDConstants(10.0),
-        DriveMotor.MAX_SPEED_METERS_PER_SEC,
-        CENTER_TO_WHEEL_OFFSET_METERS,
-        new ReplanningConfig()
-      ),
-      () -> {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
-      this
-    );
   }
 
   public SwerveModulePosition[] getSwerveModulePositions() {
