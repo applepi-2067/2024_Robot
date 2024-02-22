@@ -8,8 +8,8 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shoulder;
 
-public class FeedGamePiece extends SequentialCommandGroup {
-  public FeedGamePiece() {
+public class PickupPiece extends SequentialCommandGroup {
+  public PickupPiece() {
     addCommands(
       new ParallelCommandGroup(
         new SetFeederVelocity(1_000.0),

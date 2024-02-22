@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
 
-import frc.robot.commands.FeedGamePiece;
+import frc.robot.commands.PickupPiece;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
@@ -67,7 +67,7 @@ public class RobotContainer {
     m_vision = Vision.getInstance();
   
     // PathPlanner.
-    NamedCommands.registerCommand("FeedGamePiece", new FeedGamePiece());
+    NamedCommands.registerCommand("PickupPiece", new PickupPiece());
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -117,7 +117,7 @@ public class RobotContainer {
 
     m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_operatorController.x().onTrue(new FeedGamePiece());
+    m_operatorController.x().onTrue(new PickupPiece());
 
     m_operatorController.a().onTrue(new ScoreAmp());
     
