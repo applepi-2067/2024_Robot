@@ -15,15 +15,15 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class SteerMotor {
     private final TalonFX m_motor;
     private final CANcoder m_canCoder;
 
-    private final int canCoderID;
+    // private final int canCoderID;
     private final double wheelZeroOffsetDegrees;
 
     // Motor settings.
@@ -46,7 +46,7 @@ public class SteerMotor {
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0);
 
     public SteerMotor(int canID, int canCoderID, double wheelZeroOffsetDegrees) {
-        this.canCoderID = canCoderID;
+        // this.canCoderID = canCoderID;
         this.wheelZeroOffsetDegrees = wheelZeroOffsetDegrees;
 
         // Motor.
@@ -89,8 +89,7 @@ public class SteerMotor {
 
     public Rotation2d getPositionRotation2d() {        
         // Log CANCoder position for debugging.
-        // TODO: remove to reduce CAN utilization.
-        SmartDashboard.putNumber("CANCoder " + canCoderID + ": ", getCANCoderPositionRotation2d().getDegrees());
+        // SmartDashboard.putNumber("CANCoder " + canCoderID + ": ", getCANCoderPositionRotation2d().getDegrees());
 
         double rotations = m_motor.getPosition().getValueAsDouble() % 1.0;
         return Rotation2d.fromRotations(rotations);

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
+import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
@@ -125,7 +126,7 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(
       new ParallelCommandGroup(
-        new SetShoulderPosition(117.0, false),  // 136.5 subwoofer, 117.0 podium.
+        new AutoAimShoulder(),
         new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
       )
     );

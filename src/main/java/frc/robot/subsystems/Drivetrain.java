@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -205,8 +206,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void periodic() {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
-
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
+
+    SmartDashboard.putNumber("Dist to speaker (in)", getDistToSpeakerInches());
   }
 
   // Log state.
@@ -237,5 +239,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     description += "Pitch=" + rounder.format(m_gyro.getPitch()) + "    ";
     description += "Roll=" + rounder.format(m_gyro.getRoll());
     return description;
+  }
+
+  @Log (name="Dist to speaker (m)")
+  public double getDistToSpeakerMeters() {
+    int speakerTag = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue? 8 : 4;
+
+    Pose2d speakerPose2d = Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(speakerTag).get().toPose2d();
+    double dx = speakerPose2d.getX() - m_pose.getX();
+    double dy = speakerPose2d.getY() - m_pose.getY();
+    double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));
+    return distToSpeaker;
+  }
+
+  @Log (name="Dist to speaker (in)")
+  public double getDistToSpeakerInches() {
+    return Units.metersToInches(getDistToSpeakerMeters());
   }
 }
