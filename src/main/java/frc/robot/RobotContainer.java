@@ -69,6 +69,8 @@ public class RobotContainer {
   
     // PathPlanner.
     NamedCommands.registerCommand("PickupPiece", new PickupPiece());
+    NamedCommands.registerCommand("AutoAimShoulder", new AutoAimShoulder());
+    NamedCommands.registerCommand("ShootGamePiece", new ShootGamePiece());
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
