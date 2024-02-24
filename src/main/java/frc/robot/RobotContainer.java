@@ -120,11 +120,8 @@ public class RobotContainer {
 
     m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_operatorController.x().onTrue(new PickupPiece());
-
     m_operatorController.a().onTrue(new ScoreAmp());
-    
-    m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
+    m_operatorController.x().onTrue(new PickupPiece());
 
     m_operatorController.leftTrigger().onTrue(
       new ParallelCommandGroup(
@@ -132,12 +129,14 @@ public class RobotContainer {
         new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
       )
     );
-    m_operatorController.leftTrigger().onFalse(
+    m_operatorController.leftBumper().onTrue(
       new ParallelCommandGroup(
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
         new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter)
       )
     );
+  
+    m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
