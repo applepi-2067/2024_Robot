@@ -24,6 +24,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.ScoreAmp;
+import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
@@ -123,19 +124,16 @@ public class RobotContainer {
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
 
-    m_operatorController.leftTrigger().onTrue(
+    m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
+    m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
-        new AutoAimShoulder(),
-        new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false)
-      )
-    );
-    m_operatorController.leftBumper().onTrue(
-      new ParallelCommandGroup(
+        new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter),
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
-        new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter)
+        new SetFeederVelocity(0.0)
       )
     );
-  
+
+    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
   }
 
