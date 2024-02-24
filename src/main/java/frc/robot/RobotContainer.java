@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -70,8 +71,11 @@ public class RobotContainer {
   
     // PathPlanner.
     NamedCommands.registerCommand("PickupPiece", new PickupPiece());
-    NamedCommands.registerCommand("AutoAimShoulder", new AutoAimShoulder());
-    NamedCommands.registerCommand("ShootGamePiece", new ShootGamePiece());
+    NamedCommands.registerCommand("SpinupShooter", new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
+    NamedCommands.registerCommand(
+      "AimAndShoot",
+      new ParallelDeadlineGroup(new ShootGamePiece(true), new AutoAimShoulder())
+    );
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -134,7 +138,7 @@ public class RobotContainer {
     );
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
-    m_operatorController.rightTrigger().onTrue(new ShootGamePiece());
+    m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
