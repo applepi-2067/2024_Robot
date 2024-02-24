@@ -10,7 +10,7 @@ public class BlinkinLeds extends SubsystemBase {
 
    public BlinkinLeds(){
     m_blinkinLeds = new Spark(8);
-    m_currentLedMode = LEDMode.rainbow.value;
+    m_currentLedMode = LEDMode.orange.value;
       
    }
 
