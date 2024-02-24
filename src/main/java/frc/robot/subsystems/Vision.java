@@ -28,7 +28,7 @@ public class Vision extends SubsystemBase {
 
   private static final Transform3d ROBOT_TO_CAMERA_TRANSFORM3D = new Transform3d(
     new Translation3d(Units.inchesToMeters(11.25), 0.0, Units.inchesToMeters(20.75)),
-    new Rotation3d(0.0, 0.0, 0.0)
+    new Rotation3d(0.0, Units.degreesToRadians(-30.0), 0.0)
   );
 
   // Single-tag pose estimate rejection thresholds.
