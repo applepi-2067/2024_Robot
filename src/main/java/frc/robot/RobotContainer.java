@@ -26,6 +26,7 @@ import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetFeederVelocity;
+import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
@@ -133,7 +134,8 @@ public class RobotContainer {
       new ParallelCommandGroup(
         new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter),
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
-        new SetFeederVelocity(0.0)
+        new SetFeederVelocity(0.0),
+        new SetIntakeVelocity(0.0)
       )
     );
 
