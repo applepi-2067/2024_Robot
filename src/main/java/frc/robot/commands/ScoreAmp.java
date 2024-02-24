@@ -9,7 +9,7 @@ import frc.robot.subsystems.Shoulder;
 public class ScoreAmp extends SequentialCommandGroup {
   public ScoreAmp() {
     addCommands(
-      new SetShoulderPosition(78.3, true),
+      new SetShoulderPosition(-11.7, true),
 
       new SetFeederVelocity(-1_000.0),
       new WaitUntilCommand(() -> !Feeder.getInstance().gamePieceDetected()),

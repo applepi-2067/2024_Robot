@@ -51,13 +51,13 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    public static final double ZERO_POSITION_DEGREES = 180.0 - 27.6;
+    public static final double ZERO_POSITION_DEGREES = 62.4;
     public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
 
     // Dist -> theta quadratic fit coefficients.
     private static final double A = 0.0014486986;
     private static final double B = -0.5604978964;
-    private static final double C = 160.9255743;
+    private static final double C = 70.9255743;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -104,7 +104,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     private double getFeedForwardVoltage(double degrees) {
-        return Math.sin(Units.degreesToRadians(degrees)) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
+        return Math.cos(Units.degreesToRadians(degrees)) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
     }
 
     public void setTargetPositionDegrees(double degrees) {
@@ -133,11 +133,6 @@ public class Shoulder extends SubsystemBase implements Loggable {
     public void periodic() {
         SmartDashboard.putNumber("Speaker score angle (deg)", getSpeakerScoreAngleDegrees());
     }
-
-    // @Log (name = "90 deg reached")
-    // public boolean shoulderAngleReached() {
-    //     return Utils.withinThreshold(getPositionDegrees(), 90.0, ALLOWABLE_ERROR_DEGREES);
-    // }
 
     // @Config
     // public void setPIDs(double kV, double kP) {
