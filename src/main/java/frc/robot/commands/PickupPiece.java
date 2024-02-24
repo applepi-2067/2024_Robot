@@ -14,7 +14,7 @@ public class PickupPiece extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new SetFeederVelocity(1_000.0),
         new SetIntakeVelocity(3_000.0),
-        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false)
+        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, true)
       ),
 
       new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
