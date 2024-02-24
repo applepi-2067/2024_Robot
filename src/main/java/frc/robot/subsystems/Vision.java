@@ -6,6 +6,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -29,6 +30,11 @@ public class Vision extends SubsystemBase {
     new Translation3d(Units.inchesToMeters(11.25), 0.0, Units.inchesToMeters(20.75)),
     new Rotation3d(0.0, 0.0, 0.0)
   );
+
+  // Single-tag pose estimate rejection thresholds.
+  private static final double MAX_TARGET_AMBIGUITY = 0.25;
+
+  // TODO: add checklist item to set camera exposure to 7.5.
 
   private final PhotonCamera m_camera;
   private final PhotonPoseEstimator m_photonPoseEstimator;
@@ -65,6 +71,12 @@ public class Vision extends SubsystemBase {
     EstimatedRobotPose robotPose = result.get();
     Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
     double timestampSeconds = result.get().timestampSeconds;
+
+    // Estimates based on a single tag must pass ambiguity test.
+    if (robotPose.targetsUsed.size() == 1) {
+      PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
+      if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {return;}
+    }
     
     Drivetrain.getInstance().addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
 
