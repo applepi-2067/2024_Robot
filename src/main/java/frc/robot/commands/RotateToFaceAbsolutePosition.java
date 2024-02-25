@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.Drivetrain;
@@ -12,10 +11,10 @@ public class RotateToFaceAbsolutePosition extends Command {
 
   private final Pose2d m_targetPose2d;
 
-  private static final double ROTATION_TOLERANCE_DEGREES = 1.0;  // TODO: find rotation tolerance.
+  private static final double ROTATION_TOLERANCE_DEGREES = 0.5;
 
-  private static final double kP = 0.001;  // TODO: tune rotation kP.
-  private static final double kS = 0.1;  // TODO: find kS, minimum power to rotate robot.
+  private static final double kP = 1.35;
+  private static final double kS = 0.15;
   
   private Rotation2d m_targetRotation2d;
 
@@ -40,29 +39,27 @@ public class RotateToFaceAbsolutePosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double power = getRotationDeltaDegrees() * kP;
+    double power = getRobotToTargetRotation2d().getRadians() * (1.0 / Math.PI) * kP;
     power += Math.signum(power) * kS;
 
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, power);
-    m_drivetrain.driveRobotRelative(chassisSpeeds);
+    m_drivetrain.drive(0.0, 0.0, -1.0 * power);
   }
 
-  private double getRotationDeltaDegrees() {
+  private Rotation2d getRobotToTargetRotation2d() {
     Rotation2d currRotation2d = m_drivetrain.getRobotPose2d().getRotation();
     Rotation2d deltaRotation2d = currRotation2d.minus(m_targetRotation2d); 
-    return deltaRotation2d.getDegrees();
+    return deltaRotation2d.unaryMinus();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-    m_drivetrain.driveRobotRelative(chassisSpeeds);
+    m_drivetrain.drive(0.0, 0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(getRotationDeltaDegrees()) < ROTATION_TOLERANCE_DEGREES;
+    return Math.abs(getRobotToTargetRotation2d().getDegrees()) < ROTATION_TOLERANCE_DEGREES;
   }
 }

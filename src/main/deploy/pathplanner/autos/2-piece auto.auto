@@ -14,13 +14,32 @@
         {
           "type": "named",
           "data": {
-            "name": "AimAndShoot"
+            "name": "AimShoot"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2-piece"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2-piece"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "PickupAimShoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoastShooter"
           }
         }
       ]

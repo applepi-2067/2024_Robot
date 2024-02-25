@@ -27,7 +27,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final double OUTPUT_SPROCKET_PITCH_RADIUS_INCHES = 1.751 / 2.0;
   private static final double GEAR_RATIO = 5.0 * 3.0;
 
-  private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
+  private static final double HOLD_POSITION_VOLTAGE = 0.25;
 
   public static final double ALLOWABLE_ERROR_INCHES = 0.1;
 

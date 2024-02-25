@@ -13,7 +13,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Conversions;
 
 
@@ -80,11 +79,6 @@ public class DriveMotor {
     public double getVelocityMetersPerSecond() {
         double velocityRotationsPerSecond = m_motor.getVelocity().getValueAsDouble();
         double velocityMetersPerSecond = Conversions.rotationsToArcLength(velocityRotationsPerSecond, WHEEL_RADIUS_METERS);
-        
-        // SmartDashboard.putNumber("Drive motor accel (rps^2)" + m_canID, m_motor.getAcceleration().getValueAsDouble());
-        // SmartDashboard.putNumber("Drive motor velocity (rps)" + m_canID, m_motor.getVelocity().getValueAsDouble());
-        // SmartDashboard.putNumber("Drive motor velocity (mps)" + m_canID, velocityMetersPerSecond);
-
         return velocityMetersPerSecond;
     }
     

@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -25,6 +28,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.RotateToFaceAbsolutePosition;
 import frc.robot.commands.AutoAimShoulder;
+import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
@@ -72,14 +76,24 @@ public class RobotContainer {
     m_vision = Vision.getInstance();
   
     // PathPlanner.
-    NamedCommands.registerCommand("PickupPiece", new PickupPiece());
     NamedCommands.registerCommand(
-      "AimAndShoot",
+      "PickupAimShoot",
+      new SequentialCommandGroup(
+        new PickupPiece(),
+        new ParallelDeadlineGroup(
+          new ShootGamePiece(false),
+          new AutoAimShoulder()
+        )
+      )
+    );
+    NamedCommands.registerCommand(
+      "AimShoot",
       new ParallelDeadlineGroup(
-        new ShootGamePiece(true),
+        new ShootGamePiece(false),
         new AutoAimShoulder()
       )
     );
+    NamedCommands.registerCommand("CoastShooter", new SetShooterPercentOutput(0.0));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -103,6 +117,8 @@ public class RobotContainer {
       m_drivetrain
     );
 
+    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);
+
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto chooser", autoChooser);
 
@@ -113,6 +129,14 @@ public class RobotContainer {
     configureBindings();
 
     Logger.configureLoggingAndConfig(this, false);
+  }
+
+  public Optional<Rotation2d> getTargetRotationOverride() {
+    if (Feeder.getInstance().gamePieceDetected()) {
+      return Optional.of(m_drivetrain.getRobotToSpeakerRotation2d());
+    }
+    
+    return Optional.empty();
   }
 
   private void configureBindings() {
@@ -135,7 +159,7 @@ public class RobotContainer {
     m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
-        new InstantCommand(() -> m_shooter.setPercentOutput(0.0), m_shooter),
+        new SetShooterPercentOutput(0.0),
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
         new SetFeederVelocity(0.0),
         new SetIntakeVelocity(0.0)
