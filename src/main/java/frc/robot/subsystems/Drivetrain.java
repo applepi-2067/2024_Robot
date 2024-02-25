@@ -241,11 +241,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return description;
   }
 
+  public Pose2d getSpeakerPose2d() {
+    int speakerTag = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue? 8 : 4;
+    Pose2d speakerPose2d = Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(speakerTag).get().toPose2d();
+    return speakerPose2d;
+  }
+
   @Log (name="Dist to speaker (m)")
   public double getDistToSpeakerMeters() {
-    int speakerTag = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue? 8 : 4;
-
-    Pose2d speakerPose2d = Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(speakerTag).get().toPose2d();
+    Pose2d speakerPose2d = getSpeakerPose2d();
     double dx = speakerPose2d.getX() - m_pose.getX();
     double dy = speakerPose2d.getY() - m_pose.getY();
     double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));

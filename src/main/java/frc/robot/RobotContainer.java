@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
+import frc.robot.commands.RotateToFaceAbsolutePosition;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetFeederVelocity;
@@ -143,6 +144,8 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
+
+    m_operatorController.y().onTrue(new RotateToFaceAbsolutePosition(m_drivetrain.getSpeakerPose2d()));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
