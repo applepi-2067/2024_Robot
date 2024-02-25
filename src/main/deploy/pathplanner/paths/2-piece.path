@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1149354110405783,
-        "y": 4.649202108675259
+        "x": 1.36086297850199,
+        "y": 5.539225686154654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5716580363260588,
-        "y": 4.625780435586983
+        "x": 2.3608629785019897,
+        "y": 5.539225686154654
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.72,
-        "y": 4.15
+        "x": 3.3634160278306275,
+        "y": 5.539225686154654
       },
       "prevControl": {
-        "x": 2.368674903626553,
-        "y": 4.290530038549379
+        "x": 2.3634160278306275,
+        "y": 5.539225686154654
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,25 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Pickup game piece",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "PickupPiece"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 6.0,
@@ -39,13 +57,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 159.6166232782054,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 128.31309067381764,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

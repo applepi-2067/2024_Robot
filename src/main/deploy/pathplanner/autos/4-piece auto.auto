@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.1149354110405783,
-      "y": 4.649202108675259
+      "x": 1.2203329399526117,
+      "y": 6.4058275905424855
     },
-    "rotation": 134.4327335901421
+    "rotation": -135.69027719786513
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,6 @@
         {
           "type": "named",
           "data": {
-            "name": "SpinupShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AimAndShoot"
           }
         },
@@ -30,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 piece attempt 2"
+                  "pathName": "Piece 2"
                 }
               },
               {
@@ -55,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4P pt2"
+                  "pathName": "Piece 3"
                 }
               },
               {
@@ -80,7 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4P pt3"
+                  "pathName": "Piece 4"
                 }
               },
               {

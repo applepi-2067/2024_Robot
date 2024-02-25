@@ -72,10 +72,12 @@ public class RobotContainer {
   
     // PathPlanner.
     NamedCommands.registerCommand("PickupPiece", new PickupPiece());
-    NamedCommands.registerCommand("SpinupShooter", new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     NamedCommands.registerCommand(
       "AimAndShoot",
-      new ParallelDeadlineGroup(new ShootGamePiece(true), new AutoAimShoulder())
+      new ParallelDeadlineGroup(
+        new ShootGamePiece(true),
+        new AutoAimShoulder()
+      )
     );
 
     AutoBuilder.configureHolonomic(
