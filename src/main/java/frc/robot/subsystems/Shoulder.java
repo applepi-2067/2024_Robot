@@ -42,7 +42,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
         .withKP(100.0)
-        .withKV(4.0);  // TODO: better PID tuning.
+        .withKV(4.0);
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
