@@ -81,7 +81,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new PickupPiece(),
         new ParallelDeadlineGroup(
-          new ShootGamePiece(false),
+          new ShootGamePiece(true),
           new AutoAimShoulder()
         )
       )
@@ -89,7 +89,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
       "AimShoot",
       new ParallelDeadlineGroup(
-        new ShootGamePiece(false),
+        new ShootGamePiece(true),
         new AutoAimShoulder()
       )
     );
