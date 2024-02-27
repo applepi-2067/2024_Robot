@@ -63,7 +63,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final Field2d m_field;
 
   // Pose facing.
-  private Optional<Pose2d> m_targetPose = Optional.empty();
+  private Optional<AprilTag> m_targetAprilTag = Optional.empty();
   private static final double POSE_FACING_kP = 1.725;
   private static final double POSE_FACING_kS = 0.15;  // TODO: add kI and IZone.
 
@@ -129,8 +129,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
-    if (m_targetPose.isPresent()) {
-      Rotation2d robotToTargetRotation = getRobotToPoseRotation(m_targetPose.get());
+    if (m_targetAprilTag.isPresent()) {
+      Rotation2d robotToTargetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+  
+      // Face away from amp.
+      if (m_targetAprilTag.get().equals(AprilTag.AMP)) {
+        robotToTargetRotation = robotToTargetRotation.plus(Rotation2d.fromDegrees(180.0));
+      }
       
       rightStickX = (robotToTargetRotation.getRadians() / Math.PI) * POSE_FACING_kP;
       rightStickX += Math.signum(rightStickX) * POSE_FACING_kS;
@@ -159,8 +164,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     driveRobotRelative(chassisSpeeds);
   }
 
-  public void setTargetPose(Optional<Pose2d> targetPose) {
-    m_targetPose = targetPose;
+  public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {
+    m_targetAprilTag = targetAprilTag;
   }
 
   private double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
