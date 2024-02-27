@@ -132,8 +132,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     if (m_targetAprilTag.isPresent()) {
       Rotation2d robotToTargetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
   
-      // Face away from amp.
-      if (m_targetAprilTag.get().equals(AprilTag.AMP)) {
+      // Face away from amp and trap.
+      if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
         robotToTargetRotation = robotToTargetRotation.plus(Rotation2d.fromDegrees(180.0));
       }
       
