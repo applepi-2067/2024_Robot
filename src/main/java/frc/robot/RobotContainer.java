@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
-import frc.robot.commands.RotateToFaceAbsolutePosition;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
@@ -42,6 +41,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Drivetrain.AprilTag;
 import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.Elevator;
 
@@ -101,7 +101,7 @@ public class RobotContainer {
       m_drivetrain::getRobotRelativeChassisSpeeds,
       m_drivetrain::driveRobotRelative,
       new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5),  // TODO: tune PIDs.
+        new PIDConstants(2.5),
         new PIDConstants(10.0),
         DriveMotor.MAX_SPEED_METERS_PER_SEC,
         Drivetrain.CENTER_TO_WHEEL_OFFSET_METERS,
@@ -133,13 +133,14 @@ public class RobotContainer {
 
   public Optional<Rotation2d> getTargetRotationOverride() {
     if (Feeder.getInstance().gamePieceDetected()) {
-      return Optional.of(m_drivetrain.getRobotToSpeakerRotation2d());
+      return Optional.of(m_drivetrain.getRobotToPoseRotation(m_drivetrain.getAprilTagPose(AprilTag.SPEAKER)));
     }
     
     return Optional.empty();
   }
 
   private void configureBindings() {
+    // Driver.
     m_drivetrain.setDefaultCommand(
       Commands.run(
         () -> m_drivetrain.drive(
@@ -151,8 +152,24 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
+    m_driverController.a().onTrue(
+      new InstantCommand(() -> m_drivetrain.setTargetPose(Optional.of(m_drivetrain.getAprilTagPose(AprilTag.SPEAKER))))
+    );
+
+    // TODO: reverse for amp.
+    m_driverController.b().onTrue(
+      new InstantCommand(() -> m_drivetrain.setTargetPose(Optional.of(m_drivetrain.getAprilTagPose(AprilTag.AMP))))
+    );
+    m_driverController.x().onTrue(
+      new InstantCommand(() -> m_drivetrain.setTargetPose(Optional.of(m_drivetrain.getAprilTagPose(AprilTag.TRAP))))
+    );
+    m_driverController.rightTrigger().onTrue(
+      new InstantCommand(() -> m_drivetrain.setTargetPose(Optional.empty()))
+    );
+
+    // Operator.
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
 
@@ -168,8 +185,6 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
-
-    m_operatorController.y().onTrue(new RotateToFaceAbsolutePosition(m_drivetrain.getSpeakerPose2d()));
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.

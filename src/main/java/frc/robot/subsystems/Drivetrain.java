@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 
-import java.text.DecimalFormat;
+import java.util.Optional;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -34,8 +34,6 @@ import frc.robot.utils.Utils;
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
-  private static final DecimalFormat rounder = new DecimalFormat("0.0000");
-
   // Swerve module offsets from center. +x = front of robot, +y = left of robot. 
   public static final double CENTER_TO_WHEEL_OFFSET_METERS = Units.inchesToMeters(13.0 - 2.5);
   public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
@@ -58,11 +56,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
   private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
-  private static final double[] visionStds = {0.5, 0.5, 0.2};  // TODO: verify pose stds.
+  private static final double[] visionStds = {0.5, 0.5, 0.2}; 
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
+
+  // Pose facing.
+  private Optional<Pose2d> m_targetPose = Optional.empty();
+  private static final double POSE_FACING_kP = 1.725;
+  private static final double POSE_FACING_kS = 0.15;  // TODO: add kI and IZone.
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -125,6 +128,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
+    // Override rotation command if targeting pose.
+    if (m_targetPose.isPresent()) {
+      Rotation2d robotToTargetRotation = getRobotToPoseRotation(m_targetPose.get());
+      
+      rightStickX = (robotToTargetRotation.getRadians() / Math.PI) * POSE_FACING_kP;
+      rightStickX += Math.signum(rightStickX) * POSE_FACING_kS;
+      rightStickX *= -1.0;  // Pre-account for stick-sign flip.
+    }
+    
     // Deadband and square stick values.
     double absDeadbandThreshold = 0.10;
     leftStickX = deadbandSquareStickInput(leftStickX, absDeadbandThreshold);
@@ -147,19 +159,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     driveRobotRelative(chassisSpeeds);
   }
 
-  public double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
-    // Add abs deadband and square values.
-    value = deadband(absDeadbandThreshold, value);
-    return Math.pow(value, 2.0) * Math.signum(value);
+  public void setTargetPose(Optional<Pose2d> targetPose) {
+    m_targetPose = targetPose;
   }
-  
-  public double deadband(double absDeadbandThreshold, double x) {
-    if (Math.abs(x) < absDeadbandThreshold) {
+
+  private double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
+    // Deadband while preserving sensitivity.
+    if (Math.abs(value) < absDeadbandThreshold) {
       return 0.0;
     }
 
     double m = 1.0 / (1 - absDeadbandThreshold);
-    return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
+    value = Math.signum(value) * (Math.abs(value) - absDeadbandThreshold) * m;
+    return Math.pow(value, 2.0) * Math.signum(value);
   }
 
   public void setSwerveModuleStates(SwerveModuleState[] states) {
@@ -179,6 +191,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_gyro.setYaw(0.0);
   }
 
+  @Log (name="Heading (deg)")
   public double getHeadingDegrees() {
     return m_gyro.getYaw();
   }
@@ -231,24 +244,33 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].toString();
   }
 
-  @Log (name="Gyro (deg)")
-  public String getGyroDescription() {
-    // Pitch = hand up, yaw = hand left, roll = hand in.
-    String description = "Yaw=" + rounder.format(m_gyro.getYaw()) + "    ";
-    description += "Pitch=" + rounder.format(m_gyro.getPitch()) + "    ";
-    description += "Roll=" + rounder.format(m_gyro.getRoll());
-    return description;
+  // TODO: clean up april tag pose getters. (Silent failing?)
+  public Pose2d getAprilTagPose(AprilTag aprilTag) {
+    boolean isBlue = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+    
+    int aprilTagID;
+    if (aprilTag == AprilTag.AMP) {
+      aprilTagID = isBlue ? 6 : 5;
+    }
+    else if (aprilTag == AprilTag.TRAP) {
+      aprilTagID = isBlue ? 15 : 12;
+    }
+    else {
+      aprilTagID = isBlue ? 7 : 4;  // Default at speaker.
+    }
+
+    return Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID).get().toPose2d();
   }
 
-  public Pose2d getSpeakerPose2d() {
-    int speakerTag = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue? 8 : 4;
-    Pose2d speakerPose2d = Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(speakerTag).get().toPose2d();
-    return speakerPose2d;
+  public enum AprilTag {
+    SPEAKER,
+    AMP,
+    TRAP
   }
 
   @Log (name="Dist to speaker (m)")
   public double getDistToSpeakerMeters() {
-    Pose2d speakerPose2d = getSpeakerPose2d();
+    Pose2d speakerPose2d = getAprilTagPose(AprilTag.SPEAKER);
     double dx = speakerPose2d.getX() - m_pose.getX();
     double dy = speakerPose2d.getY() - m_pose.getY();
     double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));
@@ -260,21 +282,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return Units.metersToInches(getDistToSpeakerMeters());
   }
   
-  public Rotation2d getRobotToSpeakerRotation2d() {
+  public Rotation2d getRobotToPoseRotation(Pose2d targetPose) {
     Pose2d robotPose2d = getRobotPose2d();
 
-    Pose2d speakerPose2d = getSpeakerPose2d();
-    double dx = speakerPose2d.getX() - robotPose2d.getX();
-    double dy = speakerPose2d.getY() - robotPose2d.getY();
-    Rotation2d targetRotation2d = Rotation2d.fromRadians(Math.atan2(dy, dx));
+    double dx = targetPose.getX() - robotPose2d.getX();
+    double dy = targetPose.getY() - robotPose2d.getY();
+    Rotation2d targetRotation = Rotation2d.fromRadians(Math.atan2(dy, dx));
 
-    Rotation2d currRotation2d = getRobotPose2d().getRotation();
-    Rotation2d deltaRotation2d = currRotation2d.minus(targetRotation2d); 
-    return deltaRotation2d.unaryMinus();
-  }
-
-  @Log (name="Robot to speaker rotation (deg)")
-  public double getRobotToSpeakerRotationDegrees() {
-    return getRobotToSpeakerRotation2d().getDegrees();
+    Rotation2d robotToTargetRotation = robotPose2d.getRotation().minus(targetRotation).unaryMinus();
+    return robotToTargetRotation;
   }
 }
