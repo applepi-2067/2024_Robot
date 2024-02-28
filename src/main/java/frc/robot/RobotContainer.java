@@ -93,7 +93,8 @@ public class RobotContainer {
         new AutoAimShoulder()
       )
     );
-    NamedCommands.registerCommand("CoastShooter", new SetShooterPercentOutput(0.0));
+    NamedCommands.registerCommand("Pickup", new PickupPiece());
+    NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
