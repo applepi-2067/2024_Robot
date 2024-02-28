@@ -53,9 +53,16 @@ public class RobotContainer {
     //   )
     // );
 
-    m_driverController.povUp().onTrue(
+    m_driverController.b().onTrue(
      new InstantCommand(
-      () -> m_blinkinLeds.setMode(LEDMode.rainbow),
+      () -> m_blinkinLeds.setLEDManual(-0.35),
+      m_blinkinLeds
+     ) 
+    );
+
+    m_driverController.y().onTrue(
+     new InstantCommand(
+      () -> m_blinkinLeds.setLEDManual(0.07),
       m_blinkinLeds
      ) 
     );
