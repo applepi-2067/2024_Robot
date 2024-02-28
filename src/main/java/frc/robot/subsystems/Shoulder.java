@@ -51,7 +51,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    public static final double ZERO_POSITION_DEGREES = 62.4;
+    public static final double ZERO_POSITION_DEGREES = 60.0;
     public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
 
     // Dist -> theta quadratic fit coefficients.
