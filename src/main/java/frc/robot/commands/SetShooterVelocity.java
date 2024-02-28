@@ -31,10 +31,13 @@ public class SetShooterVelocity extends Command {
       return true;
     }
     
-    return Utils.withinThreshold(
+    boolean withinThreshold = Utils.withinThreshold(
       m_shooter.getMotorVelocityRPM(),
       m_velocityRPM,
       Shooter.ALLOWABLE_ERROR_RPM
     );
+
+    return withinThreshold && (m_shooter.getMotorVelocityRPM() > m_velocityRPM);
+
   }
 }

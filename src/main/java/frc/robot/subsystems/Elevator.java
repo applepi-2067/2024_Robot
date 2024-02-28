@@ -23,11 +23,11 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static Elevator instance;
   
   // Physical properties.
-  public static final double MAX_EXTENSION_INCHES = 16.0;
+  public static final double MAX_EXTENSION_INCHES = 15.0;
   private static final double OUTPUT_SPROCKET_PITCH_RADIUS_INCHES = 1.751 / 2.0;
   private static final double GEAR_RATIO = 5.0 * 3.0;
 
-  private static final double HOLD_POSITION_VOLTAGE = 0.25;  // TODO: find voltage to pull robot up.
+  private static final double HOLD_POSITION_VOLTAGE = 0.25;
 
   public static final double ALLOWABLE_ERROR_INCHES = 0.1;
 
@@ -47,6 +47,11 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
       .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 4.0);
+
+  // TODO: add separate configs for climb.
+  // private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+  //     .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS / 4.0)
+  //     .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 4.0 / 4.0);
 
   public static Elevator getInstance() {
     if (instance == null) {
@@ -94,6 +99,16 @@ public class Elevator extends SubsystemBase implements Loggable {
   public double getPositionInches() {
     double rotations = m_leftMotor.getPosition().getValueAsDouble();
     return Conversions.rotationsToArcLength(rotations, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
+  }
+
+  @Log (name="Left current (amps)")
+  public double getLeftCurrentAmps() {
+    return m_leftMotor.getSupplyCurrent().getValueAsDouble();
+  }
+
+  @Log (name="Right current (amps)")
+  public double getRightCurrentAmps() {
+    return m_rightMotor.getSupplyCurrent().getValueAsDouble();
   }
 
   // @Log (name = "Max extension reached")

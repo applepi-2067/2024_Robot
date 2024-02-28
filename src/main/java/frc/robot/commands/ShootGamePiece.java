@@ -8,7 +8,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 
 public class ShootGamePiece extends SequentialCommandGroup {
-  public ShootGamePiece() {
+  public ShootGamePiece(boolean keepShooterSpinning) {
     Shooter shooter = Shooter.getInstance();
     Feeder feeder = Feeder.getInstance();
 
@@ -19,9 +19,12 @@ public class ShootGamePiece extends SequentialCommandGroup {
       new WaitUntilCommand(() -> !feeder.gamePieceDetected()),
       new WaitCommand(0.5),  // Piece should be gone by now!
       
-      new SetFeederVelocity(0.0),
-      new InstantCommand(() -> shooter.setPercentOutput(0.0), shooter)  // Coast to 0.
+      new SetFeederVelocity(0.0)
     );
+
+    if (!keepShooterSpinning) {
+      addCommands(new InstantCommand(() -> shooter.setPercentOutput(0.0), shooter));  // Coast to 0.
+    }
 
     addRequirements(feeder, shooter);
   }

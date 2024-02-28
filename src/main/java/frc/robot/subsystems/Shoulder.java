@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import io.github.oblarg.oblog.Loggable;
@@ -41,7 +42,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
         .withKP(100.0)
-        .withKV(4.0);  // TODO: better PID tuning.
+        .withKV(4.0);
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -50,8 +51,13 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    public static final double ZERO_POSITION_DEGREES = 180.0 - 27.6;
+    public static final double ZERO_POSITION_DEGREES = 60.0;
     public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
+
+    // Dist -> theta quadratic fit coefficients.
+    private static final double A = 0.0014486986;
+    private static final double B = -0.5604978964;
+    private static final double C = 70.9255743;
 
     public static Shoulder getInstance() {
         if (instance == null) {
@@ -98,7 +104,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     }
 
     private double getFeedForwardVoltage(double degrees) {
-        return Math.sin(Units.degreesToRadians(degrees)) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
+        return Math.cos(Units.degreesToRadians(degrees)) * HORIZONTAL_FEED_FORWARD_VOLTAGE;
     }
 
     public void setTargetPositionDegrees(double degrees) {
@@ -113,10 +119,20 @@ public class Shoulder extends SubsystemBase implements Loggable {
         return m_motor.getSupplyCurrent().getValueAsDouble();
     }
 
-    // @Log (name = "90 deg reached")
-    // public boolean shoulderAngleReached() {
-    //     return Utils.withinThreshold(getPositionDegrees(), 90.0, ALLOWABLE_ERROR_DEGREES);
-    // }
+    public double getSpeakerScoreAngleDegrees() {
+        double x = Drivetrain.getInstance().getDistToSpeakerInches();
+        double theta = (A * (x * x)) + (B * x) + C;
+
+        // Clamp theta to (0, zero_position).
+        theta = Math.max(theta, 0.0);
+        theta = Math.min(theta, ZERO_POSITION_DEGREES);
+        return theta;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Speaker score angle (deg)", getSpeakerScoreAngleDegrees());
+    }
 
     // @Config
     // public void setPIDs(double kV, double kP) {

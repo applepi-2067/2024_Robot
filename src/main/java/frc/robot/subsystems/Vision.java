@@ -6,6 +6,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -18,17 +19,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.utils.Utils;
-
 public class Vision extends SubsystemBase {
   public static Vision instance = null;
 
   public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   private static final Transform3d ROBOT_TO_CAMERA_TRANSFORM3D = new Transform3d(
-    new Translation3d(Units.inchesToMeters(11.25), 0.0, Units.inchesToMeters(20.75)),
-    new Rotation3d(0.0, 0.0, 0.0)
+    new Translation3d(Units.inchesToMeters(10.5), 0.0, Units.inchesToMeters(22.0)),
+    new Rotation3d(0.0, Units.degreesToRadians(-30.0), 0.0)
   );
+
+  // Single-tag pose estimate rejection thresholds.
+  private static final double MAX_TARGET_AMBIGUITY = 0.15;
+
+  // TODO: add 2nd camera.
 
   private final PhotonCamera m_camera;
   private final PhotonPoseEstimator m_photonPoseEstimator;
@@ -54,6 +58,7 @@ public class Vision extends SubsystemBase {
     m_photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
     m_field = new Field2d();
+    SmartDashboard.putData("Vision field", m_field);
   }
 
   @Override
@@ -64,14 +69,17 @@ public class Vision extends SubsystemBase {
     EstimatedRobotPose robotPose = result.get();
     Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
     double timestampSeconds = result.get().timestampSeconds;
+
+    // Estimates based on a single tag must pass ambiguity test.
+    if (robotPose.targetsUsed.size() == 1) {
+      PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
+      if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {return;}
+    }
     
     Drivetrain.getInstance().addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
 
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);
-    SmartDashboard.putData("Vision field", m_field);
-
-    SmartDashboard.putString("Vision pose", Utils.getPose2dDescription(estimatedRobotPose2d));
   }
 }
 

@@ -13,12 +13,12 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
-
 import frc.robot.utils.Conversions;
 
 
 public class DriveMotor {
     private final TalonFX m_motor;
+    private final int m_canID;
 
     // Motor settings.
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
@@ -33,16 +33,21 @@ public class DriveMotor {
 
     // PID.
     private static final int K_TIMEOUT_MS = 10;
-    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.0).withKV(0.75);
+    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.0).withKV(0.8);
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
         .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 2.0)
-        .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
+        .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * (100.0 / 15.0));
+
+    // Max speeds.
+    public static final double MAX_SPEED_METERS_PER_SEC = 5.0;
 
     public DriveMotor(int canID) {
-        m_motor = new TalonFX(canID);
+        m_canID = canID;
+
+        m_motor = new TalonFX(m_canID);
+
         m_motor.getConfigurator().apply(new TalonFXConfiguration());
         m_motor.setNeutralMode(NeutralModeValue.Coast);
 

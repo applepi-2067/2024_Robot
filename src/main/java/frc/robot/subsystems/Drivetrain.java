@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 
-import java.text.DecimalFormat;
+import java.util.Optional;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,41 +25,47 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import frc.robot.constants.RobotMap;
+import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.utils.Conversions;
 import frc.robot.utils.Utils;
 
 
 public class Drivetrain extends SubsystemBase implements Loggable {
   private static Drivetrain instance = null;
 
-  private static final DecimalFormat rounder = new DecimalFormat("0.0000");
-
   // Swerve module offsets from center. +x = front of robot, +y = left of robot. 
-  private static final double centerToWheelOffsetMeters = Units.inchesToMeters(13.0 - 2.5);
+  public static final double CENTER_TO_WHEEL_OFFSET_METERS = Units.inchesToMeters(13.0 - 2.5);
   public static final SwerveDriveKinematics SWERVE_DRIVE_KINEMATICS = new SwerveDriveKinematics(
-    new Translation2d(-centerToWheelOffsetMeters, centerToWheelOffsetMeters),
-    new Translation2d(-centerToWheelOffsetMeters, -centerToWheelOffsetMeters),
-    new Translation2d(centerToWheelOffsetMeters, centerToWheelOffsetMeters),
-    new Translation2d(centerToWheelOffsetMeters, -centerToWheelOffsetMeters)
+    new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(-CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(CENTER_TO_WHEEL_OFFSET_METERS, CENTER_TO_WHEEL_OFFSET_METERS),
+    new Translation2d(CENTER_TO_WHEEL_OFFSET_METERS, -CENTER_TO_WHEEL_OFFSET_METERS)
   );
 
-  // Max speeds.
-  public static final double MAX_TRANSLATION_SPEED_METERS_PER_SEC = 5.55;
-  public static final double MAX_ACCEL_METERS_PER_SEC_SQUARED = MAX_TRANSLATION_SPEED_METERS_PER_SEC * 2.0;
-
-  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Math.PI * 4.0;
-  public static final double MAX_ROTATION_ACCEL_RADIANS_PER_SEC_SQUARED = MAX_ROTATION_SPEED_RADIANS_PER_SEC * 2.0;
-  
   private final SwerveModule[] m_swerveModules;
+
+  // Max speeds.
+  public static final double MAX_ROTATION_SPEED_RADIANS_PER_SEC = Units.rotationsToRadians(
+    Conversions.arcLengthToRotations(
+      DriveMotor.MAX_SPEED_METERS_PER_SEC,
+      CENTER_TO_WHEEL_OFFSET_METERS
+    )
+  );
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
   private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
-  private static final double[] visionStds = {0.0408, 1.2711, 0.1};  // TODO: find pose stds.
+  private static final double[] visionStds = {0.5, 0.5, 0.2}; 
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
+
+  // Pose facing.
+  private Optional<AprilTag> m_targetAprilTag = Optional.empty();
+  private static final double POSE_FACING_kP = 1.725;
+  private static final double POSE_FACING_kS = 0.15;  // TODO: add kI and IZone.
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -102,7 +109,39 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return swerveModulePositions;
   }
 
+  public SwerveModuleState[] getSwerveModuleStates() {
+    SwerveModuleState[] swerveModuleStates = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i++) {
+      swerveModuleStates[i] = m_swerveModules[i].getState();
+    }
+    return swerveModuleStates;
+  }
+
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
+    return SWERVE_DRIVE_KINEMATICS.toChassisSpeeds(getSwerveModuleStates());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    // Convert to swerve module states, and set states.
+    SwerveModuleState[] states = SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+    setSwerveModuleStates(states);
+  }
+
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
+    // Override rotation command if targeting pose.
+    if (m_targetAprilTag.isPresent()) {
+      Rotation2d robotToTargetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+  
+      // Face away from amp and trap.
+      if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
+        robotToTargetRotation = robotToTargetRotation.plus(Rotation2d.fromDegrees(180.0));
+      }
+      
+      rightStickX = (robotToTargetRotation.getRadians() / Math.PI) * POSE_FACING_kP;
+      rightStickX += Math.signum(rightStickX) * POSE_FACING_kS;
+      rightStickX *= -1.0;  // Pre-account for stick-sign flip.
+    }
+    
     // Deadband and square stick values.
     double absDeadbandThreshold = 0.10;
     leftStickX = deadbandSquareStickInput(leftStickX, absDeadbandThreshold);
@@ -110,41 +149,39 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     rightStickX = deadbandSquareStickInput(rightStickX, absDeadbandThreshold);
 
     // Speeds in robot coords. Negatives account for stick signs.
-    double yVelocityMetersPerSecond = -1.0 * leftStickX * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
-    double xVelocityMetersPerSecond = -1.0 * leftStickY * MAX_TRANSLATION_SPEED_METERS_PER_SEC;
+    double yVelocityMetersPerSecond = -1.0 * leftStickX * DriveMotor.MAX_SPEED_METERS_PER_SEC;
+    double xVelocityMetersPerSecond = -1.0 * leftStickY * DriveMotor.MAX_SPEED_METERS_PER_SEC;
     double rotationVelocityRadiansPerSecond = -1.0 * rightStickX * MAX_ROTATION_SPEED_RADIANS_PER_SEC;
 
     // Robot to field oriented speeds.
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+    ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
       xVelocityMetersPerSecond,
       yVelocityMetersPerSecond,
       rotationVelocityRadiansPerSecond,
       Rotation2d.fromDegrees(getHeadingDegrees())
     );
 
-    // Convert to swerve module states, and set states.
-    SwerveModuleState[] states = SWERVE_DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
-    setSwerveModuleStates(states);
+    driveRobotRelative(chassisSpeeds);
   }
 
-  public double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
-    // Add abs deadband and square values.
-    value = deadband(absDeadbandThreshold, value);
-    return Math.pow(value, 2.0) * Math.signum(value);
+  public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {
+    m_targetAprilTag = targetAprilTag;
   }
-  
-  public double deadband(double absDeadbandThreshold, double x) {
-    if (Math.abs(x) < absDeadbandThreshold) {
+
+  private double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
+    // Deadband while preserving sensitivity.
+    if (Math.abs(value) < absDeadbandThreshold) {
       return 0.0;
     }
 
     double m = 1.0 / (1 - absDeadbandThreshold);
-    return Math.signum(x) * (Math.abs(x) - absDeadbandThreshold) * m;
+    value = Math.signum(value) * (Math.abs(value) - absDeadbandThreshold) * m;
+    return Math.pow(value, 2.0) * Math.signum(value);
   }
 
   public void setSwerveModuleStates(SwerveModuleState[] states) {
     // Normalize swerve module states.
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_TRANSLATION_SPEED_METERS_PER_SEC);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveMotor.MAX_SPEED_METERS_PER_SEC);
 
     // Pass states to each module.
     for (int location = 0; location < 4; location++) {
@@ -159,6 +196,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_gyro.setYaw(0.0);
   }
 
+  @Log (name="Heading (deg)")
   public double getHeadingDegrees() {
     return m_gyro.getYaw();
   }
@@ -171,6 +209,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return robotPose2d; 
   }
 
+  public void setRobotPose2d(Pose2d pose) {
+    m_odometry.resetPosition(
+      Rotation2d.fromDegrees(getHeadingDegrees()),
+      getSwerveModulePositions(),
+      pose
+    );
+  }
+  
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
     m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
   }
@@ -179,7 +225,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void periodic() {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
-
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
   }
 
@@ -204,12 +249,52 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].toString();
   }
 
-  @Log (name="Gyro (deg)")
-  public String getGyroDescription() {
-    // Pitch = hand up, yaw = hand left, roll = hand in.
-    String description = "Yaw=" + rounder.format(m_gyro.getYaw()) + "    ";
-    description += "Pitch=" + rounder.format(m_gyro.getPitch()) + "    ";
-    description += "Roll=" + rounder.format(m_gyro.getRoll());
-    return description;
+  // TODO: clean up april tag pose getters. (Silent failing?)
+  public Pose2d getAprilTagPose(AprilTag aprilTag) {
+    boolean isBlue = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+    
+    int aprilTagID;
+    if (aprilTag == AprilTag.AMP) {
+      aprilTagID = isBlue ? 6 : 5;
+    }
+    else if (aprilTag == AprilTag.TRAP) {
+      aprilTagID = isBlue ? 15 : 12;
+    }
+    else {
+      aprilTagID = isBlue ? 7 : 4;  // Default at speaker.
+    }
+
+    return Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID).get().toPose2d();
+  }
+
+  public enum AprilTag {
+    SPEAKER,
+    AMP,
+    TRAP
+  }
+
+  @Log (name="Dist to speaker (m)")
+  public double getDistToSpeakerMeters() {
+    Pose2d speakerPose2d = getAprilTagPose(AprilTag.SPEAKER);
+    double dx = speakerPose2d.getX() - m_pose.getX();
+    double dy = speakerPose2d.getY() - m_pose.getY();
+    double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));
+    return distToSpeaker;
+  }
+
+  @Log (name="Dist to speaker (in)")
+  public double getDistToSpeakerInches() {
+    return Units.metersToInches(getDistToSpeakerMeters());
+  }
+  
+  public Rotation2d getRobotToPoseRotation(Pose2d targetPose) {
+    Pose2d robotPose2d = getRobotPose2d();
+
+    double dx = targetPose.getX() - robotPose2d.getX();
+    double dy = targetPose.getY() - robotPose2d.getY();
+    Rotation2d targetRotation = Rotation2d.fromRadians(Math.atan2(dy, dx));
+
+    Rotation2d robotToTargetRotation = robotPose2d.getRotation().minus(targetRotation).unaryMinus();
+    return robotToTargetRotation;
   }
 }
