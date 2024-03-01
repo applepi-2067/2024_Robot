@@ -19,25 +19,36 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Vision extends SubsystemBase {
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
+
+public class Vision extends SubsystemBase implements Loggable {
   public static Vision instance = null;
 
   public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  private final Field2d m_field;
 
-  private static final Transform3d ROBOT_TO_CAMERA_TRANSFORM3D = new Transform3d(
-    new Translation3d(Units.inchesToMeters(10.5), 0.0, Units.inchesToMeters(22.0)),
-    new Rotation3d(0.0, Units.degreesToRadians(-30.0), 0.0)
-  );
+  // Cameras.
+  private final PhotonPoseEstimator[] m_photonPoseEstimators = new PhotonPoseEstimator[2];
+
+  private static final String[] CAMERA_NAMES = {
+    "Arducam_0",
+    "Arducam_1"
+  };
+  
+  private static final Transform3d[] ROBOT_TO_CAMERA_TRANSFORMS = {
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(10.5), 0.0, Units.inchesToMeters(22.0)),
+      new Rotation3d(0.0, Units.degreesToRadians(-30.0), 0.0)
+    ),
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(-12.0), 0.0, Units.inchesToMeters(9.0)),
+      new Rotation3d(0.0, Units.degreesToRadians(-45.0), 0.0)
+    )
+  };
 
   // Single-tag pose estimate rejection thresholds.
   private static final double MAX_TARGET_AMBIGUITY = 0.15;
-
-  // TODO: add 2nd camera.
-
-  private final PhotonCamera m_camera;
-  private final PhotonPoseEstimator m_photonPoseEstimator;
-
-  private final Field2d m_field;
 
   public static Vision getInstance() {
     if (instance == null) {
@@ -47,15 +58,18 @@ public class Vision extends SubsystemBase {
   }
 
   private Vision() {
-    m_camera = new PhotonCamera("Arducam_0");
+    for (int i = 0; i < CAMERA_NAMES.length; ++i) {
+      PhotonCamera camera = new PhotonCamera(CAMERA_NAMES[i]);
 
-    m_photonPoseEstimator = new PhotonPoseEstimator(
-      APRIL_TAG_FIELD_LAYOUT,
-      PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-      m_camera,
-      ROBOT_TO_CAMERA_TRANSFORM3D
-    );
-    m_photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+      m_photonPoseEstimators[i] = new PhotonPoseEstimator(
+        APRIL_TAG_FIELD_LAYOUT,
+        PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+        camera,
+        ROBOT_TO_CAMERA_TRANSFORMS[i]
+      );
+
+      m_photonPoseEstimators[i].setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+    }
 
     m_field = new Field2d();
     SmartDashboard.putData("Vision field", m_field);
@@ -63,23 +77,40 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Optional<EstimatedRobotPose> result = m_photonPoseEstimator.update();
+    for (PhotonPoseEstimator photonPoseEstimator : m_photonPoseEstimators) {
+      addVisionMeaurementToDrivetrain(photonPoseEstimator);
+    }
+  }
+
+  public void addVisionMeaurementToDrivetrain(PhotonPoseEstimator photonPoseEstimator) {
+    Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
     if (!result.isPresent()) {return;}
 
     EstimatedRobotPose robotPose = result.get();
-    Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
-    double timestampSeconds = result.get().timestampSeconds;
-
     // Estimates based on a single tag must pass ambiguity test.
     if (robotPose.targetsUsed.size() == 1) {
       PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
       if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {return;}
     }
     
+    Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
+    double timestampSeconds = result.get().timestampSeconds;
     Drivetrain.getInstance().addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
 
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);
+  }
+
+  @Log (name="# cameras seeing AprilTag")
+  public int getNCamerasSeeingAprilTag() {
+    int nCameras = 0;
+    for (PhotonPoseEstimator photonPoseEstimator : m_photonPoseEstimators) {
+      Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
+      if (result.isPresent()) {
+        ++nCameras;
+      };
+    }
+    return nCameras;
   }
 }
 
