@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -25,11 +26,16 @@ public class Elevator extends SubsystemBase implements Loggable {
   // Physical properties.
   public static final double MAX_EXTENSION_INCHES = 15.0;
   private static final double OUTPUT_SPROCKET_PITCH_RADIUS_INCHES = 1.751 / 2.0;
-  private static final double GEAR_RATIO = 5.0 * 3.0;
+  private static final double GEAR_RATIO = 9.0 * 4.0;
 
   private static final double HOLD_POSITION_VOLTAGE = 0.25;
 
   public static final double ALLOWABLE_ERROR_INCHES = 0.1;
+
+  private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
+    .withSupplyCurrentThreshold(25)
+    .withSupplyTimeThreshold(0.5)
+    .withSupplyCurrentLimit(25);
 
   // Motors.
   private final TalonFX m_leftMotor;
@@ -46,7 +52,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
   private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
-      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 4.0);
+      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 8.0);
 
   // TODO: add separate configs for climb.
   // private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -70,6 +76,8 @@ public class Elevator extends SubsystemBase implements Loggable {
   private void setUpMotor(TalonFX motor, InvertedValue invert) {
     motor.getConfigurator().apply(new TalonFXConfiguration(), K_TIMEOUT_MS);
     motor.setNeutralMode(NeutralModeValue.Brake);
+
+    motor.getConfigurator().apply(CURRENT_LIMITS_CONFIGS);
 
     motor.getConfigurator().apply(
       new FeedbackConfigs().withSensorToMechanismRatio(GEAR_RATIO),
