@@ -19,10 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
-
-public class Vision extends SubsystemBase implements Loggable {
+public class Vision extends SubsystemBase {
   public static Vision instance = null;
 
   public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -99,18 +96,6 @@ public class Vision extends SubsystemBase implements Loggable {
 
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);
-  }
-
-  @Log (name="# cameras seeing AprilTag")
-  public int getNCamerasSeeingAprilTag() {
-    int nCameras = 0;
-    for (PhotonPoseEstimator photonPoseEstimator : m_photonPoseEstimators) {
-      Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
-      if (result.isPresent()) {
-        ++nCameras;
-      };
-    }
-    return nCameras;
   }
 }
 
