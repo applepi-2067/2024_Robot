@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0802897231924302,
-      "y": 6.655997336192904
+      "x": 1.08,
+      "y": 6.66
     },
-    "rotation": -123.56278770976381
+    "rotation": -116.36440086712557
   },
   "command": {
     "type": "sequential",
@@ -30,10 +30,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupAimShoot"
+                  "name": "Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
           }
         },
         {
@@ -49,29 +55,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupPiece"
+                  "name": "Pickup"
                 }
               }
             ]
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Alt 3-piece #3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "RampupShooter"
-                }
-              }
-            ]
+            "pathName": "Alt 3-piece #3"
           }
         },
         {
