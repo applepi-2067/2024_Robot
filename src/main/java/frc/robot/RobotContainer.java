@@ -3,6 +3,7 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -100,6 +101,7 @@ public class RobotContainer {
     );
     NamedCommands.registerCommand("Pickup", new PickupPiece());
     NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
+    NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -159,12 +161,12 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.leftTrigger().onTrue(new InstantCommand(m_drivetrain::resetGyro));
+    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_driverController.a().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
+    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
     m_driverController.b().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
     m_driverController.x().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))));
-    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
 
     // Operator.
     m_operatorController.a().onTrue(new ScoreAmp());
@@ -183,6 +185,7 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
   }
+  
 
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {
