@@ -13,7 +13,7 @@ public class ScoreAmp extends SequentialCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         new SetShoulderPosition(20.0, true),
-        new SetElevatorPosition(12.0, true)
+        new SetElevatorPosition(13.0, true)
       ),
 
       new SetFeederVelocity(-3_000.0),

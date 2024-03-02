@@ -152,12 +152,12 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.leftTrigger().onTrue(new InstantCommand(m_drivetrain::resetGyro));
+    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_driverController.a().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
+    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
     m_driverController.b().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
     m_driverController.x().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))));
-    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
 
     // Operator.
     m_operatorController.a().onTrue(new ScoreAmp());
