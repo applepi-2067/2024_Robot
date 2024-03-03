@@ -95,13 +95,14 @@ public class RobotContainer {
       "AimShoot",
       new SequentialCommandGroup(
         new AutoAimShoulder(false),
-        new WaitUntilSpeakerOriented(),
+        //new WaitUntilSpeakerOriented(),
         new ShootGamePiece(true)
       )
     );
     NamedCommands.registerCommand("Pickup", new PickupPiece());
     NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
     NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
+    NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
