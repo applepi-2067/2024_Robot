@@ -30,10 +30,34 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupAimShoot"
+                  "name": "Pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "KillShooter"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2-piece #2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitUntilSpeakerOriented"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
           }
         },
         {

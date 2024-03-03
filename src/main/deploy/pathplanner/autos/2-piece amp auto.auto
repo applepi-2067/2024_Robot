@@ -22,6 +22,12 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "CoastShooter"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "2-piece amp"

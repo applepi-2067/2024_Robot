@@ -103,6 +103,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
     NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
+    NamedCommands.registerCommand("CoastShooter", new SetShooterPercentOutput(0.0));
+    NamedCommands.registerCommand("FirstShot", new SetShooterVelocity(3_000, false));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,

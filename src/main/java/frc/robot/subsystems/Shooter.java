@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
-        .withSupplyCurrentThreshold(60)
+        .withSupplyCurrentThreshold(40)
         .withSupplyTimeThreshold(0.5)
         .withSupplyCurrentLimit(40);
     
@@ -53,6 +53,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     private final TalonFX m_topMotor;
     private final TalonFX m_bottomMotor;
 
+    
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
