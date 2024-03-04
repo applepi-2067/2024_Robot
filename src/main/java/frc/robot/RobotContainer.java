@@ -3,6 +3,7 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -21,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -34,7 +37,7 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
-
+import frc.robot.commands.WaitUntilSpeakerOriented;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -43,6 +46,7 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.AprilTag;
 import frc.robot.subsystems.swerve.DriveMotor;
+import frc.robot.utils.Utils;
 import frc.robot.subsystems.Elevator;
 
 
@@ -80,20 +84,25 @@ public class RobotContainer {
       "PickupAimShoot",
       new SequentialCommandGroup(
         new PickupPiece(),
-        new ParallelDeadlineGroup(
-          new ShootGamePiece(true),
-          new AutoAimShoulder()
+        new SequentialCommandGroup(
+          new AutoAimShoulder(false),
+          new WaitUntilSpeakerOriented(),
+          new ShootGamePiece(true)
         )
       )
     );
     NamedCommands.registerCommand(
       "AimShoot",
-      new ParallelDeadlineGroup(
-        new ShootGamePiece(true),
-        new AutoAimShoulder()
+      new SequentialCommandGroup(
+        new AutoAimShoulder(false),
+        //new WaitUntilSpeakerOriented(),
+        new ShootGamePiece(true)
       )
     );
-    NamedCommands.registerCommand("CoastShooter", new SetShooterPercentOutput(0.0));
+    NamedCommands.registerCommand("Pickup", new PickupPiece());
+    NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
+    NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
+    NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -132,6 +141,7 @@ public class RobotContainer {
   }
 
   public Optional<Rotation2d> getTargetRotationOverride() {
+    SmartDashboard.putBoolean("Feeder piece detected", Feeder.getInstance().gamePieceDetected());
     if (Feeder.getInstance().gamePieceDetected()) {
       return Optional.of(m_drivetrain.getRobotToPoseRotation(m_drivetrain.getAprilTagPose(AprilTag.SPEAKER)));
     }
@@ -173,9 +183,10 @@ public class RobotContainer {
       )
     );
 
-    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
+    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
   }
+  
 
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {
