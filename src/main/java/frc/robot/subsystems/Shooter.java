@@ -47,8 +47,8 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
-    public static final double SHOOTING_SPEED_RPM = 4_200.0;
-    public static final double ALLOWABLE_ERROR_RPM =100.0;
+    public static final double SHOOTING_SPEED_RPM = 4_200.0;  // TODO: determine shooting speed.
+    public static final double ALLOWABLE_ERROR_RPM = 100.0;
 
     private final TalonFX m_topMotor;
     private final TalonFX m_bottomMotor;
