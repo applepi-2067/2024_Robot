@@ -3,7 +3,6 @@ package frc.robot;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -20,10 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -46,7 +42,6 @@ import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.AprilTag;
 import frc.robot.subsystems.swerve.DriveMotor;
-import frc.robot.utils.Utils;
 import frc.robot.subsystems.Elevator;
 
 
@@ -80,25 +75,17 @@ public class RobotContainer {
     m_vision = Vision.getInstance();
   
     // PathPlanner.
-    NamedCommands.registerCommand(
-      "PickupAimShoot",
-      new SequentialCommandGroup(
-        new PickupPiece(),
-        new SequentialCommandGroup(
-          new AutoAimShoulder(false),
-          new WaitUntilSpeakerOriented(),
-          new ShootGamePiece(true)
-        )
-      )
+    SequentialCommandGroup aimShoot = new SequentialCommandGroup(
+      new AutoAimShoulder(false),
+      new WaitUntilSpeakerOriented(),
+      new ShootGamePiece(true)
     );
-    NamedCommands.registerCommand(
-      "AimShoot",
-      new SequentialCommandGroup(
-        new AutoAimShoulder(false),
-        //new WaitUntilSpeakerOriented(),
-        new ShootGamePiece(true)
-      )
+
+    NamedCommands.registerCommand("AimShoot", aimShoot);
+    NamedCommands.registerCommand("PickupAimShoot",
+      new SequentialCommandGroup(new PickupPiece(), aimShoot)
     );
+
     NamedCommands.registerCommand("Pickup", new PickupPiece());
     NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
     NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
