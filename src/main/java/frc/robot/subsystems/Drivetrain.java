@@ -83,7 +83,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     // Create and reset gyro.
     m_gyro = new PigeonIMU(RobotMap.canIDs.Drivetrain.GYRO);
-    resetGyro();
+    m_gyro.setYaw(0.0);
 
     // Odometry.
     m_odometry = new SwerveDrivePoseEstimator(
@@ -192,10 +192,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  // TODO: reset gyro to actual field-oriented (use odometry pose).
-  // FIXME: resetting gyro confuses robot pose estimation.
   public void resetGyro() {
-    m_gyro.setYaw(0.0);
+    // Field-orient gyro using odometry pose.
+    // TODO: check gyro field-orientation correct.
+    m_gyro.setYaw(getRobotPose2d().getRotation().getDegrees());
   }
 
   @Log (name="Heading (deg)")
