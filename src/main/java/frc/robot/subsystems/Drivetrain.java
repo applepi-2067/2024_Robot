@@ -194,8 +194,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void resetGyro() {
     // Field-orient gyro using odometry pose.
-    // TODO: check gyro field-orientation correct.
-    m_gyro.setYaw(getRobotPose2d().getRotation().getDegrees());
+    Rotation2d robotHeading = getRobotPose2d().getRotation();
+    if (!isBlue()) {
+      robotHeading = robotHeading.plus(Rotation2d.fromDegrees(180.0));
+    }
+
+    m_gyro.setYaw(robotHeading.getDegrees());
   }
 
   @Log (name="Heading (deg)")
@@ -253,9 +257,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].toString();
   }
 
+  public boolean isBlue() {
+    return DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+  }
+
   // TODO: clean up april tag pose getters. (Silent failing?)
   public Pose2d getAprilTagPose(AprilTag aprilTag) {
-    boolean isBlue = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+    boolean isBlue = isBlue();
     
     int aprilTagID;
     if (aprilTag == AprilTag.AMP) {
