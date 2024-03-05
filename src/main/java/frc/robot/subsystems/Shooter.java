@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     // PIDs.
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
-        .withKP(0.015)
-        .withKV(0.116);
+        .withKP(0.018)
+        .withKV(0.1185);
 
     private static final double PERCENT_DEADBAND = 0.001;
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
-    public static final double SHOOTING_SPEED_RPM = 4_200.0;  // TODO: determine shooting speed.
+    public static final double SHOOTING_SPEED_RPM = 4_200.0;
     public static final double ALLOWABLE_ERROR_RPM = 50.0;
 
     private final TalonFX m_topMotor;
