@@ -233,8 +233,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_field.setRobotPose(m_pose);
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
 
-    SmartDashboard.putNumber("dist to speaker (in)", getDistToSpeakerInches());
-
     SmartDashboard.putNumber("Speaker error (deg)", m_pose.getRotation().getDegrees() - getRobotToPoseRotation(getAprilTagPose(AprilTag.SPEAKER)).getDegrees());
   }
 

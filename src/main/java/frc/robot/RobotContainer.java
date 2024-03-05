@@ -157,11 +157,9 @@ public class RobotContainer {
     m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
 
     // Operator.
-    // m_operatorController.a().onTrue(new ScoreAmp());
+    m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
 
-    SmartDashboard.putNumber("targetPosition", Shoulder.ZERO_POSITION_DEGREES);
-    m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false, true));
     m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
@@ -172,7 +170,7 @@ public class RobotContainer {
       )
     );
 
-    // m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
+    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
   }
   
