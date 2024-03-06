@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -64,8 +65,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // Pose facing.
   private Optional<AprilTag> m_targetAprilTag = Optional.empty();
-  private static final double POSE_FACING_kP = 1.725;
-  private static final double POSE_FACING_kS = 0.15;  // TODO: add kI and IZone.
+  private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
+  private static final double POSE_FACING_kS = -0.15;
+  private static final double POSE_FACING_IZONE = 4.0;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -99,6 +101,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     SmartDashboard.putData("Field", m_field);
 
     m_pose = getRobotPose2d();
+
+    m_poseFacingPIDController.setIZone(POSE_FACING_IZONE);
   }
 
   public SwerveModulePosition[] getSwerveModulePositions() {
@@ -130,16 +134,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {
-      Rotation2d robotToTargetRotation = getRobotToPoseTransformRotation(getAprilTagPose(m_targetAprilTag.get()));
+      Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+      Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
   
       // Face away from amp and trap.
       if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
-        robotToTargetRotation = robotToTargetRotation.plus(Rotation2d.fromDegrees(180.0));
+        robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
       }
       
-      rightStickX = (robotToTargetRotation.getRadians() / Math.PI) * POSE_FACING_kP;
-      rightStickX += Math.signum(rightStickX) * POSE_FACING_kS;
-      rightStickX *= -1.0;  // Pre-account for stick-sign flip.
+      rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
+      rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
     }
     
     // Deadband and square stick values.
@@ -306,13 +310,5 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     double dy = targetPose.getY() - robotPose2d.getY();
     Rotation2d targetRotation = Rotation2d.fromRadians(Math.atan2(dy, dx));
     return targetRotation;
-  }
-  
-  public Rotation2d getRobotToPoseTransformRotation(Pose2d targetPose) {
-    Pose2d robotPose2d = getRobotPose2d();
-    Rotation2d targetRotation = getRobotToPoseRotation(targetPose);
-
-    Rotation2d robotToTargetRotation = robotPose2d.getRotation().minus(targetRotation).unaryMinus();
-    return robotToTargetRotation;
   }
 }
