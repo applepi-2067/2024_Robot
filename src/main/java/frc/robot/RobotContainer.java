@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import io.github.oblarg.oblog.Logger;
 import frc.robot.subsystems.BlinkinLeds;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.BlinkinLeds.LEDMode;
+
 
 public class RobotContainer {
   // Subsystems.
@@ -60,12 +60,14 @@ public class RobotContainer {
      ) 
     );
 
-    m_driverController.y().onTrue(
+    m_driverController.povLeft().onTrue(
      new InstantCommand(
       () -> m_blinkinLeds.setLEDManual(0.07),
       m_blinkinLeds
      ) 
     );
+    
+
   }
 
   // Use this to pass the autonomous command to the main Robot.java class.
