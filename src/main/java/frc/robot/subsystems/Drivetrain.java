@@ -131,6 +131,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     setSwerveModuleStates(states);
   }
 
+  // TODO: functional implementation with pose-facing rightStickX passed in.
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {

@@ -33,7 +33,7 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
-import frc.robot.commands.WaitUntilSpeakerOriented;
+import frc.robot.commands.FaceSpeaker;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -75,20 +75,17 @@ public class RobotContainer {
     m_vision = Vision.getInstance();
   
     // PathPlanner.
-    SequentialCommandGroup aimShoot = new SequentialCommandGroup(
-      new AutoAimShoulder(false),
-      //new WaitUntilSpeakerOriented(),
-      new ShootGamePiece(true)
-    );
-
-    NamedCommands.registerCommand("AimShoot", aimShoot);
-    NamedCommands.registerCommand("PickupAimShoot",
-      new SequentialCommandGroup(new PickupPiece(), aimShoot)
-    );
-
     NamedCommands.registerCommand("Pickup", new PickupPiece());
-    NamedCommands.registerCommand("RampupShooter", new SetShooterPercentOutput(Shooter.SHOOTING_SPEED_RPM));
-    NamedCommands.registerCommand("WaitUntilSpeakerOriented", new WaitUntilSpeakerOriented());
+    NamedCommands.registerCommand(
+      "AimShoot", 
+      new SequentialCommandGroup(
+        new ParallelCommandGroup(
+          new AutoAimShoulder(false),
+          new FaceSpeaker()
+        ),
+        new ShootGamePiece(true)
+      )
+    );
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
@@ -113,7 +110,7 @@ public class RobotContainer {
       m_drivetrain
     );
 
-    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);
+    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);  // FIXME: robot doesn't obey rotation override.
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto chooser", autoChooser);
