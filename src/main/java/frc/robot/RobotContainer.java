@@ -176,9 +176,16 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
 
-    m_driverController.povLeft().onTrue(
+    m_operatorController.povLeft().onTrue(
      new InstantCommand(
       () -> m_blinkinLEDs.setLEDManual(0.07),
+      m_blinkinLEDs
+     ) 
+    );
+
+    m_operatorController.povRight().onTrue(
+     new InstantCommand(
+      () -> m_blinkinLEDs.latchLED(0.07, false),
       m_blinkinLEDs
      ) 
     );
