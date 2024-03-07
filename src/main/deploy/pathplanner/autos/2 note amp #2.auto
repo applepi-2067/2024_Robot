@@ -12,15 +12,40 @@
     "data": {
       "commands": [
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "AimShoot"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "2 note amp"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2 note amp"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitUntilSpeakerOriented"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
           }
         }
       ]
