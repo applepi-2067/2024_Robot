@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.08,
-      "y": 6.66
+      "x": 1.1032245744947966,
+      "y": 6.710309340732804
     },
-    "rotation": -116.36440086712557
+    "rotation": -126.86989764584402
   },
   "command": {
     "type": "sequential",
@@ -22,9 +22,15 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "CoastShooter"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
-                  "pathName": "Alt 3-piece #1"
+                  "pathName": "2-piece amp"
                 }
               },
               {
@@ -39,32 +45,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AimShoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Alt 3-piece #2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Alt 3-piece #3"
+            "name": "WaitUntilSpeakerOriented"
           }
         },
         {

@@ -130,7 +130,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {
-      Rotation2d robotToTargetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+      Rotation2d robotToTargetRotation = getRobotToPoseTransformRotation(getAprilTagPose(m_targetAprilTag.get()));
   
       // Face away from amp and trap.
       if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
@@ -226,6 +226,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
+
+    SmartDashboard.putNumber("Speaker error (deg)", m_pose.getRotation().getDegrees() - getRobotToPoseRotation(getAprilTagPose(AprilTag.SPEAKER)).getDegrees());
   }
 
   // Log state.
@@ -286,13 +288,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public double getDistToSpeakerInches() {
     return Units.metersToInches(getDistToSpeakerMeters());
   }
-  
+
   public Rotation2d getRobotToPoseRotation(Pose2d targetPose) {
     Pose2d robotPose2d = getRobotPose2d();
 
     double dx = targetPose.getX() - robotPose2d.getX();
     double dy = targetPose.getY() - robotPose2d.getY();
     Rotation2d targetRotation = Rotation2d.fromRadians(Math.atan2(dy, dx));
+    return targetRotation;
+  }
+  
+  public Rotation2d getRobotToPoseTransformRotation(Pose2d targetPose) {
+    Pose2d robotPose2d = getRobotPose2d();
+    Rotation2d targetRotation = getRobotToPoseRotation(targetPose);
 
     Rotation2d robotToTargetRotation = robotPose2d.getRotation().minus(targetRotation).unaryMinus();
     return robotToTargetRotation;

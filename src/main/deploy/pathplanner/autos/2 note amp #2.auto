@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.08,
-      "y": 6.66
+      "x": 1.0095378821285446,
+      "y": 6.722020177278586
     },
-    "rotation": -116.36440086712557
+    "rotation": -120.1013045655997
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Alt 3-piece #1"
+                  "pathName": "2 note amp"
                 }
               },
               {
@@ -39,32 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AimShoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Alt 3-piece #2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Alt 3-piece #3"
+            "name": "WaitUntilSpeakerOriented"
           }
         },
         {
