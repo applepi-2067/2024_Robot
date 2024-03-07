@@ -290,18 +290,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     TRAP
   }
 
-  @Log (name="Dist to speaker (m)")
-  public double getDistToSpeakerMeters() {
-    Pose2d speakerPose2d = getAprilTagPose(AprilTag.SPEAKER);
-    double dx = speakerPose2d.getX() - m_pose.getX();
-    double dy = speakerPose2d.getY() - m_pose.getY();
-    double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));
-    return distToSpeaker;
+  public double getDistToAprilTagMeters(AprilTag aprilTag) {
+    Translation2d aprilTagTranslation2d = getAprilTagPose(aprilTag).getTranslation();
+    Translation2d robotTranslation2d = getRobotPose2d().getTranslation();
+    return aprilTagTranslation2d.getDistance(robotTranslation2d);
   }
 
   @Log (name="Dist to speaker (in)")
   public double getDistToSpeakerInches() {
-    return Units.metersToInches(getDistToSpeakerMeters());
+    double distToSpeakerMeters = getDistToAprilTagMeters(AprilTag.SPEAKER);
+    return Units.metersToInches(distToSpeakerMeters);
   }
 
   public Rotation2d getRobotToPoseRotation(Pose2d targetPose) {
