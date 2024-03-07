@@ -77,7 +77,7 @@ public class RobotContainer {
     // PathPlanner.
     SequentialCommandGroup aimShoot = new SequentialCommandGroup(
       new AutoAimShoulder(false),
-      new WaitUntilSpeakerOriented(),
+      //new WaitUntilSpeakerOriented(),
       new ShootGamePiece(true)
     );
 
