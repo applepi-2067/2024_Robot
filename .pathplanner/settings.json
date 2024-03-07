@@ -3,8 +3,9 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
+    "2-piece",
     "Alt 3-piece",
-    "2-piece"
+    "New Folder"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.0,
