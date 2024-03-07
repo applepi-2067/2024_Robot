@@ -275,7 +275,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       aprilTagID = isBlue ? 6 : 5;
     }
     else if (aprilTag == AprilTag.TRAP) {
-      aprilTagID = isBlue ? 15 : 12;
+      aprilTagID = isBlue ? 15 : 12;  // TODO: select closest trap.
     }
     else {
       aprilTagID = isBlue ? 7 : 4;  // Default at speaker.
