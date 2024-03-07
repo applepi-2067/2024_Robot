@@ -43,6 +43,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.AprilTag;
 import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.BlinkinLEDs;
 
 
 public class RobotContainer {
@@ -54,6 +55,7 @@ public class RobotContainer {
   private final Shoulder m_shoulder;
   private final Elevator m_elevator;
   private final Vision m_vision;
+  private final BlinkinLEDs m_blinkinLEDs;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -73,6 +75,7 @@ public class RobotContainer {
     m_shoulder = Shoulder.getInstance();
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
+    m_blinkinLEDs = BlinkinLEDs.getInstance();
   
     // PathPlanner.
     SequentialCommandGroup aimShoot = new SequentialCommandGroup(
@@ -172,6 +175,13 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
+
+    m_driverController.povLeft().onTrue(
+     new InstantCommand(
+      () -> m_blinkinLEDs.setLEDManual(0.07),
+      m_blinkinLEDs
+     ) 
+    );
   }
   
 
