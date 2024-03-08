@@ -92,13 +92,7 @@ public class RobotContainer {
         Drivetrain.CENTER_TO_WHEEL_OFFSET_METERS,
         new ReplanningConfig()
       ),
-      () -> {
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
+      () -> {return !m_drivetrain.isBlue();},
       m_drivetrain
     );
 
