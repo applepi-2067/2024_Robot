@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -34,7 +33,7 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
-
+import frc.robot.commands.FaceSpeaker;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -76,24 +75,18 @@ public class RobotContainer {
     m_vision = Vision.getInstance();
   
     // PathPlanner.
+    NamedCommands.registerCommand("Pickup", new PickupPiece());
     NamedCommands.registerCommand(
-      "PickupAimShoot",
+      "AimShoot", 
       new SequentialCommandGroup(
-        new PickupPiece(),
-        new ParallelDeadlineGroup(
-          new ShootGamePiece(true),
-          new AutoAimShoulder()
-        )
+        new ParallelCommandGroup(
+          new AutoAimShoulder(false),
+          new FaceSpeaker()
+        ),
+        new ShootGamePiece(true)
       )
     );
-    NamedCommands.registerCommand(
-      "AimShoot",
-      new ParallelDeadlineGroup(
-        new ShootGamePiece(true),
-        new AutoAimShoulder()
-      )
-    );
-    NamedCommands.registerCommand("CoastShooter", new SetShooterPercentOutput(0.0));
+    NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -117,7 +110,7 @@ public class RobotContainer {
       m_drivetrain
     );
 
-    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);
+    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);  // FIXME: robot doesn't obey rotation override.
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto chooser", autoChooser);
@@ -132,6 +125,7 @@ public class RobotContainer {
   }
 
   public Optional<Rotation2d> getTargetRotationOverride() {
+    SmartDashboard.putBoolean("Feeder piece detected", Feeder.getInstance().gamePieceDetected());
     if (Feeder.getInstance().gamePieceDetected()) {
       return Optional.of(m_drivetrain.getRobotToPoseRotation(m_drivetrain.getAprilTagPose(AprilTag.SPEAKER)));
     }
@@ -152,12 +146,12 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.leftTrigger().onTrue(new InstantCommand(m_drivetrain::resetGyro));
+    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
 
-    m_driverController.a().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
+    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
     m_driverController.b().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
     m_driverController.x().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))));
-    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
 
     // Operator.
     m_operatorController.a().onTrue(new ScoreAmp());
@@ -173,9 +167,10 @@ public class RobotContainer {
       )
     );
 
-    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder());
+    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
   }
+  
 
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {

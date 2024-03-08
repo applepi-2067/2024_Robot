@@ -7,6 +7,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -64,8 +65,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   // Pose facing.
   private Optional<AprilTag> m_targetAprilTag = Optional.empty();
-  private static final double POSE_FACING_kP = 1.725;
-  private static final double POSE_FACING_kS = 0.15;  // TODO: add kI and IZone.
+  private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
+  private static final double POSE_FACING_kS = -0.15;
+  private static final double POSE_FACING_IZONE = 4.0;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -83,7 +85,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     // Create and reset gyro.
     m_gyro = new PigeonIMU(RobotMap.canIDs.Drivetrain.GYRO);
-    resetGyro();
+    m_gyro.setYaw(0.0);
 
     // Odometry.
     m_odometry = new SwerveDrivePoseEstimator(
@@ -99,6 +101,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     SmartDashboard.putData("Field", m_field);
 
     m_pose = getRobotPose2d();
+
+    m_poseFacingPIDController.setIZone(POSE_FACING_IZONE);
   }
 
   public SwerveModulePosition[] getSwerveModulePositions() {
@@ -127,19 +131,20 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     setSwerveModuleStates(states);
   }
 
+  // TODO: functional implementation with pose-facing rightStickX passed in.
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {
-      Rotation2d robotToTargetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+      Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
+      Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
   
       // Face away from amp and trap.
       if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
-        robotToTargetRotation = robotToTargetRotation.plus(Rotation2d.fromDegrees(180.0));
+        robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
       }
       
-      rightStickX = (robotToTargetRotation.getRadians() / Math.PI) * POSE_FACING_kP;
-      rightStickX += Math.signum(rightStickX) * POSE_FACING_kS;
-      rightStickX *= -1.0;  // Pre-account for stick-sign flip.
+      rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
+      rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
     }
     
     // Deadband and square stick values.
@@ -193,7 +198,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   public void resetGyro() {
-    m_gyro.setYaw(0.0);
+    // Field-orient gyro using odometry pose.
+    Rotation2d robotHeading = getRobotPose2d().getRotation();
+    if (!isBlue()) {
+      robotHeading = robotHeading.plus(Rotation2d.fromDegrees(180.0));
+    }
+
+    m_gyro.setYaw(robotHeading.getDegrees());
   }
 
   @Log (name="Heading (deg)")
@@ -226,6 +237,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
+
+    SmartDashboard.putNumber("Speaker error (deg)", m_pose.getRotation().getDegrees() - getRobotToPoseRotation(getAprilTagPose(AprilTag.SPEAKER)).getDegrees());
   }
 
   // Log state.
@@ -249,16 +262,20 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return m_swerveModules[3].toString();
   }
 
+  public boolean isBlue() {
+    return DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+  }
+
   // TODO: clean up april tag pose getters. (Silent failing?)
   public Pose2d getAprilTagPose(AprilTag aprilTag) {
-    boolean isBlue = DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
+    boolean isBlue = isBlue();
     
     int aprilTagID;
     if (aprilTag == AprilTag.AMP) {
       aprilTagID = isBlue ? 6 : 5;
     }
     else if (aprilTag == AprilTag.TRAP) {
-      aprilTagID = isBlue ? 15 : 12;
+      aprilTagID = isBlue ? 15 : 12;  // TODO: select closest trap.
     }
     else {
       aprilTagID = isBlue ? 7 : 4;  // Default at speaker.
@@ -273,28 +290,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     TRAP
   }
 
-  @Log (name="Dist to speaker (m)")
-  public double getDistToSpeakerMeters() {
-    Pose2d speakerPose2d = getAprilTagPose(AprilTag.SPEAKER);
-    double dx = speakerPose2d.getX() - m_pose.getX();
-    double dy = speakerPose2d.getY() - m_pose.getY();
-    double distToSpeaker = Math.sqrt((dx * dx) + (dy * dy));
-    return distToSpeaker;
+  public double getDistToAprilTagMeters(AprilTag aprilTag) {
+    Translation2d aprilTagTranslation2d = getAprilTagPose(aprilTag).getTranslation();
+    Translation2d robotTranslation2d = getRobotPose2d().getTranslation();
+    return aprilTagTranslation2d.getDistance(robotTranslation2d);
   }
 
   @Log (name="Dist to speaker (in)")
   public double getDistToSpeakerInches() {
-    return Units.metersToInches(getDistToSpeakerMeters());
+    double distToSpeakerMeters = getDistToAprilTagMeters(AprilTag.SPEAKER);
+    return Units.metersToInches(distToSpeakerMeters);
   }
-  
+
   public Rotation2d getRobotToPoseRotation(Pose2d targetPose) {
     Pose2d robotPose2d = getRobotPose2d();
 
     double dx = targetPose.getX() - robotPose2d.getX();
     double dy = targetPose.getY() - robotPose2d.getY();
     Rotation2d targetRotation = Rotation2d.fromRadians(Math.atan2(dy, dx));
-
-    Rotation2d robotToTargetRotation = robotPose2d.getRotation().minus(targetRotation).unaryMinus();
-    return robotToTargetRotation;
+    return targetRotation;
   }
 }

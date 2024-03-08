@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.454549670868242,
-      "y": 5.539225686154654
+      "y": 6.476092609817173
     },
     "rotation": 180.0
   },
@@ -24,13 +24,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2-piece"
+                  "pathName": "Amp 2nd note"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "PickupAimShoot"
+                  "name": "Pickup"
                 }
               }
             ]
@@ -39,7 +39,13 @@
         {
           "type": "named",
           "data": {
-            "name": "CoastShooter"
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "KillShooter"
           }
         }
       ]
