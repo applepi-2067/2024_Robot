@@ -5,14 +5,10 @@ import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -96,8 +92,6 @@ public class RobotContainer {
       m_drivetrain
     );
 
-    PPHolonomicDriveController.setRotationTargetOverride(this::getTargetRotationOverride);  // FIXME: robot doesn't obey rotation override.
-
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto chooser", autoChooser);
 
@@ -108,15 +102,6 @@ public class RobotContainer {
     configureBindings();
 
     Logger.configureLoggingAndConfig(this, false);
-  }
-
-  public Optional<Rotation2d> getTargetRotationOverride() {
-    SmartDashboard.putBoolean("Feeder piece detected", Feeder.getInstance().gamePieceDetected());
-    if (Feeder.getInstance().gamePieceDetected()) {
-      return Optional.of(m_drivetrain.getRobotToPoseRotation(m_drivetrain.getAprilTagPose(AprilTag.SPEAKER)));
-    }
-    
-    return Optional.empty();
   }
 
   private void configureBindings() {
@@ -167,7 +152,6 @@ public class RobotContainer {
     m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
   }
   
-
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();

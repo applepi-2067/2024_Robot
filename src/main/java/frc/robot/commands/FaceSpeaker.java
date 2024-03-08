@@ -41,7 +41,7 @@ public class FaceSpeaker extends Command {
   public boolean isFinished() {
     return Utils.withinThreshold(
       drivetrain.getRobotPose2d().getRotation().getDegrees(),
-      drivetrain.getRobotToPoseRotation(drivetrain.getAprilTagPose(AprilTag.SPEAKER)).getDegrees(),
+      drivetrain.getRobotToPoseRotation(drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.SPEAKER))).getDegrees(),
       ALLOWABLE_ERROR_DEGREES
     );
   }
