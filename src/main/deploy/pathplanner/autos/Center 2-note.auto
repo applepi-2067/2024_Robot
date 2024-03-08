@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.454549670868242,
-      "y": 6.476092609817173
+      "y": 5.539225686154654
     },
     "rotation": 180.0
   },
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp note 2"
+                  "pathName": "Center note 2"
                 }
               },
               {
@@ -51,6 +51,6 @@
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Center",
   "choreoAuto": false
 }

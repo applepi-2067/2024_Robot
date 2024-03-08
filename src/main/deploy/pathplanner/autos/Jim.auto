@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.454549670868242,
-      "y": 6.476092609817173
+      "x": 1.4135617429580065,
+      "y": 4.286166175756032
     },
-    "rotation": 180.0
+    "rotation": -179.2042764472607
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp note 2"
+                  "pathName": "Jim"
                 }
               },
               {
@@ -32,25 +32,19 @@
                 "data": {
                   "name": "Pickup"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CloseAimShoot"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "KillShooter"
           }
         }
       ]
     }
   },
-  "folder": "Amp",
+  "folder": null,
   "choreoAuto": false
 }

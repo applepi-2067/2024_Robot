@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.454549670868242,
-      "y": 6.476092609817173
+      "x": 1.44283883432246,
+      "y": 4.590647925946351
     },
-    "rotation": 180.0
+    "rotation": 179.40628260378742
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp note 2"
+                  "pathName": "Source note 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source note 3"
                 }
               },
               {
@@ -51,6 +76,6 @@
       ]
     }
   },
-  "folder": "Amp",
+  "folder": "Source",
   "choreoAuto": false
 }
