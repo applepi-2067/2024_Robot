@@ -185,7 +185,7 @@ public class RobotContainer {
 
     m_operatorController.povRight().onTrue(
      new InstantCommand(
-      () -> m_blinkinLEDs.latchLED(0.07, false),
+      () -> m_blinkinLEDs.setLEDManual(0.89), 
       m_blinkinLEDs
      ) 
     );
