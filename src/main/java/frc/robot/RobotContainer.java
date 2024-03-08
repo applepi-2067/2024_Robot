@@ -28,6 +28,7 @@ import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
+import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
@@ -169,6 +170,16 @@ public class RobotContainer {
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
+
+    // Trap score.
+    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
+    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
+
+    m_operatorController.y().onTrue(new SetShoulderPosition(-10.0, false));
+    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
+
+    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
+    m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
   }
   
 
