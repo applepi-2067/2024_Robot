@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shoulder;
 
@@ -23,12 +22,6 @@ public class ScoreAmp extends SequentialCommandGroup {
       new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
       new SetFeederVelocity(0.0),
       new SetElevatorPosition(0.0, false)
-    );
-
-    addRequirements(
-      Shoulder.getInstance(),
-      Feeder.getInstance(),
-      Elevator.getInstance()
     );
   }
 }

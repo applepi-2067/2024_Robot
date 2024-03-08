@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
+import frc.robot.commands.AimShoot;
 import frc.robot.commands.AutoAimShoulder;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
@@ -34,7 +34,6 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
-import frc.robot.commands.FaceSpeaker;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -77,16 +76,8 @@ public class RobotContainer {
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
-    NamedCommands.registerCommand(
-      "AimShoot", 
-      new SequentialCommandGroup(
-        new ParallelCommandGroup(
-          new AutoAimShoulder(false),
-          new FaceSpeaker()
-        ),
-        new ShootGamePiece(true)
-      )
-    );
+    NamedCommands.registerCommand("AimShoot", new AimShoot(false));
+    NamedCommands.registerCommand("CloseAimShoot", new AimShoot(true));
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
@@ -169,7 +160,7 @@ public class RobotContainer {
     );
 
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
-    m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
+    m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
 
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
