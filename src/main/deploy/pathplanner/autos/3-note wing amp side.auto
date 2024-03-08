@@ -39,12 +39,6 @@
         {
           "type": "named",
           "data": {
-            "name": "WaitUntilSpeakerOriented"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AimShoot"
           }
         },
@@ -70,13 +64,13 @@
         {
           "type": "named",
           "data": {
-            "name": "WaitUntilSpeakerOriented"
+            "name": "AimShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimShoot"
+            "name": "KillShooter"
           }
         }
       ]
