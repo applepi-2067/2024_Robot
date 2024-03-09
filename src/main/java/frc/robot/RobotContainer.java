@@ -141,7 +141,9 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
 
-    m_operatorController.povLeft().onTrue(new SetIntakeVelocity(-2_000.0));
+    m_operatorController.povDown().onTrue(new SetIntakeVelocity(-2_000.0));
+    m_operatorController.povRight().onTrue(new SetShoulderPosition(58.5, false));  // TODO: test subwoofer and podium angle.
+    m_operatorController.povLeft().onTrue(new SetShoulderPosition(36.3, false));
 
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
