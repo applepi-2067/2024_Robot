@@ -36,7 +36,7 @@ public class Vision extends SubsystemBase {
   private static final Transform3d[] ROBOT_TO_CAMERA_TRANSFORMS = {
     new Transform3d(
       new Translation3d(Units.inchesToMeters(9.75), Units.inchesToMeters(0.0), Units.inchesToMeters(22.0)),
-      new Rotation3d(0.0, Units.degreesToRadians(-26.0), Units.degreesToRadians(-2.0))  // TODO: check camera rotation offset.
+      new Rotation3d(0.0, Units.degreesToRadians(-26.0), Units.degreesToRadians(0.0))
     ),
     new Transform3d(
       new Translation3d(Units.inchesToMeters(-12.0), 0.0, Units.inchesToMeters(9.0)),
