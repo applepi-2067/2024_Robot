@@ -32,12 +32,6 @@
                 "data": {
                   "name": "Pickup"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CloseAimShoot"
-                }
               }
             ]
           }
