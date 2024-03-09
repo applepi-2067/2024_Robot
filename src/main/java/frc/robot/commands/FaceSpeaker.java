@@ -11,7 +11,7 @@ import frc.robot.utils.Utils;
 public class FaceSpeaker extends Command {
   private final Drivetrain drivetrain;
 
-  private static final double ALLOWABLE_ERROR_DEGREES = 1.0;
+  private static final double ALLOWABLE_ERROR_DEGREES = 0.5;
 
   public FaceSpeaker() {
     drivetrain = Drivetrain.getInstance();
