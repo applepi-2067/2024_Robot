@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     
     // Speeds for shooting.
     public static final double SHOOTING_SPEED_RPM = 4_200.0;
-    public static final double CLOSE_SHOOTING_SPEED_RPM = 3_000;  // TODO: test close shooting speed.
+    public static final double CLOSE_SHOOTING_SPEED_RPM = 3_700;
     public static final double ALLOWABLE_ERROR_RPM = 50.0;
 
     private final TalonFX m_topMotor;
