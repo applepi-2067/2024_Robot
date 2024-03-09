@@ -152,7 +152,7 @@ public class RobotContainer {
     m_operatorController.y().onTrue(new SetShoulderPosition(-10.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
 
-    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
+    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));  // TODO: spit feeder and intake.
     m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
   }
   
