@@ -5,6 +5,7 @@
 * Deploy (lower shoulder and elevator)
 
 ## Subsystems
+* Battery
 * PhotonVision + cameras (test AprilTag)
 * Swerve modules zeroed
 * Pickup note (intake, feeder)
