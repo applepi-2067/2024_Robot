@@ -3,6 +3,7 @@
 ## Code
 * On competition branch
 * Deploy (lower shoulder and elevator)
+* Laptop battery + charger
 
 ## Subsystems
 * Battery
