@@ -57,7 +57,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     // Dist -> theta quadratic fit coefficients.
     private static final double A = 0.001376;
     private static final double B = -0.5706;
-    private static final double C = 78.48 - 1.5;
+    private static final double C = 78.48 - 1.5;  // TODO: re-calibrate shoulder.
 
     public static Shoulder getInstance() {
         if (instance == null) {
