@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.454549670868242,
-      "y": 6.476092609817173
+      "x": 1.4662605074140238,
+      "y": 6.464381773271393
     },
     "rotation": 180.0
   },
@@ -49,7 +49,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp 3-note"
+                  "pathName": "Amp note high"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Amp note mid high"
                 }
               },
               {
