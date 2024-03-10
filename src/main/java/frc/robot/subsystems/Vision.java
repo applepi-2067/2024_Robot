@@ -45,7 +45,8 @@ public class Vision extends SubsystemBase {
   };
 
   // Single-tag pose estimate rejection thresholds.
-  private static final double MAX_TARGET_AMBIGUITY = 0.15;
+  private static final double MAX_SINGLE_TARGET_AMBIGUITY = 0.15;
+  private static final double MAX_MULTI_TARGET_AMBIGUITY = 0.25;
 
   public static Vision getInstance() {
     if (instance == null) {
@@ -84,10 +85,16 @@ public class Vision extends SubsystemBase {
     if (!result.isPresent()) {return;}
 
     EstimatedRobotPose robotPose = result.get();
-    // Estimates based on a single tag must pass ambiguity test.
+    // TODO: check multi-target ambiguity rejection.
     if (robotPose.targetsUsed.size() == 1) {
       PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
-      if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {return;}
+      if (target.getPoseAmbiguity() > MAX_SINGLE_TARGET_AMBIGUITY) {return;}
+    }
+    else {
+      for (int i = 0; i < robotPose.targetsUsed.size(); i++) {
+        PhotonTrackedTarget target = robotPose.targetsUsed.get(i);
+        if (target.getPoseAmbiguity() > MAX_MULTI_TARGET_AMBIGUITY) {return;}
+      }
     }
     
     Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
