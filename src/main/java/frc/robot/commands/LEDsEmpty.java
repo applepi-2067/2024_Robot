@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,20 +14,25 @@ import frc.robot.subsystems.BlinkinLEDs;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
-public class LEDsEmpty extends Command {
+public class LEDsEmpty extends InstantCommand {
+  private final BlinkinLEDs m_blinkinLEDs;
+  private final Feeder m_feeder;
   
   public LEDsEmpty() {
+    m_blinkinLEDs = BlinkinLEDs.getInstance();
+    m_feeder = Feeder.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+      m_blinkinLEDs.setLEDManual(0.89);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Feeder.getInstance().gamePieceDetected(); 
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +42,11 @@ public class LEDsEmpty extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (m_feeder.gamePieceDetected()) {
+      return true;
+    } else {
+      return false;
+
+    }
   }
 }
