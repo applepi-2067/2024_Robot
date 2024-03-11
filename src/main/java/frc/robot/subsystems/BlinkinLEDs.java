@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class BlinkinLEDs extends SubsystemBase {
     private Spark m_blinkinLEDs;
     private double m_currentLEDMode;
-    private boolean m_latch;
     public static BlinkinLEDs instance = null;
 
     public BlinkinLEDs() {
@@ -24,14 +23,7 @@ public class BlinkinLEDs extends SubsystemBase {
         m_blinkinLEDs.set(m_currentLEDMode);
     }
 
-    public void latchLED(double pattern, boolean latch) {
-        m_latch = latch;
-        m_currentLEDMode = pattern;
-    }
-
     public void setLEDManual(double pattern) {
-        if (!m_latch) {
-            m_currentLEDMode = pattern;
-        }
+        m_currentLEDMode = pattern;
     }
 }
