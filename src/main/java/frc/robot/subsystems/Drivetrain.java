@@ -196,14 +196,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  public void resetGyro() {
-    // Field-orient gyro using odometry pose.
-    Rotation2d robotHeading = getRobotPose2d().getRotation();
-    if (!isBlue()) {
-      robotHeading = robotHeading.plus(Rotation2d.fromDegrees(180.0));
+  public void resetGyro(boolean fieldOriented) {
+    Rotation2d newHeading = new Rotation2d();
+    if (fieldOriented) {
+      newHeading = getRobotPose2d().getRotation();
+      if (!isBlue()) {
+        newHeading = newHeading.plus(Rotation2d.fromDegrees(180.0));
+      }
     }
 
-    m_gyro.setYaw(robotHeading.getDegrees());
+    m_gyro.setYaw(newHeading.getDegrees());
   }
 
   @Log (name="Heading (deg)")

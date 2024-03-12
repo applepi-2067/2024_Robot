@@ -99,13 +99,13 @@ public class RobotContainer {
     m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
     m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
 
-    configureBindings();
+    configDriverBindings();
+    configOperatorBindings();
 
     Logger.configureLoggingAndConfig(this, false);
   }
 
-  private void configureBindings() {
-    // Driver.
+  private void configDriverBindings() {
     m_drivetrain.setDefaultCommand(
       Commands.run(
         () -> m_drivetrain.drive(
@@ -117,14 +117,16 @@ public class RobotContainer {
       )
     );
 
-    m_driverController.a().onTrue(new InstantCommand(m_drivetrain::resetGyro));
-
+    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(true)));
+    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(false)));
+    
     m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
     m_driverController.b().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
     m_driverController.x().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))));
-    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
+  }
 
-    // Operator.
+  private void configOperatorBindings() {
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
 
@@ -142,7 +144,7 @@ public class RobotContainer {
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
 
     m_operatorController.povDown().onTrue(new ParallelCommandGroup(new SetFeederVelocity(-1_000.0), new SetIntakeVelocity(-1_000.0)));
-    m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));  // TODO: test subwoofer angle.
+    m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
