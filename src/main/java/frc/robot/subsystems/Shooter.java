@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
         .withKP(0.02)
-        .withKV(0.122);
+        .withKV(0.118);
 
     private static final double PERCENT_DEADBAND = 0.001;
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
