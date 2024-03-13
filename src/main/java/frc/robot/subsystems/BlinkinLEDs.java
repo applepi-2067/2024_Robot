@@ -23,8 +23,7 @@ public class BlinkinLEDs extends SubsystemBase {
         m_blinkinLEDs.set(m_currentLEDMode);
     }
 
-
     public void setLEDManual(double pattern) {
-            m_currentLEDMode = pattern;
+        m_currentLEDMode = pattern;
     }
 }

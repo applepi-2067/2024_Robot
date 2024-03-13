@@ -11,8 +11,10 @@ import frc.robot.subsystems.BlinkinLEDs;
 
 public class PickupPiece extends SequentialCommandGroup {
   public PickupPiece() {
+
     addCommands(
       new ParallelCommandGroup(
+        new SetLEDPattern(-0.05),
         new SetFeederVelocity(1_000.0),
         new SetIntakeVelocity(3_000.0),
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, true),
@@ -24,17 +26,19 @@ public class PickupPiece extends SequentialCommandGroup {
       new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
 
       new ParallelCommandGroup(
-        new LEDsEmpty(),
+        new SetLEDPattern(0.65),
         new SetFeederVelocity(0.0),
         new SetIntakeVelocity(0.0)
       )
     );
 
     addRequirements(
+
       Feeder.getInstance(),
       Intake.getInstance(),
       Shoulder.getInstance(),
-      Elevator.getInstance()
+      Elevator.getInstance(),
+      BlinkinLEDs.getInstance()
     );
   }
 }

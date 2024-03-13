@@ -18,6 +18,7 @@ public class ShootGamePiece extends SequentialCommandGroup {
       
       new WaitUntilCommand(() -> !feeder.gamePieceDetected()),
       new WaitCommand(0.5),  // Piece should be gone by now!
+      new SetLEDPattern(0.93),
       
       new SetFeederVelocity(0.0)
     );

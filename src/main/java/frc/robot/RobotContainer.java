@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -30,6 +31,7 @@ import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
+import frc.robot.commands.SetLEDPattern;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
@@ -177,17 +179,19 @@ public class RobotContainer {
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
 
     m_operatorController.povLeft().onTrue(
-     new InstantCommand(
-      () -> m_blinkinLEDs.setLEDManual(0.07),
-      m_blinkinLEDs
-     ) 
+      new ParallelCommandGroup(
+        new SetLEDPattern(-0.11),
+        new WaitCommand(4),
+        new SetLEDPattern(0.93)
+      )
     );
 
     m_operatorController.povRight().onTrue(
-     new InstantCommand(
-      () -> m_blinkinLEDs.setLEDManual(0.89), 
-      m_blinkinLEDs
-     ) 
+      new ParallelCommandGroup(
+        new SetLEDPattern(-0.97),
+        new WaitCommand(4),
+        new SetLEDPattern(0.93)
+      )
     );
   }
   
