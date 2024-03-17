@@ -16,40 +16,40 @@
     },
     {
       "anchor": {
-        "x": 6.782980299198829,
-        "y": 7.155321129472502
+        "x": 5.892956721719433,
+        "y": 6.956236908194216
       },
       "prevControl": {
-        "x": 7.169437905209619,
-        "y": 6.8157068696448375
+        "x": 6.2794143277302235,
+        "y": 6.616622648366552
       },
       "nextControl": {
-        "x": 6.319193585429389,
-        "y": 7.56289127187595
+        "x": 5.429170007949994,
+        "y": 7.363807050597664
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2814401720101576,
-        "y": 6.921104398556871
+        "x": 2.3211515752560734,
+        "y": 6.37069508090514
       },
       "prevControl": {
-        "x": 4.827270596053317,
-        "y": 7.694019610578451
+        "x": 3.866981999299233,
+        "y": 7.14361029292672
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "New amp shooting"
+      "linkedName": "Amp shooting waypoint"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0
   },
