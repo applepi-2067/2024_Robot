@@ -73,8 +73,8 @@ public class RobotContainer {
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
-    NamedCommands.registerCommand("AimShoot", new AimShoot(false));
-    NamedCommands.registerCommand("CloseAimShoot", new AimShoot(true));
+    NamedCommands.registerCommand("AimShoot", new AimShoot(false).onlyIf(m_feeder::gamePieceDetected));
+    NamedCommands.registerCommand("CloseAimShoot", new AimShoot(true).onlyIf(m_feeder::gamePieceDetected));
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
     AutoBuilder.configureHolonomic(
