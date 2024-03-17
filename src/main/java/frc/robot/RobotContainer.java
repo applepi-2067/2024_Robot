@@ -6,16 +6,21 @@ import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import io.github.oblarg.oblog.Logger;
@@ -23,6 +28,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AimShoot;
 import frc.robot.commands.AutoAimShoulder;
+import frc.robot.commands.PathfindToTrap;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetElevatorPosition;
@@ -83,8 +89,8 @@ public class RobotContainer {
       m_drivetrain::getRobotRelativeChassisSpeeds,
       m_drivetrain::driveRobotRelative,
       new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5),
-        new PIDConstants(10.0),
+        new PIDConstants(3.0),
+        new PIDConstants(11.0),
         DriveMotor.MAX_SPEED_METERS_PER_SEC,
         Drivetrain.CENTER_TO_WHEEL_OFFSET_METERS,
         new ReplanningConfig()
@@ -120,13 +126,43 @@ public class RobotContainer {
       )
     );
 
+    m_driverController.povCenter().onTrue(new InstantCommand(() -> m_drivetrain.drive(0.0, 0.0, 0.0), m_drivetrain));
+
     m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(true)));
     m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(false)));
-    
+
     m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
     m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
-    m_driverController.b().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
-    m_driverController.x().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))));
+
+    // Pathfinding.
+    PathConstraints pathConstraints = new PathConstraints(
+      3.0,
+      3.0,
+      Units.degreesToRadians(360.0),
+      Units.degreesToRadians(720.0)
+    );
+
+    m_driverController.a().onTrue(
+      AutoBuilder.pathfindToPoseFlipped(
+        new Pose2d(2.36, 5.5, Rotation2d.fromDegrees(180.0)),
+        pathConstraints
+      ).andThen(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))))
+    );
+    m_driverController.b().onTrue(
+      new SequentialCommandGroup(
+        AutoBuilder.pathfindToPoseFlipped(
+          new Pose2d(1.84, 7.25, Rotation2d.fromDegrees(-90.0)),
+          pathConstraints,
+          1.5
+        ),
+        AutoBuilder.pathfindToPoseFlipped(
+          new Pose2d(1.84, 7.8, Rotation2d.fromDegrees(-90.0)),
+          pathConstraints
+        ),
+        new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP)))
+      )
+    );
+    m_driverController.x().onTrue(new PathfindToTrap(pathConstraints));
   }
 
   private void configOperatorBindings() {
@@ -153,7 +189,7 @@ public class RobotContainer {
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
 
-    m_operatorController.y().onTrue(new SetShoulderPosition(-10.0, false));
+    m_operatorController.y().onTrue(new SetShoulderPosition(-13.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
 
     m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
