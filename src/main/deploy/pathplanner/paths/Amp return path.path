@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.454549670868242,
-        "y": 6.476092609817173
+        "x": 8.3,
+        "y": 3.1385041942694443
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4662605074140231,
-        "y": 7.0733452736520315
+        "x": 7.708136386315569,
+        "y": 5.351852301422149
+      },
+      "isLocked": false,
+      "linkedName": "Amp final pickup waypoint"
+    },
+    {
+      "anchor": {
+        "x": 6.782980299198829,
+        "y": 7.155321129472502
+      },
+      "prevControl": {
+        "x": 7.169437905209619,
+        "y": 6.8157068696448375
+      },
+      "nextControl": {
+        "x": 6.319193585429389,
+        "y": 7.56289127187595
       },
       "isLocked": false,
       "linkedName": null
@@ -20,21 +36,15 @@
         "y": 6.921104398556871
       },
       "prevControl": {
-        "x": 2.883271729453586,
-        "y": 7.06163443710625
+        "x": 4.827270596053317,
+        "y": 7.694019610578451
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "New amp shooting"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.06848815949232,
+    "rotation": -157.38013505195968,
     "rotateFast": false
   },
   "reversed": false,

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -92,7 +93,9 @@ public class RobotContainer {
       m_drivetrain
     );
 
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // Populate auto chooser.
+    autoChooser = new SendableChooser<Command>();
+    autoChooser.addOption("Amp auto", new PathPlannerAuto("Amp auto"));
     SmartDashboard.putData("Auto chooser", autoChooser);
 
     // Controls init.

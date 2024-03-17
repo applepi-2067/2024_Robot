@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.44283883432246,
-      "y": 4.590647925946351
+      "x": 1.454549670868242,
+      "y": 6.476092609817173
     },
-    "rotation": 179.40628260378742
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -24,7 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Source note 2"
+                  "pathName": "Amp note 2"
                 }
               },
               {
@@ -43,13 +43,13 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Source note 3"
+                  "pathName": "Amp midline note path"
                 }
               },
               {
@@ -59,6 +59,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp return path"
           }
         },
         {
@@ -76,6 +82,6 @@
       ]
     }
   },
-  "folder": "Source",
+  "folder": "Amp",
   "choreoAuto": false
 }

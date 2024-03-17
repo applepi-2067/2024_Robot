@@ -3,87 +3,92 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9112722961537205,
-        "y": 4.133925300660873
+        "x": 3.2814401720101576,
+        "y": 6.921104398556871
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4499707772596704,
-        "y": 0.8197585582047061
+        "x": 4.042644547485956,
+        "y": 7.541778735483292
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "New amp shooting"
     },
     {
       "anchor": {
-        "x": 7.368522126487903,
-        "y": 1.9439988665997294
+        "x": 6.361390183550694,
+        "y": 7.44
       },
       "prevControl": {
-        "x": 6.000358690969361,
-        "y": 1.2166208375898717
+        "x": 5.377650286452402,
+        "y": 7.44
       },
       "nextControl": {
-        "x": 8.293678213604645,
-        "y": 2.435854001522554
+        "x": 7.345130080648985,
+        "y": 7.44
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.539605781066056,
-        "y": 2.5529623669803687
+        "x": 8.3,
+        "y": 7.42
       },
       "prevControl": {
-        "x": 8.510870992509421,
-        "y": 2.4571797384582537
+        "x": 8.3,
+        "y": 7.47
       },
       "nextControl": {
-        "x": 8.566735956583328,
-        "y": 2.6433962853712707
+        "x": 8.3,
+        "y": 6.933411460632358
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Amp first pickup waypoint"
     },
     {
       "anchor": {
-        "x": 1.9112722961537205,
-        "y": 4.133925300660873
+        "x": 8.3,
+        "y": 3.1385041942694443
       },
       "prevControl": {
-        "x": 2.9535367487282747,
-        "y": -0.4801442983770431
+        "x": 8.3,
+        "y": 3.7623672132546333
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Amp final pickup waypoint"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0499999999999998,
-      "rotationDegrees": -153.04346774301095,
+      "waypointRelativePos": 1.4,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.9499999999999997,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 133.83086067209257,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Source",
+  "folder": "Amp",
   "previewStartingState": {
-    "rotation": 131.7107573215082,
+    "rotation": -147.652556500558,
     "velocity": 0
   },
   "useDefaultConstraints": true
