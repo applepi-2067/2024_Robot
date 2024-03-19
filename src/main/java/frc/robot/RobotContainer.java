@@ -191,6 +191,8 @@ public class RobotContainer {
     m_operatorController.povDown().onTrue(new ParallelCommandGroup(new SetFeederVelocity(-1_000.0), new SetIntakeVelocity(-1_000.0)));
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
+    m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
+
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
