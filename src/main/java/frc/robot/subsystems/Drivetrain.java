@@ -57,7 +57,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
   private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
-  private static final double[] visionStds = {0.1, 0.1, Units.degreesToRadians(0.1)}; 
+  private static final double[] visionStds = {0.1, 0.1, 0.05}; 
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -68,6 +68,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
   private static final double POSE_FACING_kS = -0.15;
   private static final double POSE_FACING_IZONE = 4.0;
+  public static final double POSE_FACING_ALLOWABLE_ERROR_DEGREES = 0.5;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -134,16 +135,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {
-      Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(getAprilTagID(m_targetAprilTag.get())));
-      Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
-  
-      // Face away from amp and trap.
-      if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
-        robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
-      }
-      
-      rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
-      rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
+      rightStickX = getPoseFacingRightStickX();
     }
     
     // Deadband and square stick values.
@@ -166,6 +158,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     );
 
     driveRobotRelative(chassisSpeeds);
+  }
+
+  private double getPoseFacingRightStickX() {
+    Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(getAprilTagID(m_targetAprilTag.get())));
+    Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
+
+    // Face away from amp and trap.
+    if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
+      robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
+    }
+
+    if (Math.abs(robotToTargetRotationError.getDegrees()) < POSE_FACING_ALLOWABLE_ERROR_DEGREES) {
+      return 0.0;
+    }
+
+    double rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
+    rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
+    return rightStickX;
   }
 
   public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {

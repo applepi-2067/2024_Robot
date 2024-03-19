@@ -11,8 +11,6 @@ import frc.robot.utils.Utils;
 public class FaceSpeaker extends Command {
   private final Drivetrain drivetrain;
 
-  private static final double ALLOWABLE_ERROR_DEGREES = 0.5;
-
   public FaceSpeaker() {
     drivetrain = Drivetrain.getInstance();
   }
@@ -42,7 +40,7 @@ public class FaceSpeaker extends Command {
     return Utils.withinThreshold(
       drivetrain.getRobotPose2d().getRotation().getDegrees(),
       drivetrain.getRobotToPoseRotation(drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.SPEAKER))).getDegrees(),
-      ALLOWABLE_ERROR_DEGREES
+      Drivetrain.POSE_FACING_ALLOWABLE_ERROR_DEGREES
     );
   }
 }
