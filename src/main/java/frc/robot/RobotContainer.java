@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -143,23 +144,24 @@ public class RobotContainer {
     );
 
     m_driverController.a().onTrue(
-      AutoBuilder.pathfindToPoseFlipped(
-        new Pose2d(2.36, 5.5, Rotation2d.fromDegrees(180.0)),
+      AutoBuilder.pathfindToPose(
+        m_drivetrain.getAprilTagPose(m_drivetrain.getAprilTagID(AprilTag.SPEAKER)).transformBy(new Transform2d(2.0, 0.0, Rotation2d.fromDegrees(180.0))),
         pathConstraints
       ).andThen(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))))
     );
+
+    Pose2d ampPose = m_drivetrain.getAprilTagPose(m_drivetrain.getAprilTagID(AprilTag.AMP));
     m_driverController.b().onTrue(
       new SequentialCommandGroup(
-        AutoBuilder.pathfindToPoseFlipped(
-          new Pose2d(1.84, 7.25, Rotation2d.fromDegrees(-90.0)),
+        AutoBuilder.pathfindToPose(
+          ampPose.transformBy(new Transform2d(1.0, 0.0, new Rotation2d())),
           pathConstraints,
-          1.5
+          1.0
         ),
-        AutoBuilder.pathfindToPoseFlipped(
-          new Pose2d(1.84, 7.8, Rotation2d.fromDegrees(-90.0)),
+        AutoBuilder.pathfindToPose(
+          ampPose.transformBy(new Transform2d(0.4, 0.0, new Rotation2d())),
           pathConstraints
-        ),
-        new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP)))
+        )
       )
     );
     m_driverController.x().onTrue(new PathfindToTrap(pathConstraints));

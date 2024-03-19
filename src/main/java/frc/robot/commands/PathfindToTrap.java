@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.Optional;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -9,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Drivetrain.AprilTag;
 
@@ -26,9 +23,9 @@ public class PathfindToTrap extends Command {
     Drivetrain drivetrain = Drivetrain.getInstance();
     CommandScheduler.getInstance().schedule(
       AutoBuilder.pathfindToPose(
-        drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.TRAP)).transformBy(new Transform2d(0.93, 0.0, new Rotation2d())),
+        drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.TRAP)).transformBy(new Transform2d(1.0, 0.0, new Rotation2d())),
         m_pathConstraints
-      ).andThen(new InstantCommand(() -> drivetrain.setTargetAprilTag(Optional.of(AprilTag.TRAP))))
+      )
     );
   }
 
