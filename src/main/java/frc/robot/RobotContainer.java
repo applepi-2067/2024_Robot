@@ -182,16 +182,16 @@ public class RobotContainer {
     m_operatorController.povLeft().onTrue(
       new SequentialCommandGroup(
         new SetLEDPattern(-0.11),
-        new WaitCommand(3),
+        new WaitCommand(2),
         new SetLEDPattern(0.93)
       )
     );
 
     m_operatorController.povRight().onTrue(
-      new ParallelCommandGroup(
-        new LEDsEmpty()
-        //new SetLEDPattern(-0.97)
-        //new SetLEDPattern(0.93)
+      new SequentialCommandGroup(
+        new SetLEDPattern(-0.97),
+        new WaitCommand(2),
+        new SetLEDPattern(0.93)
       )
     );
   }
