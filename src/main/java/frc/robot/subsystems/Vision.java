@@ -45,7 +45,7 @@ public class Vision extends SubsystemBase {
   };
 
   // Single-tag pose estimate rejection thresholds.
-  private static final double MAX_SINGLE_TARGET_AMBIGUITY = 0.15;
+  private static final double MAX_SINGLE_TARGET_AMBIGUITY = 0.05;
 
   public static Vision getInstance() {
     if (instance == null) {

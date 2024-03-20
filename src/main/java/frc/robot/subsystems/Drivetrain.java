@@ -56,8 +56,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
-  private static final double[] visionStds = {0.1, 0.1, 0.05}; 
+  private static final double[] drivetrainStds = {0.005, 0.005, 0.001};  // x, y, heading.
+  private static final double[] visionStds = {0.2, 0.2, 0.1};
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
