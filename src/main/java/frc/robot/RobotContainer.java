@@ -27,6 +27,7 @@ import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AutoAimShoulder;
+import frc.robot.commands.LEDsEmpty;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
 import frc.robot.commands.SetFeederVelocity;
@@ -179,18 +180,18 @@ public class RobotContainer {
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false));
 
     m_operatorController.povLeft().onTrue(
-      new ParallelCommandGroup(
+      new SequentialCommandGroup(
         new SetLEDPattern(-0.11),
-        new WaitCommand(4),
+        new WaitCommand(3),
         new SetLEDPattern(0.93)
       )
     );
 
     m_operatorController.povRight().onTrue(
       new ParallelCommandGroup(
-        new SetLEDPattern(-0.97),
-        new WaitCommand(4),
-        new SetLEDPattern(0.93)
+        new LEDsEmpty()
+        //new SetLEDPattern(-0.97)
+        //new SetLEDPattern(0.93)
       )
     );
   }
