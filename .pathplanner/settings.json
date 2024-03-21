@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp",
-    "Center"
+    "Center",
+    "Source"
   ],
   "autoFolders": [
     "Amp",
