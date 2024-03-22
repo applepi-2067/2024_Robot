@@ -42,6 +42,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.AprilTag;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final Shoulder m_shoulder;
   private final Elevator m_elevator;
   private final Vision m_vision;
+  private final Lights m_lights;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -77,6 +79,7 @@ public class RobotContainer {
     m_shoulder = Shoulder.getInstance();
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
+    m_lights = Lights.getInstance();
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
