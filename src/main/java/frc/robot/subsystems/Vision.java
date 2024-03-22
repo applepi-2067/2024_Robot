@@ -35,17 +35,17 @@ public class Vision extends SubsystemBase {
   
   private static final Transform3d[] ROBOT_TO_CAMERA_TRANSFORMS = {
     new Transform3d(
-      new Translation3d(Units.inchesToMeters(10.5), 0.0, Units.inchesToMeters(22.0)),
-      new Rotation3d(0.0, Units.degreesToRadians(-30.0), 0.0)
+      new Translation3d(Units.inchesToMeters(9.75), Units.inchesToMeters(0.0), Units.inchesToMeters(22.0)),
+      new Rotation3d(0.0, Units.degreesToRadians(-26.0), Units.degreesToRadians(0.0))
     ),
     new Transform3d(
       new Translation3d(Units.inchesToMeters(-12.0), 0.0, Units.inchesToMeters(9.0)),
-      new Rotation3d(0.0, Units.degreesToRadians(-45.0), Units.degreesToRadians(180.0))
+      new Rotation3d(0.0, Units.degreesToRadians(-41.0), Units.degreesToRadians(180.0))
     )
   };
 
   // Single-tag pose estimate rejection thresholds.
-  private static final double MAX_TARGET_AMBIGUITY = 0.15;
+  private static final double MAX_SINGLE_TARGET_AMBIGUITY = 0.05;
 
   public static Vision getInstance() {
     if (instance == null) {
@@ -84,10 +84,11 @@ public class Vision extends SubsystemBase {
     if (!result.isPresent()) {return;}
 
     EstimatedRobotPose robotPose = result.get();
-    // Estimates based on a single tag must pass ambiguity test.
-    if (robotPose.targetsUsed.size() == 1) {
+
+    if (robotPose.targetsUsed.size() == 1){
       PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
-      if (target.getPoseAmbiguity() > MAX_TARGET_AMBIGUITY) {return;}
+      SmartDashboard.putNumber("Pose ambiguity", target.getPoseAmbiguity());
+      if (target.getPoseAmbiguity() > MAX_SINGLE_TARGET_AMBIGUITY) {return;}
     }
     
     Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();

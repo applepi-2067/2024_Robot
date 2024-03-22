@@ -36,8 +36,6 @@ public class SetShooterVelocity extends Command {
       m_velocityRPM,
       Shooter.ALLOWABLE_ERROR_RPM
     );
-
-    return withinThreshold && (m_shooter.getMotorVelocityRPM() > m_velocityRPM);
-
+    return withinThreshold;
   }
 }

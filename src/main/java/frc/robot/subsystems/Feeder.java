@@ -17,6 +17,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.RobotMap;
@@ -103,6 +104,11 @@ public class Feeder extends SubsystemBase implements Loggable {
   @Log (name = "Current amps")
   public double getCurrent() {
       return m_motor.getSupplyCurrent().getValueAsDouble();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean(("Game piece sensor"), gamePieceDetected());
   }
 
   // @Config (name="PIDs")

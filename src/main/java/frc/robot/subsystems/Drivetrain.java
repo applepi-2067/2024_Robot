@@ -56,8 +56,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.02, 0.02, 0.01};  // x, y, heading.
-  private static final double[] visionStds = {0.5, 0.5, 0.2}; 
+  private static final double[] drivetrainStds = {0.005, 0.005, 0.001};  // x, y, heading.
+  private static final double[] visionStds = {0.2, 0.2, 0.1};
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -68,6 +68,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
   private static final double POSE_FACING_kS = -0.15;
   private static final double POSE_FACING_IZONE = 4.0;
+  public static final double POSE_FACING_ALLOWABLE_ERROR_DEGREES = 0.5;
 
   public static Drivetrain getInstance() {
     if (instance == null) {
@@ -131,20 +132,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     setSwerveModuleStates(states);
   }
 
-  // TODO: functional implementation with pose-facing rightStickX passed in.
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
     if (m_targetAprilTag.isPresent()) {
-      Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(m_targetAprilTag.get()));
-      Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
-  
-      // Face away from amp and trap.
-      if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
-        robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
-      }
-      
-      rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
-      rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
+      rightStickX = getPoseFacingRightStickX();
     }
     
     // Deadband and square stick values.
@@ -167,6 +158,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     );
 
     driveRobotRelative(chassisSpeeds);
+  }
+
+  private double getPoseFacingRightStickX() {
+    Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(getAprilTagID(m_targetAprilTag.get())));
+    Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
+
+    // Face away from amp and trap.
+    if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
+      robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
+    }
+
+    if (Math.abs(robotToTargetRotationError.getDegrees()) < POSE_FACING_ALLOWABLE_ERROR_DEGREES) {
+      return 0.0;
+    }
+
+    double rightStickX = m_poseFacingPIDController.calculate(robotToTargetRotationError.getDegrees(), 0.0);
+    rightStickX += Math.signum(robotToTargetRotationError.getDegrees()) * POSE_FACING_kS;
+    return rightStickX;
   }
 
   public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {
@@ -197,14 +206,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  public void resetGyro() {
-    // Field-orient gyro using odometry pose.
-    Rotation2d robotHeading = getRobotPose2d().getRotation();
-    if (!isBlue()) {
-      robotHeading = robotHeading.plus(Rotation2d.fromDegrees(180.0));
+  public void resetGyro(boolean fieldOriented) {
+    Rotation2d newHeading = new Rotation2d();
+    if (fieldOriented) {
+      newHeading = getRobotPose2d().getRotation();
+      if (!isBlue()) {
+        newHeading = newHeading.plus(Rotation2d.fromDegrees(180.0));
+      }
     }
 
-    m_gyro.setYaw(robotHeading.getDegrees());
+    m_gyro.setYaw(newHeading.getDegrees());
   }
 
   @Log (name="Heading (deg)")
@@ -237,8 +248,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     m_pose = getRobotPose2d();
     m_field.setRobotPose(m_pose);
     SmartDashboard.putString("Robot pose", Utils.getPose2dDescription(m_pose));
-
-    SmartDashboard.putNumber("Speaker error (deg)", m_pose.getRotation().getDegrees() - getRobotToPoseRotation(getAprilTagPose(AprilTag.SPEAKER)).getDegrees());
+    
+    SmartDashboard.putNumber("Dist to speaker (in)", getDistToSpeakerInches());
   }
 
   // Log state.
@@ -266,8 +277,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return DriverStation.getAlliance().get() == DriverStation.Alliance.Blue;
   }
 
-  // TODO: clean up april tag pose getters. (Silent failing?)
-  public Pose2d getAprilTagPose(AprilTag aprilTag) {
+  public enum AprilTag {
+    SPEAKER,
+    AMP,
+    TRAP
+  }
+
+  public int getAprilTagID(AprilTag aprilTag) {
     boolean isBlue = isBlue();
     
     int aprilTagID;
@@ -275,30 +291,40 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       aprilTagID = isBlue ? 6 : 5;
     }
     else if (aprilTag == AprilTag.TRAP) {
-      aprilTagID = isBlue ? 15 : 12;  // TODO: select closest trap.
+      int[] blueTrapTags = {14, 15, 16};
+      int[] redTrapTags = {11, 12, 13};
+      aprilTagID = isBlue ? getClosestAprilTagID(blueTrapTags) : getClosestAprilTagID(redTrapTags);
     }
     else {
       aprilTagID = isBlue ? 7 : 4;  // Default at speaker.
     }
 
+    return aprilTagID;
+  }
+
+  private int getClosestAprilTagID(int[] aprilTagIDs) {
+    int closestAprilTagID = aprilTagIDs[0];
+    for (int i = 1; i < aprilTagIDs.length; i++) {
+      if (getDistToAprilTagMeters(aprilTagIDs[i]) < getDistToAprilTagMeters(closestAprilTagID)) {
+        closestAprilTagID = aprilTagIDs[i];
+      }
+    }
+    return closestAprilTagID;
+  }
+
+  public Pose2d getAprilTagPose(int aprilTagID) {
     return Vision.APRIL_TAG_FIELD_LAYOUT.getTagPose(aprilTagID).get().toPose2d();
   }
 
-  public enum AprilTag {
-    SPEAKER,
-    AMP,
-    TRAP
-  }
-
-  public double getDistToAprilTagMeters(AprilTag aprilTag) {
-    Translation2d aprilTagTranslation2d = getAprilTagPose(aprilTag).getTranslation();
+  public double getDistToAprilTagMeters(int aprilTagID) {
+    Translation2d aprilTagTranslation2d = getAprilTagPose(aprilTagID).getTranslation();
     Translation2d robotTranslation2d = getRobotPose2d().getTranslation();
     return aprilTagTranslation2d.getDistance(robotTranslation2d);
   }
 
   @Log (name="Dist to speaker (in)")
   public double getDistToSpeakerInches() {
-    double distToSpeakerMeters = getDistToAprilTagMeters(AprilTag.SPEAKER);
+    double distToSpeakerMeters = getDistToAprilTagMeters(getAprilTagID(AprilTag.SPEAKER));
     return Units.metersToInches(distToSpeakerMeters);
   }
 

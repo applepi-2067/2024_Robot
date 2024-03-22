@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -8,24 +7,22 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 
 public class ShootGamePiece extends SequentialCommandGroup {
-  public ShootGamePiece(boolean keepShooterSpinning) {
-    Shooter shooter = Shooter.getInstance();
-    Feeder feeder = Feeder.getInstance();
-
+  public ShootGamePiece(boolean closeShot, boolean keepShooterSpinning) {
     addCommands(
-      new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, true),
+      new SetShooterVelocity((closeShot ? Shooter.CLOSE_SHOOTING_SPEED_RPM : Shooter.SHOOTING_SPEED_RPM), true),
       new SetFeederVelocity(3_000),
       
-      new WaitUntilCommand(() -> !feeder.gamePieceDetected()),
+      new WaitUntilCommand(() -> !Feeder.getInstance().gamePieceDetected()),
       new WaitCommand(0.5),  // Piece should be gone by now!
       
       new SetFeederVelocity(0.0)
     );
 
     if (!keepShooterSpinning) {
-      addCommands(new InstantCommand(() -> shooter.setPercentOutput(0.0), shooter));  // Coast to 0.
+      addCommands(new SetShooterPercentOutput(0.0));  // Coast to 0.
     }
-
-    addRequirements(feeder, shooter);
+    else if (closeShot) {
+      addCommands(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
+    }
   }
 }
