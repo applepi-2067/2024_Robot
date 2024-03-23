@@ -12,7 +12,7 @@
         "y": 6.2770083885388885
       },
       "isLocked": false,
-      "linkedName": "Amp final pickup waypoint"
+      "linkedName": "Amp midline pickup end"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp shooting waypoint"
+      "linkedName": "Amp shooting"
     }
   ],
   "rotationTargets": [],

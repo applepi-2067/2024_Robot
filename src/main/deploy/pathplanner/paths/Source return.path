@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.454549670868242,
-        "y": 6.476092609817173
+        "x": 8.29,
+        "y": 4.871708003045107
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4662605074140231,
-        "y": 7.0733452736520315
+        "x": 7.9891964634094075,
+        "y": 1.5341195874969469
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Source midline pickup end"
     },
     {
       "anchor": {
-        "x": 3.0823559507318716,
-        "y": 6.991369417831561
+        "x": 1.8292964403332503,
+        "y": 4.27445533921025
       },
       "prevControl": {
-        "x": 2.1097217997950057,
-        "y": 6.991369417831561
+        "x": 5.70558333698693,
+        "y": -0.4801442983770431
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp shooting"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.6,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 135.69027719786507,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp",
+  "folder": "Source",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -179.0712505051839,
     "velocity": 0
   },
   "useDefaultConstraints": true

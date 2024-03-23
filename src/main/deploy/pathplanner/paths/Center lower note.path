@@ -12,7 +12,7 @@
         "y": 4.309587848847595
       },
       "isLocked": false,
-      "linkedName": "Center shooting waypoint"
+      "linkedName": "Center shooting"
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center shooting waypoint"
+      "linkedName": "Center shooting"
     }
   ],
   "rotationTargets": [
