@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.014643980785821,
-        "y": 4.309587848847595
+        "x": 5.283993221338795,
+        "y": 4.251033666118688
       },
       "isLocked": false,
       "linkedName": "Center shooting"
     },
     {
       "anchor": {
-        "x": 8.445919088699803,
+        "x": 8.4,
         "y": 2.4241431649767726
       },
       "prevControl": {
-        "x": 6.490209385554292,
-        "y": 3.4898292906428896
+        "x": 7.486554749429041,
+        "y": 2.705203242075528
       },
       "nextControl": {
-        "x": 8.482995851817002,
-        "y": 2.4039396593260833
+        "x": 8.788542858465474,
+        "y": 2.304591516218166
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 5.539225686154654
       },
       "prevControl": {
-        "x": 5.026354817331602,
-        "y": 4.286166175756032
+        "x": 5.061487326968947,
+        "y": 4.27445533921025
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9,
-      "rotationDegrees": 144.99178486198159,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 155.50697536693573,
       "rotateFast": false
     }
   ],
