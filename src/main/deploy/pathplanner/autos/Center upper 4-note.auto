@@ -1,0 +1,106 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.454549670868242,
+      "y": 5.539225686154654
+    },
+    "rotation": 179.99999999939556
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAimShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center note 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center upper note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center middle note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "KillShooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Center",
+  "choreoAuto": false
+}

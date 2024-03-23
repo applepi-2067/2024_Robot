@@ -3,61 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.48,
-        "y": 5.54
+        "x": 3.480524393288442,
+        "y": 5.539225686154654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.002933144240039,
-        "y": 7.307562004567661
+        "x": 3.5859219222004755,
+        "y": 4.813153820316202
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Center shooting waypoint"
     },
     {
       "anchor": {
-        "x": 7.087462049389147,
-        "y": 5.7617315805245015
+        "x": 7.251413761030089,
+        "y": 4.098792791023527
       },
       "prevControl": {
-        "x": 6.9352211742939875,
-        "y": 5.7617315805245015
+        "x": 5.931345415461699,
+        "y": 4.098792791023527
       },
       "nextControl": {
-        "x": 7.7905024949807595,
-        "y": 5.7617315805245015
+        "x": 8.571482106598468,
+        "y": 4.098792791023527
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.563027454157618,
-        "y": 5.7617315805245015
+        "x": 8.6,
+        "y": 4.098792791023527
       },
       "prevControl": {
-        "x": 7.813533915227601,
-        "y": 5.7617315805245015
+        "x": 8.084723191985615,
+        "y": 4.098792791023527
       },
       "nextControl": {
-        "x": 9.219252411600044,
-        "y": 5.7617315805245015
+        "x": 8.799999999999999,
+        "y": 4.098792791023527
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.48,
-        "y": 5.54
+        "x": 3.480524393288442,
+        "y": 5.539225686154654
       },
       "prevControl": {
-        "x": 5.014643980785821,
-        "y": 7.3426945142050055
+        "x": 3.703030287658291,
+        "y": 4.204190319935563
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Center shooting waypoint"
     }
   ],
   "rotationTargets": [],
@@ -71,13 +71,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.40885972880548,
+    "rotation": 179.2926806314558,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Center",
   "previewStartingState": {
-    "rotation": -179.94341945252026,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

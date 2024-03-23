@@ -3,13 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.454549670868242,
+        "x": 3.480524393288442,
         "y": 5.539225686154654
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.454549670868242,
-        "y": 5.539225686154654
+        "x": 5.014643980785821,
+        "y": 4.309587848847595
+      },
+      "isLocked": false,
+      "linkedName": "Center shooting waypoint"
+    },
+    {
+      "anchor": {
+        "x": 8.445919088699803,
+        "y": 2.4241431649767726
+      },
+      "prevControl": {
+        "x": 6.490209385554292,
+        "y": 3.4898292906428896
+      },
+      "nextControl": {
+        "x": 8.482995851817002,
+        "y": 2.4039396593260833
       },
       "isLocked": false,
       "linkedName": null
@@ -20,15 +36,21 @@
         "y": 5.539225686154654
       },
       "prevControl": {
-        "x": 2.480524393288442,
-        "y": 5.539225686154654
+        "x": 5.026354817331602,
+        "y": 4.286166175756032
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Center shooting waypoint"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 144.99178486198159,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 179.09061955080094,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Center",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 179.79542684568145,
     "velocity": 0
   },
   "useDefaultConstraints": true
