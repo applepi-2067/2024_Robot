@@ -195,7 +195,13 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
 
-    m_operatorController.povDown().onTrue(new ParallelCommandGroup(new SetFeederVelocity(-1_000.0), new SetIntakeVelocity(-1_000.0)));
+    m_operatorController.povDown().onTrue(
+      new ParallelCommandGroup(
+        new SetFeederVelocity(-1_000.0),
+        new SetIntakeVelocity(-1_000.0),
+        new SetShooterVelocity(-400.0, false)
+      )
+    );
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
@@ -206,9 +212,6 @@ public class RobotContainer {
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
-
-    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
-    m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.
