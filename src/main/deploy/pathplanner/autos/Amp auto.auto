@@ -62,9 +62,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Amp return path"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Amp return path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
           }
         },
         {
@@ -93,9 +106,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Amp return path"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Amp return path"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
           }
         },
         {

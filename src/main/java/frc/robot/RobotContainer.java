@@ -86,6 +86,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("AimShoot", new AimShoot(false).onlyIf(m_feeder::gamePieceDetected));
     NamedCommands.registerCommand("CloseAimShoot", new AimShoot(true).onlyIf(m_feeder::gamePieceDetected));
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
+    NamedCommands.registerCommand("RampUpShooter", new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -206,9 +207,9 @@ public class RobotContainer {
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
-
-    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
-    m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
+    //podium preset
+    m_operatorController.povUp().onTrue(new SetShoulderPosition(0.0, false));
+    
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.
