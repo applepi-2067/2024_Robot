@@ -37,9 +37,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Source return"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
           }
         },
         {
@@ -68,9 +81,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Source return"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Source return"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
           }
         },
         {
