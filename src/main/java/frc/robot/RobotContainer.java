@@ -37,6 +37,7 @@ import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
+import frc.robot.commands.ShelfPickup;
 import frc.robot.commands.ShootGamePiece;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
@@ -209,6 +210,8 @@ public class RobotContainer {
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
     //podium preset
     m_operatorController.povUp().onTrue(new SetShoulderPosition(0.0, false));
+
+    m_operatorController.back().onTrue(new ShelfPickup());
     
   }
   

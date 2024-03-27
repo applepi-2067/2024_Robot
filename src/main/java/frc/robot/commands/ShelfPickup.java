@@ -27,14 +27,9 @@ public class ShelfPickup extends SequentialCommandGroup {
 
             //get note into feeder
             new SequentialCommandGroup(
-                new SetFeederVelocity(-200.0),
-                wait(0.2)
+                new SetFeederVelocity(-100.0),
+                new WaitCommand(0.3)
             )
         );
-    }
-
-    private Command wait(double d) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'wait'");
     }
 }
