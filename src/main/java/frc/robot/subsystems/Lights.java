@@ -25,7 +25,7 @@ public class Lights extends SubsystemBase{
             m_blinkinLEDs.set(0.93);
         }
         else {
-            m_blinkinLEDs.set(0.0);
+            m_blinkinLEDs.set(0.61);
         }
     }
 }

@@ -185,6 +185,7 @@ public class RobotContainer {
     m_operatorController.x().onTrue(new PickupPiece());
     //shooter rampup
     m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
+    //kill all subsystems 
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
         new SetShooterPercentOutput(0.0),
@@ -211,6 +212,7 @@ public class RobotContainer {
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
     //podium preset
     m_operatorController.povUp().onTrue(new SetShoulderPosition(0.0, false));
+    
     
   }
   
