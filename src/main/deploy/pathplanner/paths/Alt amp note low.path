@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.0823559507318716,
+        "y": 6.991369417831561
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.491613242775097,
+        "y": 6.8900622540105045
+      },
+      "isLocked": false,
+      "linkedName": "Amp shooting"
+    },
+    {
+      "anchor": {
+        "x": 8.33,
+        "y": 5.769195573004862
+      },
+      "prevControl": {
+        "x": 6.835003850430154,
+        "y": 5.759471381102775
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 179.32896371414898,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Alt amp paths",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

@@ -1,0 +1,150 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.454549670868242,
+      "y": 6.476092609817173
+    },
+    "rotation": 179.88055057123276
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "CloseAimShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Amp note 2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Alt amp note top"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Alt amp return path top note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "alt amp note mid"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "alt amp return path mid note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUpShooter"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "KillShooter"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Alt Amp Autos",
+  "choreoAuto": false
+}

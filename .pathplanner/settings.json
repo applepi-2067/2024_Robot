@@ -5,11 +5,13 @@
   "pathFolders": [
     "Amp",
     "Center",
+    "Alt amp paths",
     "Source"
   ],
   "autoFolders": [
     "Amp",
     "Center",
+    "Alt Amp Autos",
     "Source"
   ],
   "defaultMaxVel": 4.0,
