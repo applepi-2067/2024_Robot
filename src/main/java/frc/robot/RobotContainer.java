@@ -37,7 +37,6 @@ import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
-import frc.robot.commands.ShelfPickup;
 import frc.robot.commands.ShootGamePiece;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
@@ -183,7 +182,7 @@ public class RobotContainer {
     
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
-
+    //shooter rampup
     m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
@@ -193,13 +192,14 @@ public class RobotContainer {
         new SetIntakeVelocity(0.0)
       )
     );
-
+    //shooter
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
-
+    //outake for stuck notes and trap 
     m_operatorController.povDown().onTrue(new ParallelCommandGroup(new SetFeederVelocity(-1_000.0), new SetIntakeVelocity(-1_000.0)));
+    //subwoofer preset
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
-
+    //feeder pose preset 
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
 
     // Trap score.
@@ -210,8 +210,6 @@ public class RobotContainer {
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
     //podium preset
     m_operatorController.povUp().onTrue(new SetShoulderPosition(0.0, false));
-
-    m_operatorController.back().onTrue(new ShelfPickup());
     
   }
   
