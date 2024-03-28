@@ -42,6 +42,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.AprilTag;
@@ -58,6 +59,7 @@ public class RobotContainer {
   private final Shoulder m_shoulder;
   private final Elevator m_elevator;
   private final Vision m_vision;
+  private final Lights m_lights;
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
@@ -77,6 +79,7 @@ public class RobotContainer {
     m_shoulder = Shoulder.getInstance();
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
+    m_lights = Lights.getInstance();
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
@@ -103,6 +106,10 @@ public class RobotContainer {
     // Populate auto chooser.
     autoChooser = new SendableChooser<Command>();
     autoChooser.addOption("Amp auto", new PathPlannerAuto("Amp auto"));
+    autoChooser.addOption("Center upper auto", new PathPlannerAuto("Center upper 4-note"));
+    autoChooser.addOption("Center lower auto", new PathPlannerAuto("Center lower 4-note"));
+    autoChooser.addOption("Source auto", new PathPlannerAuto("Source auto"));
+
     SmartDashboard.putData("Auto chooser", autoChooser);
 
     // Controls init.
@@ -188,7 +195,13 @@ public class RobotContainer {
     m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
     m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
 
-    m_operatorController.povDown().onTrue(new ParallelCommandGroup(new SetFeederVelocity(-1_000.0), new SetIntakeVelocity(-1_000.0)));
+    m_operatorController.povDown().onTrue(
+      new ParallelCommandGroup(
+        new SetFeederVelocity(-1_000.0),
+        new SetIntakeVelocity(-1_000.0),
+        new SetShooterVelocity(-400.0, false)
+      )
+    );
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
@@ -199,9 +212,6 @@ public class RobotContainer {
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
-
-    m_operatorController.povUp().onTrue(new SetFeederVelocity(-1_000.0));
-    m_operatorController.povUp().onFalse(new SetFeederVelocity(0.0));
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.

@@ -21,6 +21,10 @@ public class PickupPiece extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new SetFeederVelocity(0.0),
         new SetIntakeVelocity(0.0)
+      ),
+      new ParallelCommandGroup(  // FIXME: need continuous setting to 0?
+        new SetFeederVelocity(0.0),
+        new SetIntakeVelocity(0.0)
       )
     );
   }

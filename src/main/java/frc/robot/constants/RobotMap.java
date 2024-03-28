@@ -36,4 +36,8 @@ public final class RobotMap {
     public static class dios {
         public static final int FEEDER_SENSOR = 0;
     }
+
+    public static class pwms {
+        public static final int LIGHTS = 8;
+    }
 }

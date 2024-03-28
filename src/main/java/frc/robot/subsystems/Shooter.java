@@ -108,7 +108,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     @Log (name = "Shooting v reached")
     public boolean shootingVelocityReached() {
-        return Utils.withinThreshold(getMotorVelocityRPM(), SHOOTING_SPEED_RPM, ALLOWABLE_ERROR_RPM);
+        return Utils.withinThreshold(getMotorVelocityRPM(), SHOOTING_SPEED_RPM, ALLOWABLE_ERROR_RPM) && (getMotorVelocityRPM() > SHOOTING_SPEED_RPM);
     }
 
     @Log (name = "Current amps top")
