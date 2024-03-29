@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     // PIDs.
     private static final int K_TIMEOUT_MS = 10;
     private static final Slot0Configs PID_GAINS = new Slot0Configs()
-        .withKP(0.02)
-        .withKV(0.118);
+        .withKP(0.15)
+        .withKV(0.125);
 
     private static final double PERCENT_DEADBAND = 0.001;
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
@@ -64,8 +64,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     private Shooter() {
         m_topMotor = new TalonFX(RobotMap.canIDs.Shooter.TOP_SHOOTER);
         m_bottomMotor = new TalonFX(RobotMap.canIDs.Shooter.BOTTOM_SHOOTER);
-        setupMotor(m_topMotor, InvertedValue.Clockwise_Positive);
-        setupMotor(m_bottomMotor, InvertedValue.CounterClockwise_Positive);
+        setupMotor(m_topMotor, InvertedValue.CounterClockwise_Positive);
+        setupMotor(m_bottomMotor, InvertedValue.Clockwise_Positive);
     }
 
     public void setupMotor(TalonFX motor, InvertedValue invert){
@@ -103,7 +103,17 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     @Log (name = "motor v (rpm)")
     public double getMotorVelocityRPM() {
+        return (getTopMotorVelocityRPM() + getBottomMotorVelocityRPM()) / 2.0;
+    }
+
+    @Log (name = "Top motor v (rpm)")
+    public double getTopMotorVelocityRPM() {
         return m_topMotor.getVelocity().getValueAsDouble() * 60.0;
+    }
+
+    @Log (name = "Bottom motor v (rpm)")
+    public double getBottomMotorVelocityRPM() {
+        return m_bottomMotor.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Log (name = "Shooting v reached")
