@@ -207,8 +207,8 @@ public class RobotContainer {
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
 
     // Trap score.
-    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
-    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
+    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false, false));
+    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, true, false));
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));

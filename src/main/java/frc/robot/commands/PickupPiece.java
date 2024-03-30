@@ -13,7 +13,7 @@ public class PickupPiece extends SequentialCommandGroup {
         new SetFeederVelocity(900.0),
         new SetIntakeVelocity(3_500.0),
         new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, true),
-        new SetElevatorPosition(0.0, true)
+        new SetElevatorPosition(0.0, false, true)
       ),
 
       new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
