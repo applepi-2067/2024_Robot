@@ -29,8 +29,8 @@ public class Vision extends SubsystemBase {
   private final PhotonPoseEstimator[] m_photonPoseEstimators = new PhotonPoseEstimator[2];
 
   private static final String[] CAMERA_NAMES = {
-    "Arducam_0",
-    "Arducam_1"
+    "Arducam_OV2311_FRONT",
+    "Arducam_OV2311_BACK"
   };
   
   private static final Transform3d[] ROBOT_TO_CAMERA_TRANSFORMS = {
