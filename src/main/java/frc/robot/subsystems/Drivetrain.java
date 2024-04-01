@@ -56,8 +56,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.005, 0.005, 0.001};  // x, y, heading.
-  private static final double[] visionStds = {0.2, 0.2, 0.1};
+  private static final double[] drivetrainStds = {0.01, 0.01, 0.005};  // x, y, heading.
+  private static final double[] visionStds = {0.1, 0.1, 0.05};
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -241,6 +241,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
     m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+
+    double visionToDrivetrainPoseDistMeters = visionEstimatedRobotPose2d.getTranslation().getDistance(m_pose.getTranslation());
+    SmartDashboard.putNumber("Dist to vision measurement", visionToDrivetrainPoseDistMeters);
+    SmartDashboard.putBoolean("VisionCloseToDrivetrain", visionToDrivetrainPoseDistMeters < 0.5);
   }
 
   @Override
