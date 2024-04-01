@@ -9,8 +9,7 @@ import frc.robot.subsystems.Shoulder;
 
 public class ZeroShoulder extends Command {
     private Shoulder m_shoulder;
-    private double ZERO_POSITION_DEGREES = 60;
-    private double targetPositionDegrees;
+    private double ZERO_POSITION_DEGREES = 58.0;
 
     public ZeroShoulder() {
         m_shoulder = Shoulder.getInstance();
@@ -19,19 +18,18 @@ public class ZeroShoulder extends Command {
 
     @Override
     public void initialize() {
-        targetPositionDegrees = m_shoulder.getPositionDegrees() - 20.0;
     }
 
     @Override
     public void execute() {
-        m_shoulder.setTargetPositionDegrees(targetPositionDegrees);
+        m_shoulder.setPercentOutput(-0.1);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // Stop the shoulder by setting the target angle to the current angle
-        m_shoulder.setTargetPositionDegrees(m_shoulder.getPositionDegrees());
+        // Stop the shoulder
+        m_shoulder.setPercentOutput(0.0);
 
         // Seed the shoulder angle
         m_shoulder.setSeedPositionDegrees(ZERO_POSITION_DEGREES);

@@ -38,6 +38,7 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
+import frc.robot.commands.ZeroShoulder;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -212,6 +213,8 @@ public class RobotContainer {
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
+
+    m_operatorController.povUp().onTrue(new ZeroShoulder());
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.
