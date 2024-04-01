@@ -63,6 +63,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
 
+  private double m_fieldOrientedHeadingOffsetDegrees = 0.0;
+
   // Pose facing.
   private Optional<AprilTag> m_targetAprilTag = Optional.empty();
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
@@ -154,7 +156,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       xVelocityMetersPerSecond,
       yVelocityMetersPerSecond,
       rotationVelocityRadiansPerSecond,
-      Rotation2d.fromDegrees(getHeadingDegrees())
+      Rotation2d.fromDegrees(getHeadingDegrees() - m_fieldOrientedHeadingOffsetDegrees)
     );
 
     driveRobotRelative(chassisSpeeds);
@@ -206,16 +208,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  public void resetGyro(boolean fieldOriented) {
-    Rotation2d newHeading = new Rotation2d();
+  public void resetFieldOriented(boolean fieldOriented) {
     if (fieldOriented) {
-      newHeading = getRobotPose2d().getRotation();
-      if (!isBlue()) {
-        newHeading = newHeading.plus(Rotation2d.fromDegrees(180.0));
-      }
+      Rotation2d currRotation = getRobotPose2d().getRotation();  // FIXME: why this not work???
+      if (!isBlue()) {currRotation = currRotation.plus(Rotation2d.fromDegrees(180.0));}
+      m_fieldOrientedHeadingOffsetDegrees = currRotation.getDegrees() + getHeadingDegrees();
     }
-
-    m_gyro.setYaw(newHeading.getDegrees());
+    else {
+      m_fieldOrientedHeadingOffsetDegrees = getHeadingDegrees();
+    }
   }
 
   @Log (name="Heading (deg)")
