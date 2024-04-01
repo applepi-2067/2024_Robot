@@ -202,6 +202,14 @@ public class RobotContainer {
         new SetShooterVelocity(-400.0, false)
       )
     );
+    m_operatorController.povDown().onFalse(
+      new ParallelCommandGroup(
+        new SetFeederVelocity(0.0),
+        new SetIntakeVelocity(0.0),
+        new SetShooterVelocity(0.0, false)
+      )
+    );
+
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));

@@ -54,8 +54,8 @@ public class Elevator extends SubsystemBase implements Loggable {
       .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 8.0);
 
   private static final MotionMagicConfigs SLOW_MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-      .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS / 16.0)
-      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 16.0);
+      .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS / 25.0)
+      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 25.0);
 
   public static Elevator getInstance() {
     if (instance == null) {
