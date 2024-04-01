@@ -12,7 +12,7 @@ public class PickupPiece extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new SetFeederVelocity(900.0),
         new SetIntakeVelocity(3_500.0),
-        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, true),
+        new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, true),
         new SetElevatorPosition(0.0, true)
       ),
 

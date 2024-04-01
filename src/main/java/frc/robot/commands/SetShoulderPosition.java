@@ -29,7 +29,7 @@ public class SetShoulderPosition extends Command {
     @Override
     public void initialize() {
         if (m_dev) {
-            m_positionDegrees = SmartDashboard.getNumber("targetPosition", Shoulder.ZERO_POSITION_DEGREES);
+            m_positionDegrees = SmartDashboard.getNumber("targetPosition", Shoulder.MIN_ANGLE_DEGREES);
         }
         m_shoulder.setTargetPositionDegrees(m_positionDegrees);
     }

@@ -186,7 +186,7 @@ public class RobotContainer {
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
         new SetShooterPercentOutput(0.0),
-        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
+        new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false),
         new SetFeederVelocity(0.0),
         new SetIntakeVelocity(0.0)
       )
@@ -211,7 +211,7 @@ public class RobotContainer {
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
-    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
+    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.

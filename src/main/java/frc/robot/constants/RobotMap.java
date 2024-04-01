@@ -35,6 +35,7 @@ public final class RobotMap {
 
     public static class dios {
         public static final int FEEDER_SENSOR = 0;
+        public static final int SHOULDER_ZERO_SENSOR = 1;
     }
 
     public static class pwms {
