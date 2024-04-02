@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.RobotMap;
 import frc.robot.utils.Conversions;
-// import frc.robot.utils.Utils;
 
 import io.github.oblarg.oblog.Loggable;
 // import io.github.oblarg.oblog.annotations.Config;
@@ -54,6 +53,10 @@ public class Elevator extends SubsystemBase implements Loggable {
       .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS)
       .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 8.0);
 
+  private static final MotionMagicConfigs SLOW_MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+      .withMotionMagicCruiseVelocity(FALCON_500_MAX_SPEED_RPS / 25.0)
+      .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS / 25.0);
+
   public static Elevator getInstance() {
     if (instance == null) {
       instance = new Elevator();
@@ -91,7 +94,11 @@ public class Elevator extends SubsystemBase implements Loggable {
     motor.setPosition(0.0, K_TIMEOUT_MS);
   }
 
-  public void setTargetPositionInches(double inches) {
+  public void setTargetPositionInches(double inches, boolean slow) {
+    MotionMagicConfigs speedConfigs = slow ? SLOW_MOTION_MAGIC_CONFIGS : MOTION_MAGIC_CONFIGS;
+    m_leftMotor.getConfigurator().apply(speedConfigs);
+    m_rightMotor.getConfigurator().apply(speedConfigs);
+
     double rotations = Conversions.arcLengthToRotations(inches, OUTPUT_SPROCKET_PITCH_RADIUS_INCHES);
     MotionMagicVoltage request = new MotionMagicVoltage(rotations).withFeedForward(HOLD_POSITION_VOLTAGE);
     m_leftMotor.setControl(request);
@@ -113,11 +120,6 @@ public class Elevator extends SubsystemBase implements Loggable {
   public double getRightCurrentAmps() {
     return m_rightMotor.getSupplyCurrent().getValueAsDouble();
   }
-
-  // @Log (name = "Max extension reached")
-  // public boolean elevatorPositionReached() {
-  //     return Utils.withinThreshold(getPositionInches(), MAX_EXTENSION_INCHES / 2.0, ALLOWABLE_ERROR_INCHES);
-  // }
 
   // @Config (name = "PIDs")
   // public void setPIDs(double kV, double kP) {

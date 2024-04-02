@@ -137,8 +137,8 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_drivetrain.drive(0.0, 0.0, 0.0), m_drivetrain));
 
-    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(true)));
-    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetGyro(false)));
+    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(true)));
+    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(false)));
 
     m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
     m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
@@ -203,14 +203,21 @@ public class RobotContainer {
         new SetShooterVelocity(-400.0, false)
       )
     );
+    m_operatorController.povDown().onFalse(
+      new ParallelCommandGroup(
+        new SetFeederVelocity(0.0),
+        new SetIntakeVelocity(0.0),
+        new SetShooterVelocity(0.0, false)
+      )
+    );
 
     m_operatorController.povUp().onTrue(new ZeroShoulder());
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
     
     // Trap score.
-    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
-    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
+    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false, false));
+    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, true, false));
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));

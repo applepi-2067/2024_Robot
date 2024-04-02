@@ -8,10 +8,12 @@ public class SetElevatorPosition extends Command {
     private final Elevator m_elevator;
 
     private final double m_positionInches;
+    private final boolean m_slow;
     private final boolean m_block;
 
-    public SetElevatorPosition(double positionInches, boolean block) {
+    public SetElevatorPosition(double positionInches, boolean slow, boolean block) {
         m_positionInches = positionInches;
+        m_slow = slow;
         m_block = block;
 
         m_elevator = Elevator.getInstance();
@@ -21,7 +23,7 @@ public class SetElevatorPosition extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_elevator.setTargetPositionInches(m_positionInches);
+        m_elevator.setTargetPositionInches(m_positionInches, m_slow);
     }
 
     // Returns true when the command should end.
