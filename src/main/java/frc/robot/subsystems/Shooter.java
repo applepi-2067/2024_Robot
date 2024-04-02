@@ -41,14 +41,14 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withMotionMagicAcceleration(FALCON_500_MAX_SPEED_RPS * 4.0)
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
-    private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
+    private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()  // TODO: make shooter faster.
         .withSupplyCurrentThreshold(60)
         .withSupplyTimeThreshold(0.5)
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
     public static final double SHOOTING_SPEED_RPM = 4_200.0;
-    public static final double CLOSE_SHOOTING_SPEED_RPM = 3_700;
+    public static final double CLOSE_SHOOTING_SPEED_RPM = 3_700;  // TODO: reduce close shooting speed.
     public static final double ALLOWABLE_ERROR_RPM = 50.0;
 
     private final TalonFX m_topMotor;
