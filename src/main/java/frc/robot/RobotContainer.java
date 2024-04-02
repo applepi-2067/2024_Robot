@@ -177,8 +177,8 @@ public class RobotContainer {
 
   private void configOperatorBindings() {
     // DEV: shoulder tuning.
-    // SmartDashboard.putNumber("targetPosition", Shoulder.ZERO_POSITION_DEGREES);
-    // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false, true));
+    // SmartDashboard.putNumber("targetPosition", Shoulder.MIN_ANGLE_DEGREES);
+    // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false, true));
     
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
