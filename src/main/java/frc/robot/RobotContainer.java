@@ -136,7 +136,7 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(() -> m_drivetrain.drive(0.0, 0.0, 0.0), m_drivetrain));
 
-    // m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(true)));
+    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(true)));
     m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(false)));
 
     m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
@@ -180,9 +180,10 @@ public class RobotContainer {
     // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false, true));
     
     m_operatorController.a().onTrue(new ScoreAmp());
-    m_operatorController.x().onTrue(new PickupPiece());
+    m_operatorController.x().onTrue(
+      new PickupPiece().andThen(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false))  // TODO: test spin up on default.
+    );
 
-    m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
         new SetShooterPercentOutput(0.0),
