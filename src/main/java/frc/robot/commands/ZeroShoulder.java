@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shoulder;
 
 public class ZeroShoulder extends Command {
-    private static final double ZERO_POSITION_DEGREES = 58.0;
+    private static final double ZERO_POSITION_DEGREES = 56.75;
 
     private final Shoulder m_shoulder;
 
