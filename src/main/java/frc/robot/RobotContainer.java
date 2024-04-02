@@ -29,6 +29,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AimShoot;
 import frc.robot.commands.AutoAimShoulder;
+import frc.robot.commands.FeedShot;
 import frc.robot.commands.PathfindToTrap;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
@@ -212,7 +213,7 @@ public class RobotContainer {
     );
 
     m_operatorController.povUp().onTrue(new ZeroShoulder());
-    m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
+    m_operatorController.povLeft().onTrue(new FeedShot());
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
     
     // Trap score.
