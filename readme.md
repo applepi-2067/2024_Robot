@@ -50,20 +50,20 @@ Picks up game pieces off the ground. Hands them off to the hopper
       * Velocity closed loop control
 
   * Sensors
-    * `tbd`
+    * 1x IR Proximity Sensor
 
 ### Shooter
 Motors at the front of the shooter assembly that allow game pieces to be fired out of the robot.
 
   * Motors
-    * 3x - Kraken X60 
+    * 2x - Kraken X60 
       * Velocity closed loop control
 
 ### Hopper
 Brings in game pieces from the intake. Stores them until the shooter is ready to be fired.
 
   * Motors
-    * `tbd`x - Falcon 500
+    * 1x - Falcon 500
       * `tbd` - Velocity closed loop control 
 
 ### Linear Lift
