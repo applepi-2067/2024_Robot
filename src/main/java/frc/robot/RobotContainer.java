@@ -203,18 +203,17 @@ public class RobotContainer {
         new SetShooterVelocity(-400.0, false)
       )
     );
-    m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
 
+    m_operatorController.povUp().onTrue(new ZeroShoulder());
     m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
-
+    m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
+    
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false));
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, false));
 
     m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
-
-    m_operatorController.povUp().onTrue(new ZeroShoulder());
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.

@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shoulder;
 
 public class ZeroShoulder extends Command {
-    private Shoulder m_shoulder;
-    private double ZERO_POSITION_DEGREES = 58.0;
+    private static final double ZERO_POSITION_DEGREES = 58.0;
+
+    private final Shoulder m_shoulder;
 
     public ZeroShoulder() {
         m_shoulder = Shoulder.getInstance();
@@ -38,6 +39,6 @@ public class ZeroShoulder extends Command {
     // Returns true when we have raised the arm high enough to lose the sensor
     @Override
     public boolean isFinished() {
-        return !m_shoulder.zeroSensorTriggered();
+        return !m_shoulder.zeroSensorTriggered();  // TODO: failsafe if misses magnet.
     }
 }

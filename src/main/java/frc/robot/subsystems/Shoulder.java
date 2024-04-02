@@ -95,7 +95,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
         m_motor.getConfigurator().apply(MOTION_MAGIC_CONFIGS, K_TIMEOUT_MS);
 
         m_zeroingSensor = new DigitalInput(RobotMap.dios.SHOULDER_ZERO_SENSOR);
-    }
+            }
 
     @Log (name = "Position (rot)")
     public double getPositionRotations() {
