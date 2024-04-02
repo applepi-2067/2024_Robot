@@ -210,9 +210,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void resetFieldOriented(boolean fieldOriented) {
     if (fieldOriented) {
-      Rotation2d fieldOrientedHeadingOffsetRotation = Rotation2d.fromDegrees(getHeadingDegrees())  // TODO: test field oriented.
+      Rotation2d fieldOrientedHeadingOffsetRotation = Rotation2d.fromDegrees(getHeadingDegrees())
         .minus(getRobotPose2d().getRotation());
-      if (!isBlue()) {fieldOrientedHeadingOffsetRotation.plus(Rotation2d.fromDegrees(180.0));}
+      if (!isBlue()) {fieldOrientedHeadingOffsetRotation = fieldOrientedHeadingOffsetRotation.plus(Rotation2d.fromDegrees(180.0));}
       m_fieldOrientedHeadingOffsetDegrees = fieldOrientedHeadingOffsetRotation.getDegrees();
     }
     else {
