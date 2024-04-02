@@ -180,10 +180,9 @@ public class RobotContainer {
     // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false, true));
     
     m_operatorController.a().onTrue(new ScoreAmp());
-    m_operatorController.x().onTrue(
-      new PickupPiece().andThen(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false))  // TODO: test spin up on default.
-    );
+    m_operatorController.x().onTrue(new PickupPiece());
 
+    m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
         new SetShooterPercentOutput(0.0),
