@@ -140,6 +140,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Speaker score angle (deg)", getSpeakerScoreAngleDegrees());
+        SmartDashboard.putBoolean("Shoulder zero sensor", zeroSensorTriggered());
     }
 
     @Log (name = "Shoulder Zero Sensor")
