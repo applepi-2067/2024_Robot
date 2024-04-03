@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.539225686154654
+        "x": 3.05,
+        "y": 5.54
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.447564838068336,
-        "y": 4.321298685393376
+        "x": 5.497564838068336,
+        "y": 4.322072999238722
       },
       "isLocked": false,
       "linkedName": "Center shooting"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.539225686154654
+        "x": 3.05,
+        "y": 5.54
       },
       "prevControl": {
-        "x": 6.4195642713682,
-        "y": 3.5366726368260153
+        "x": 6.4695642713682,
+        "y": 3.5374469506713613
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,7 +61,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.6500000000000001,
+      "maxWaypointRelativePos": 2.4000000000000004,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
