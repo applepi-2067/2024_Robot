@@ -11,7 +11,7 @@ public class FeedShot extends SequentialCommandGroup {
   public FeedShot() {
     addCommands(
         new ParallelCommandGroup(
-            new SetShoulderPosition(45.0, true),
+            new SetShoulderPosition(45.0, true),  // TODO: check feed angle.
             new SetShooterVelocity(3650.0, true)
         ),
             
