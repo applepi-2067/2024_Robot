@@ -89,6 +89,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("CloseAimShoot", new ZeroShoulder().andThen(new AimShoot(true)));
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
 
+    NamedCommands.registerCommand(
+      "SpitNotes",
+      new ParallelCommandGroup(
+        new SetIntakeVelocity(4_000.0),
+        new SetFeederVelocity(3_000.0),
+        new SetShooterVelocity(3_600.0, false)
+      )
+    );
+
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
       m_drivetrain::setRobotPose2d,
@@ -111,6 +120,7 @@ public class RobotContainer {
     autoChooser.addOption("Center upper auto", new PathPlannerAuto("Center upper 4-note"));
     autoChooser.addOption("Center lower auto", new PathPlannerAuto("Center lower 4-note"));
     autoChooser.addOption("Source auto", new PathPlannerAuto("Source auto"));
+    autoChooser.addOption("Jim auto", new PathPlannerAuto("Jim auto"));
 
     SmartDashboard.putData("Auto chooser", autoChooser);
 
