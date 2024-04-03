@@ -29,6 +29,7 @@ import io.github.oblarg.oblog.Logger;
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AimShoot;
 import frc.robot.commands.AutoAimShoulder;
+import frc.robot.commands.FeedShot;
 import frc.robot.commands.PathfindToTrap;
 import frc.robot.commands.SetShooterPercentOutput;
 import frc.robot.commands.ScoreAmp;
@@ -38,6 +39,7 @@ import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
 import frc.robot.commands.SetShoulderPosition;
 import frc.robot.commands.ShootGamePiece;
+import frc.robot.commands.ZeroShoulder;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -84,8 +86,17 @@ public class RobotContainer {
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
     NamedCommands.registerCommand("AimShoot", new AimShoot(false).onlyIf(m_feeder::gamePieceDetected));
-    NamedCommands.registerCommand("CloseAimShoot", new AimShoot(true).onlyIf(m_feeder::gamePieceDetected));
+    NamedCommands.registerCommand("CloseAimShoot", new ZeroShoulder().andThen(new AimShoot(true)));
     NamedCommands.registerCommand("KillShooter", new SetShooterVelocity(0.0, false));
+
+    NamedCommands.registerCommand(
+      "SpitNotes",
+      new ParallelCommandGroup(
+        new SetIntakeVelocity(4_000.0),
+        new SetFeederVelocity(3_000.0),
+        new SetShooterVelocity(3_600.0, false)
+      )
+    );
 
     AutoBuilder.configureHolonomic(
       m_drivetrain::getRobotPose2d,
@@ -109,6 +120,7 @@ public class RobotContainer {
     autoChooser.addOption("Center upper auto", new PathPlannerAuto("Center upper 4-note"));
     autoChooser.addOption("Center lower auto", new PathPlannerAuto("Center lower 4-note"));
     autoChooser.addOption("Source auto", new PathPlannerAuto("Source auto"));
+    autoChooser.addOption("Jim auto", new PathPlannerAuto("Jim auto"));
 
     SmartDashboard.putData("Auto chooser", autoChooser);
 
@@ -176,8 +188,8 @@ public class RobotContainer {
 
   private void configOperatorBindings() {
     // DEV: shoulder tuning.
-    // SmartDashboard.putNumber("targetPosition", Shoulder.ZERO_POSITION_DEGREES);
-    // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false, true));
+    // SmartDashboard.putNumber("targetPosition", Shoulder.MIN_ANGLE_DEGREES);
+    // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false, true));
     
     m_operatorController.a().onTrue(new ScoreAmp());
     m_operatorController.x().onTrue(new PickupPiece());
@@ -186,7 +198,7 @@ public class RobotContainer {
     m_operatorController.rightBumper().onTrue(
       new ParallelCommandGroup(
         new SetShooterPercentOutput(0.0),
-        new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false),
+        new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false),
         new SetFeederVelocity(0.0),
         new SetIntakeVelocity(0.0)
       )
@@ -210,16 +222,16 @@ public class RobotContainer {
       )
     );
 
+    m_operatorController.povUp().onTrue(new ZeroShoulder());
+    m_operatorController.povLeft().onTrue(new FeedShot());
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
-
-    m_operatorController.povLeft().onTrue(new SetShoulderPosition(0.0, false));
-
+    
     // Trap score.
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false, false));
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, true, false));
 
-    m_operatorController.y().onTrue(new SetShoulderPosition(-11.0, false));
-    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.ZERO_POSITION_DEGREES, false));
+    m_operatorController.y().onTrue(new SetShoulderPosition(-9.0, false));  // TODO: test trap shoulder angle.
+    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.
