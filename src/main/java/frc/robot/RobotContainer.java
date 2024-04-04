@@ -222,7 +222,7 @@ public class RobotContainer {
       )
     );
 
-    m_operatorController.povUp().onTrue(new ZeroShoulder());
+    m_operatorController.back().onTrue(new ZeroShoulder());
     m_operatorController.povLeft().onTrue(new FeedShot());
     m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
     
