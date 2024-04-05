@@ -230,8 +230,11 @@ public class RobotContainer {
     m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false, false));
     m_operatorController.b().onFalse(new SetElevatorPosition(0.0, true, false));
 
-    m_operatorController.y().onTrue(new SetShoulderPosition(0.0, false));  // TODO: test trap shoulder angle.
+    m_operatorController.y().onTrue(new SetShoulderPosition(0.0, false));
     m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
+
+    m_operatorController.povUp().onTrue(new SetShoulderPosition(-30.0, false));
+    m_operatorController.povUp().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
   }
   
   // Use this to pass the autonomous command to the main Robot.java class.
