@@ -23,7 +23,7 @@ public class Elevator extends SubsystemBase implements Loggable {
   private static Elevator instance;
   
   // Physical properties.
-  public static final double MAX_EXTENSION_INCHES = 15.0;
+  public static final double MAX_EXTENSION_INCHES = 15.5;
   private static final double OUTPUT_SPROCKET_PITCH_RADIUS_INCHES = 1.751 / 2.0;
   private static final double GEAR_RATIO = 9.0 * 4.0;
 
