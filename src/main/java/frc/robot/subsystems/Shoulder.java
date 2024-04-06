@@ -61,7 +61,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     private final InterpolatingDoubleTreeMap m_autoAimFunc;
     private static final double[] AUTO_AIM_DISTS =  {51.6, 69.0, 79.8, 92.6, 99.9, 112.6, 119.3, 126.7, 135.0, 145.3, 158.0, 178.4};
-    private static final double[] AUTO_AIM_ANGLES = {51.0, 45.5, 39.5, 35.0, 34.0, 32.0,  31.0,  30.5,  29.5,  27.5,  26.0,  25.0};
+    private static final double[] AUTO_AIM_ANGLES = {51.0, 45.5, 39.5, 35.0, 33.5, 31.5,  31.0,  30.5,  29.5,  27.5,  26.0,  25.0};
 
     public static Shoulder getInstance() {
         if (instance == null) {
