@@ -65,10 +65,10 @@ public class RobotContainer {
 
   // Controllers.
   private static final int DRIVER_CONTROLLER_PORT = 0;
-  private final CommandXboxController m_driverController;
+  public final CommandXboxController m_driverController;
 
   private static final int OPERATOR_CONTROLLER_PORT = 1;
-  private final CommandXboxController m_operatorController;
+  public final CommandXboxController m_operatorController;
   
   private final SendableChooser<Command> autoChooser;
   
