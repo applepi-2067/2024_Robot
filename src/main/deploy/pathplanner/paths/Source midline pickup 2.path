@@ -1,0 +1,102 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.44283883432246,
+        "y": 4.578937089400569
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8598500563620233,
+        "y": 1.7097821356840999
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.775848356261618,
+        "y": 1.8971555204166035
+      },
+      "prevControl": {
+        "x": 4.838023331510841,
+        "y": 1.8971555204166035
+      },
+      "nextControl": {
+        "x": 6.771517371227376,
+        "y": 1.8971555204166035
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.29,
+        "y": 2.4475648380683346
+      },
+      "prevControl": {
+        "x": 8.29,
+        "y": 2.3975648380683348
+      },
+      "nextControl": {
+        "x": 8.29,
+        "y": 2.8556829478470425
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.29,
+        "y": 4.871708003045107
+      },
+      "prevControl": {
+        "x": 8.29,
+        "y": 3.606783564708028
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Source midline pickup end"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.6,
+      "rotationDegrees": -160.10051919689218,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.6500000000000001,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Source",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,91 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.05,
+        "y": 6.991369417831561
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.822691702444745,
+        "y": 6.628333484912334
+      },
+      "isLocked": false,
+      "linkedName": "Amp shooting"
+    },
+    {
+      "anchor": {
+        "x": 8.35,
+        "y": 5.796864090161846
+      },
+      "prevControl": {
+        "x": 8.35,
+        "y": 5.846864090161846
+      },
+      "nextControl": {
+        "x": 8.35,
+        "y": 5.310275550794204
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.35,
+        "y": 3.1385041942694443
+      },
+      "prevControl": {
+        "x": 8.35,
+        "y": 3.7623672132546333
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp midline pickup end"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 159.4149015548405,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.9499999999999997,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.8499999999999996,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Amp",
+  "previewStartingState": {
+    "rotation": -152.74467162505698,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
