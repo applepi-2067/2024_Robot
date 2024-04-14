@@ -3,61 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.05,
-        "y": 5.54
+        "x": 1.4662605074140238,
+        "y": 4.602358762492133
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.497564838068336,
-        "y": 4.322072999238722
-      },
-      "isLocked": false,
-      "linkedName": "Center shooting"
-    },
-    {
-      "anchor": {
-        "x": 6.689293606832576,
-        "y": 3.946551915928368
-      },
-      "prevControl": {
-        "x": 4.6264402256004695,
-        "y": 4.00906262445055
-      },
-      "nextControl": {
-        "x": 7.075751212843366,
-        "y": 3.934841079382587
+        "x": 2.6373441619921745,
+        "y": 1.8503121742334787
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.305389050150424,
-        "y": 4.098792791023527
+        "x": 5.729005010078493,
+        "y": 0.7612043754757987
       },
       "prevControl": {
-        "x": 6.970353683931332,
-        "y": 3.8879977331994606
+        "x": 5.239716153483543,
+        "y": 0.786956420559745
       },
       "nextControl": {
-        "x": 8.625331138945036,
-        "y": 4.1493099629384655
+        "x": 6.3965226931880395,
+        "y": 0.7260718658384518
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.05,
-        "y": 5.54
+        "x": 8.293678213604645,
+        "y": 0.7612043754757987
       },
       "prevControl": {
-        "x": 6.4695642713682,
-        "y": 3.5374469506713613
+        "x": 6.958642847385552,
+        "y": 0.7377827023842345
+      },
+      "nextControl": {
+        "x": 8.343670520705135,
+        "y": 0.7620814334951056
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.293678213604645,
+        "y": 7.436381206571257
+      },
+      "prevControl": {
+        "x": 8.293678213604645,
+        "y": 6.436381206571257
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center shooting"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -65,7 +65,7 @@
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 1.6500000000000001,
-      "maxWaypointRelativePos": 2.4000000000000004,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 4.0,
@@ -83,11 +83,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.2926806314558,
+    "rotation": -177.22978420279964,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Source",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

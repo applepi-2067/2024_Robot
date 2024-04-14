@@ -56,12 +56,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   // Odometry.
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.005, 0.005, 0.001};  // x, y, heading.
-  private static final double[] visionStds = {0.2, 0.2, 0.1};
+  private static final double[] drivetrainStds = {0.01, 0.01, 0.005};  // x, y, heading.
+  private static final double[] visionStds = {0.1, 0.1, 0.05};
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
   private final Field2d m_field;
+
+  private double m_fieldOrientedHeadingOffsetDegrees = 0.0;
 
   // Pose facing.
   private Optional<AprilTag> m_targetAprilTag = Optional.empty();
@@ -139,7 +141,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
     
     // Deadband and square stick values.
-    double absDeadbandThreshold = 0.10;
+    double absDeadbandThreshold = 0.04;
     leftStickX = deadbandSquareStickInput(leftStickX, absDeadbandThreshold);
     leftStickY = deadbandSquareStickInput(leftStickY, absDeadbandThreshold);
     rightStickX = deadbandSquareStickInput(rightStickX, absDeadbandThreshold);
@@ -154,7 +156,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       xVelocityMetersPerSecond,
       yVelocityMetersPerSecond,
       rotationVelocityRadiansPerSecond,
-      Rotation2d.fromDegrees(getHeadingDegrees())
+      Rotation2d.fromDegrees(getHeadingDegrees() - m_fieldOrientedHeadingOffsetDegrees)
     );
 
     driveRobotRelative(chassisSpeeds);
@@ -206,16 +208,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
   }
 
-  public void resetGyro(boolean fieldOriented) {
-    Rotation2d newHeading = new Rotation2d();
+  public void resetFieldOriented(boolean fieldOriented) {
     if (fieldOriented) {
-      newHeading = getRobotPose2d().getRotation();
-      if (!isBlue()) {
-        newHeading = newHeading.plus(Rotation2d.fromDegrees(180.0));
-      }
+      Rotation2d fieldOrientedHeadingOffsetRotation = Rotation2d.fromDegrees(getHeadingDegrees())
+        .minus(getRobotPose2d().getRotation());
+      if (!isBlue()) {fieldOrientedHeadingOffsetRotation = fieldOrientedHeadingOffsetRotation.plus(Rotation2d.fromDegrees(180.0));}
+      m_fieldOrientedHeadingOffsetDegrees = fieldOrientedHeadingOffsetRotation.getDegrees();
     }
-
-    m_gyro.setYaw(newHeading.getDegrees());
+    else {
+      m_fieldOrientedHeadingOffsetDegrees = getHeadingDegrees();
+    }
   }
 
   @Log (name="Heading (deg)")
@@ -241,6 +243,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   
   public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
     m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+
+    double visionToDrivetrainPoseDistMeters = visionEstimatedRobotPose2d.getTranslation().getDistance(m_pose.getTranslation());
+    SmartDashboard.putNumber("Dist to vision measurement", visionToDrivetrainPoseDistMeters);
+    SmartDashboard.putBoolean("VisionCloseToDrivetrain", visionToDrivetrainPoseDistMeters < 0.5);
   }
 
   @Override

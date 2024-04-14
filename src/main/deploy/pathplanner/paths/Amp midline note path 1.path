@@ -4,71 +4,82 @@
     {
       "anchor": {
         "x": 3.05,
-        "y": 5.54
+        "y": 6.991369417831561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.497564838068336,
-        "y": 4.322072999238722
+        "x": 4.349902856581748,
+        "y": 7.366116187296568
       },
       "isLocked": false,
-      "linkedName": "Center shooting"
+      "linkedName": "Amp shooting"
     },
     {
       "anchor": {
-        "x": 6.689293606832576,
-        "y": 3.946551915928368
+        "x": 6.349679347004912,
+        "y": 7.37782702384235
       },
       "prevControl": {
-        "x": 4.6264402256004695,
-        "y": 4.00906262445055
+        "x": 5.36593944990662,
+        "y": 7.37782702384235
       },
       "nextControl": {
-        "x": 7.075751212843366,
-        "y": 3.934841079382587
+        "x": 7.333419244103204,
+        "y": 7.37782702384235
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.305389050150424,
-        "y": 4.098792791023527
+        "x": 8.35,
+        "y": 7.37782702384235
       },
       "prevControl": {
-        "x": 6.970353683931332,
-        "y": 3.8879977331994606
+        "x": 8.35,
+        "y": 7.42782702384235
       },
       "nextControl": {
-        "x": 8.625331138945036,
-        "y": 4.1493099629384655
+        "x": 8.35,
+        "y": 6.891238484474708
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.05,
-        "y": 5.54
+        "x": 8.35,
+        "y": 3.1385041942694443
       },
       "prevControl": {
-        "x": 6.4695642713682,
-        "y": 3.5374469506713613
+        "x": 8.35,
+        "y": 3.7623672132546333
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center shooting"
+      "linkedName": "Amp midline pickup end"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.4,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.9499999999999997,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.6500000000000001,
-      "maxWaypointRelativePos": 2.4000000000000004,
+      "minWaypointRelativePos": 1.5500000000000003,
+      "maxWaypointRelativePos": 2.8499999999999996,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 4.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 5.0,
         "maxAngularVelocity": 360.0,
         "maxAngularAcceleration": 720.0
       }
@@ -83,13 +94,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.2926806314558,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Amp",
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": -152.74467162505698,
     "velocity": 0
   },
   "useDefaultConstraints": true

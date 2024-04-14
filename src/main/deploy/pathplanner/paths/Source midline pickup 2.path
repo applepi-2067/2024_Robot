@@ -3,69 +3,75 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.05,
-        "y": 5.54
+        "x": 1.44283883432246,
+        "y": 4.578937089400569
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.497564838068336,
-        "y": 4.322072999238722
-      },
-      "isLocked": false,
-      "linkedName": "Center shooting"
-    },
-    {
-      "anchor": {
-        "x": 6.689293606832576,
-        "y": 3.946551915928368
-      },
-      "prevControl": {
-        "x": 4.6264402256004695,
-        "y": 4.00906262445055
-      },
-      "nextControl": {
-        "x": 7.075751212843366,
-        "y": 3.934841079382587
+        "x": 2.8598500563620233,
+        "y": 1.7097821356840999
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.305389050150424,
-        "y": 4.098792791023527
+        "x": 5.775848356261618,
+        "y": 1.8971555204166035
       },
       "prevControl": {
-        "x": 6.970353683931332,
-        "y": 3.8879977331994606
+        "x": 4.838023331510841,
+        "y": 1.8971555204166035
       },
       "nextControl": {
-        "x": 8.625331138945036,
-        "y": 4.1493099629384655
+        "x": 6.771517371227376,
+        "y": 1.8971555204166035
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.05,
-        "y": 5.54
+        "x": 8.29,
+        "y": 2.4475648380683346
       },
       "prevControl": {
-        "x": 6.4695642713682,
-        "y": 3.5374469506713613
+        "x": 8.29,
+        "y": 2.3975648380683348
+      },
+      "nextControl": {
+        "x": 8.29,
+        "y": 2.8556829478470425
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.29,
+        "y": 4.871708003045107
+      },
+      "prevControl": {
+        "x": 8.29,
+        "y": 3.606783564708028
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center shooting"
+      "linkedName": "Source midline pickup end"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.6,
+      "rotationDegrees": -160.10051919689218,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
       "minWaypointRelativePos": 1.6500000000000001,
-      "maxWaypointRelativePos": 2.4000000000000004,
+      "maxWaypointRelativePos": 3.0,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 4.0,
@@ -83,11 +89,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.2926806314558,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Source",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0
