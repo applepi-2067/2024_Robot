@@ -27,6 +27,8 @@ public class PathfindToTrap extends Command {
         m_pathConstraints
       )
     );
+
+    drivetrain.resetFieldOriented(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
