@@ -85,7 +85,8 @@ public class Vision extends SubsystemBase {
 
     EstimatedRobotPose robotPose = result.get();
 
-    if (robotPose.targetsUsed.size() == 1){
+    boolean singleTarget = robotPose.targetsUsed.size() == 1;
+    if (singleTarget){
       PhotonTrackedTarget target = robotPose.targetsUsed.get(0);
       SmartDashboard.putNumber("Pose ambiguity", target.getPoseAmbiguity());
       if (target.getPoseAmbiguity() > MAX_SINGLE_TARGET_AMBIGUITY) {return;}
@@ -93,7 +94,7 @@ public class Vision extends SubsystemBase {
     
     Pose2d estimatedRobotPose2d = robotPose.estimatedPose.toPose2d();
     double timestampSeconds = result.get().timestampSeconds;
-    Drivetrain.getInstance().addVisionMeaurement(estimatedRobotPose2d, timestampSeconds);
+    Drivetrain.getInstance().addVisionMeaurement(estimatedRobotPose2d, timestampSeconds, singleTarget);
 
     // Log vision position on shuffleboard.
     m_field.setRobotPose(estimatedRobotPose2d);

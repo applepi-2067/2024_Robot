@@ -16,6 +16,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -54,10 +56,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     )
   );
   
-  // Odometry.
+  // Odometry (stds are x, y, heading).
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.01, 0.01, 0.005};  // x, y, heading.
-  private static final double[] visionStds = {0.1, 0.1, 0.05};
+  private static final Matrix<N3, N1> DRIVETRAIN_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.01, 0.01, 0.005});
+  private static final Matrix<N3, N1> SINGLE_VISION_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.1, 0.1, 0.05});
+  private static final Matrix<N3, N1> MULTI_VISION_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.025, 0.025, 0.0125});
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -96,8 +99,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       Rotation2d.fromDegrees(getHeadingDegrees()),
       getSwerveModulePositions(),
       new Pose2d(),
-      new Matrix<>(Nat.N3(), Nat.N1(), drivetrainStds),
-      new Matrix<>(Nat.N3(), Nat.N1(), visionStds)
+      DRIVETRAIN_STDS,
+      SINGLE_VISION_STDS
     );
 
     m_field = new Field2d();
@@ -241,8 +244,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     );
   }
   
-  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
-    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds, boolean singleTarget) {
+    Matrix<N3, N1> visionStds = singleTarget ? SINGLE_VISION_STDS : MULTI_VISION_STDS;
+    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds, visionStds);
 
     double visionToDrivetrainPoseDistMeters = visionEstimatedRobotPose2d.getTranslation().getDistance(m_pose.getTranslation());
     SmartDashboard.putNumber("Dist to vision measurement", visionToDrivetrainPoseDistMeters);
