@@ -76,11 +76,14 @@ public class Controllers extends SubsystemBase {
     m_driverController.rightBumper().onTrue(new InstantCommand(() -> drivetrain.resetFieldOriented(true)));
     m_driverController.leftBumper().onTrue(new InstantCommand(() -> drivetrain.resetFieldOriented(false)));
 
-    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
-    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> drivetrain.setTargetAprilTag(Optional.empty())));
-    m_driverController.a().onTrue(new InstantCommand(() -> drivetrain.setTargetAprilTag(Optional.of(AprilTag.AMP))));
+    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(AprilTag.SPEAKER, false)));
+    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(Optional.empty(), false)));
+    m_driverController.a().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(AprilTag.AMP, true)));
 
-    // TODO: add feed shot facing amp corner.
+    Pose2d feedShotPose = drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.SPEAKER)).transformBy(  // TODO: check feed shot transform.
+      new Transform2d(0.0, drivetrain.isBlue() ? 1.0 : -1.0, new Rotation2d())
+    );
+    m_driverController.y().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(Optional.of(feedShotPose), false)));
 
     // Pathfinding.
     PathConstraints pathConstraints = new PathConstraints(

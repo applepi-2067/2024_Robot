@@ -69,7 +69,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private double m_fieldOrientedHeadingOffsetDegrees = 0.0;
 
   // Pose facing.
-  private Optional<AprilTag> m_targetAprilTag = Optional.empty();
+  private Optional<Pose2d> m_targetFacingPose = Optional.empty();
+  private boolean m_faceAway = false;
+  
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
   private static final double POSE_FACING_kS = -0.15;
   private static final double POSE_FACING_IZONE = 4.0;
@@ -139,7 +141,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
-    if (m_targetAprilTag.isPresent()) {
+    if (m_targetFacingPose.isPresent()) {
       rightStickX = getPoseFacingRightStickX();
     }
     
@@ -166,11 +168,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private double getPoseFacingRightStickX() {
-    Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(getAprilTagID(m_targetAprilTag.get())));
+    Rotation2d targetRotation = getRobotToPoseRotation(m_targetFacingPose.get());
     Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
 
-    // Face away from amp and trap.
-    if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
+    if (m_faceAway) {
       robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
     }
 
@@ -183,8 +184,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return rightStickX;
   }
 
-  public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {
-    m_targetAprilTag = targetAprilTag;
+  public void setTargetFacingPose(AprilTag targetAprilTag, boolean faceAway) {
+    setTargetFacingPose(Optional.of(getAprilTagPose(getAprilTagID(targetAprilTag))), faceAway);
+  }
+
+  public void setTargetFacingPose(Optional<Pose2d> targetFacingPose, boolean faceAway) {
+    m_targetFacingPose = targetFacingPose;
+    m_faceAway = faceAway;
   }
 
   private double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
