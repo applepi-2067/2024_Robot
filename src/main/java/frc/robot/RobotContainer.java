@@ -1,45 +1,26 @@
 package frc.robot;
 
-
-import java.util.Optional;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import io.github.oblarg.oblog.Logger;
 
 import frc.robot.commands.PickupPiece;
 import frc.robot.commands.AimShoot;
-import frc.robot.commands.AutoAimShoulder;
-import frc.robot.commands.FeedShot;
-import frc.robot.commands.PathfindToTrap;
-import frc.robot.commands.SetShooterPercentOutput;
-import frc.robot.commands.ScoreAmp;
-import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.SetFeederVelocity;
 import frc.robot.commands.SetIntakeVelocity;
 import frc.robot.commands.SetShooterVelocity;
-import frc.robot.commands.SetShoulderPosition;
-import frc.robot.commands.ShootGamePiece;
 import frc.robot.commands.ZeroShoulder;
+
+import frc.robot.subsystems.Controllers;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -47,10 +28,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Shoulder;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.Drivetrain.AprilTag;
 import frc.robot.subsystems.swerve.DriveMotor;
 import frc.robot.subsystems.Elevator;
-
 
 public class RobotContainer {
   // Subsystems.
@@ -62,13 +41,7 @@ public class RobotContainer {
   private final Elevator m_elevator;
   private final Vision m_vision;
   private final Lights m_lights;
-
-  // Controllers.
-  private static final int DRIVER_CONTROLLER_PORT = 0;
-  public final CommandXboxController m_driverController;
-
-  private static final int OPERATOR_CONTROLLER_PORT = 1;
-  public final CommandXboxController m_operatorController;
+  private final Controllers m_controllers; 
   
   private final SendableChooser<Command> autoChooser;
   
@@ -82,6 +55,7 @@ public class RobotContainer {
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
     m_lights = Lights.getInstance();
+    m_controllers = Controllers.getInstance();
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
@@ -122,121 +96,11 @@ public class RobotContainer {
     autoChooser.addOption("Source auto", new PathPlannerAuto("Source auto"));
     autoChooser.addOption("Jim auto", new PathPlannerAuto("Jim auto"));
 
-    SmartDashboard.putData("Auto chooser", autoChooser);
-
-    // Controls init.
-    m_driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);
-    m_operatorController = new CommandXboxController(OPERATOR_CONTROLLER_PORT);
-
-    configDriverBindings();
-    configOperatorBindings();
+    SmartDashboard.putData("Auto chooser", autoChooser); 
 
     Logger.configureLoggingAndConfig(this, false);
   }
-
-  private void configDriverBindings() {
-    m_drivetrain.setDefaultCommand(
-      Commands.run(
-        () -> m_drivetrain.drive(
-          m_driverController.getLeftX(),
-          m_driverController.getLeftY(),
-          m_driverController.getRightX()
-        ),
-        m_drivetrain
-      )
-    );
-
-    m_driverController.povUp().onTrue(new InstantCommand(() -> m_drivetrain.drive(0.0, 0.0, 0.0), m_drivetrain));
-
-    m_driverController.rightBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(true)));
-    m_driverController.leftBumper().onTrue(new InstantCommand(() -> m_drivetrain.resetFieldOriented(false)));
-
-    m_driverController.rightTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))));
-    m_driverController.leftTrigger().onTrue(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.empty())));
-
-    // Pathfinding.
-    PathConstraints pathConstraints = new PathConstraints(
-      3.0,
-      3.0,
-      Units.degreesToRadians(360.0),
-      Units.degreesToRadians(720.0)
-    );
-
-    m_driverController.a().onTrue(
-      AutoBuilder.pathfindToPose(
-        m_drivetrain.getAprilTagPose(m_drivetrain.getAprilTagID(AprilTag.SPEAKER)).transformBy(new Transform2d(2.0, 0.0, Rotation2d.fromDegrees(180.0))),
-        pathConstraints
-      ).andThen(new InstantCommand(() -> m_drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER))))
-    );
-
-    Pose2d ampPose = m_drivetrain.getAprilTagPose(m_drivetrain.getAprilTagID(AprilTag.AMP));
-    m_driverController.b().onTrue(
-      new SequentialCommandGroup(
-        AutoBuilder.pathfindToPose(
-          ampPose.transformBy(new Transform2d(1.0, 0.0, new Rotation2d())),
-          pathConstraints,
-          1.0
-        ),
-        AutoBuilder.pathfindToPose(
-          ampPose.transformBy(new Transform2d(0.4, 0.0, new Rotation2d())),
-          pathConstraints
-        )
-      )
-    );
-    m_driverController.x().onTrue(new PathfindToTrap(pathConstraints));
-  }
-
-  private void configOperatorBindings() {
-    // DEV: shoulder tuning.
-    // SmartDashboard.putNumber("targetPosition", Shoulder.MIN_ANGLE_DEGREES);
-    // m_operatorController.a().onTrue(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false, true));
-    
-    m_operatorController.a().onTrue(new ScoreAmp());
-    m_operatorController.x().onTrue(new PickupPiece());
-
-    m_operatorController.leftBumper().onTrue(new SetShooterVelocity(Shooter.SHOOTING_SPEED_RPM, false));
-    m_operatorController.rightBumper().onTrue(
-      new ParallelCommandGroup(
-        new SetShooterPercentOutput(0.0),
-        new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false),
-        new SetFeederVelocity(0.0),
-        new SetIntakeVelocity(0.0)
-      )
-    );
-
-    m_operatorController.leftTrigger().onTrue(new AutoAimShoulder(true));
-    m_operatorController.rightTrigger().onTrue(new ShootGamePiece(false, false));
-
-    m_operatorController.povDown().onTrue(
-      new ParallelCommandGroup(
-        new SetFeederVelocity(-1_000.0),
-        new SetIntakeVelocity(-1_000.0),
-        new SetShooterVelocity(-400.0, false)
-      )
-    );
-    m_operatorController.povDown().onFalse(
-      new ParallelCommandGroup(
-        new SetFeederVelocity(0.0),
-        new SetIntakeVelocity(0.0),
-        new SetShooterVelocity(0.0, false)
-      )
-    );
-
-    m_operatorController.back().onTrue(new ZeroShoulder());
-    m_operatorController.povLeft().onTrue(new FeedShot());
-    m_operatorController.povRight().onTrue(new SetShoulderPosition(50.0, false));
-    
-    // Trap score.
-    m_operatorController.b().onTrue(new SetElevatorPosition(Elevator.MAX_EXTENSION_INCHES, false, false));
-    m_operatorController.b().onFalse(new SetElevatorPosition(0.0, true, false));
-
-    m_operatorController.y().onTrue(new SetShoulderPosition(0.0, false));
-    m_operatorController.y().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
-
-    m_operatorController.povUp().onTrue(new SetShoulderPosition(-30.0, false));
-    m_operatorController.povUp().onFalse(new SetShoulderPosition(Shoulder.MIN_ANGLE_DEGREES, false));
-  }
-  
+ 
   // Use this to pass the autonomous command to the main Robot.java class.
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
