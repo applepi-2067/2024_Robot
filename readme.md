@@ -30,7 +30,8 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
 
 ## Robot Subsystem Descriptions
 
-todo: add picture of robot cad
+![image](https://github.com/applepi-2067/2024_Robot/assets/148881295/53e0c1fd-fda8-4799-86cb-8156cc336157)
+
 
 ### Drivetrain
 
@@ -45,24 +46,24 @@ The motors that move the robot chassis around the field.
 Picks up game pieces off the ground. Hands them off to the hopper
 
   * Motors
-    * `tbd`x Falcon 500
+    * 2x Falcon 500
       * Velocity closed loop control
 
   * Sensors
-    * `tbd`
+    * 1x IR Proximity Sensor
 
 ### Shooter
 Motors at the front of the shooter assembly that allow game pieces to be fired out of the robot.
 
   * Motors
-    * `tbd`x - Falcon 500 
+    * 2x - Kraken X60 
       * Velocity closed loop control
 
 ### Hopper
 Brings in game pieces from the intake. Stores them until the shooter is ready to be fired.
 
   * Motors
-    * `tbd`x - Falcon 500
+    * 1x - Falcon 500
       * `tbd` - Velocity closed loop control 
 
 ### Linear Lift
@@ -70,7 +71,7 @@ Brings in game pieces from the intake. Stores them until the shooter is ready to
 Moves the shooter assembly vertically to differnt heights
 
   * Motors
-    * `tbd`x - Falcon 500
+    * 2x - Falcon 500
       * Motion Magic - position closed loop control
 
 ### Shoulder
@@ -78,7 +79,7 @@ Moves the shooter assembly vertically to differnt heights
 Rotates the shooter assembly to change pitch angle
 
   * Motors
-    * `tbd`x - Falcon 500
+    * 1x - Falcon 500
       * Motion Magic - position closed loop control
 
 ## Getting Started
