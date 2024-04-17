@@ -56,7 +56,7 @@ public class Shoulder extends SubsystemBase implements Loggable {
 
     public static final double HORIZONTAL_FEED_FORWARD_VOLTAGE = -0.25;
 
-    public static final double MIN_ANGLE_DEGREES = 60.0;
+    public static final double MIN_ANGLE_DEGREES = 62.0;
     public static final double ALLOWABLE_ERROR_DEGREES = 1.0;
 
     private final InterpolatingDoubleTreeMap m_autoAimFunc;
