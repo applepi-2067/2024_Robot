@@ -39,6 +39,6 @@ public final class RobotMap {
     }
 
     public static class pwms {
-        public static final int LIGHTS = 8;
+        public static final int LIGHTS = 0;
     }
 }
