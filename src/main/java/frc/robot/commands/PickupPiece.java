@@ -19,7 +19,7 @@ public class PickupPiece extends SequentialCommandGroup {
       ),
 
       new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
-      new InstantCommand(() -> CommandScheduler.getInstance().schedule(new Rumble(1.0))),
+      new InstantCommand(() -> CommandScheduler.getInstance().schedule(new Rumble(0.5))),
 
       new ParallelCommandGroup(
         new SetFeederVelocity(0.0),
