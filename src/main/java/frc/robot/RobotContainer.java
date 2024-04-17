@@ -55,7 +55,6 @@ public class RobotContainer {
     m_elevator = Elevator.getInstance();
     m_vision = Vision.getInstance();
     m_lights = Lights.getInstance();
-    m_controllers = Controllers.getInstance();
   
     // PathPlanner.
     NamedCommands.registerCommand("Pickup", new PickupPiece());
@@ -87,6 +86,9 @@ public class RobotContainer {
       () -> {return !m_drivetrain.isBlue();},
       m_drivetrain
     );
+
+    // Create controllers. Must come after autobuilder configuration.
+    m_controllers = Controllers.getInstance();
 
     // Populate auto chooser.
     autoChooser = new SendableChooser<Command>();
