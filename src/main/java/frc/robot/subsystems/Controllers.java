@@ -167,8 +167,5 @@ public class Controllers extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    double rumbleValue = Feeder.getInstance().gamePieceDetected() ? 1.0 : 0.0;
-    setRumble(rumbleValue);
-  } 
+  public void periodic() {} 
 }
