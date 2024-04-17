@@ -22,8 +22,8 @@ public class DriveMotor {
 
     // Motor settings.
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
-        .withSupplyCurrentThreshold(60)
-        .withSupplyTimeThreshold(0.5)
+        .withSupplyCurrentThreshold(80)
+        .withSupplyTimeThreshold(4.5)
         .withSupplyCurrentLimit(40);
     private static final double PERCENT_DEADBAND = 0.001;
     

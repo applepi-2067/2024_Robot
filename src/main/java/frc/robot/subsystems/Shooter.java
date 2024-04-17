@@ -42,8 +42,8 @@ public class Shooter extends SubsystemBase implements Loggable {
         .withMotionMagicJerk(FALCON_500_MAX_SPEED_RPS * 20.0);
 
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
-        .withSupplyCurrentThreshold(60)
-        .withSupplyTimeThreshold(1.0)
+        .withSupplyCurrentThreshold(80)
+        .withSupplyTimeThreshold(4.5)
         .withSupplyCurrentLimit(40);
     
     // Speeds for shooting.
