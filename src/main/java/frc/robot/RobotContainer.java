@@ -98,6 +98,7 @@ public class RobotContainer {
     autoChooser.addOption("Source auto", new PathPlannerAuto("Source auto"));
     autoChooser.addOption("Jim auto", new PathPlannerAuto("Jim auto"));
     autoChooser.addOption("Center 4 note close", new PathPlannerAuto("Close 4 note"));
+    autoChooser.addOption("Close shot", new ZeroShoulder().andThen(new AimShoot(true)));
 
     SmartDashboard.putData("Auto chooser", autoChooser); 
 
