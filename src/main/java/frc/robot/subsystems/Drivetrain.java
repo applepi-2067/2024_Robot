@@ -73,7 +73,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private boolean m_faceAway = false;
   
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
-  private static final double POSE_FACING_kS = -0.15;
+  private static final double POSE_FACING_kS = -0.12;
   private static final double POSE_FACING_IZONE = 4.0;
   public static final double POSE_FACING_ALLOWABLE_ERROR_DEGREES = 0.5;
 
