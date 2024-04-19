@@ -80,8 +80,8 @@ public class Controllers extends SubsystemBase {
     m_driverController.leftTrigger().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(Optional.empty(), false)));
     m_driverController.a().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(AprilTag.AMP, true)));
 
-    Pose2d feedShotPose = drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.SPEAKER)).transformBy(  // TODO: check feed shot transform.
-      new Transform2d(0.0, drivetrain.isBlue() ? 2.0 : -2.0, new Rotation2d())
+    Pose2d feedShotPose = drivetrain.getAprilTagPose(drivetrain.getAprilTagID(AprilTag.SPEAKER)).transformBy(
+      new Transform2d(0.0, drivetrain.isBlue() ? 0.5 : -0.5, new Rotation2d())
     );
     m_driverController.y().onTrue(new InstantCommand(() -> drivetrain.setTargetFacingPose(Optional.of(feedShotPose), false)));
 
