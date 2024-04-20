@@ -18,7 +18,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -43,19 +43,19 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "Center 4 note #3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
@@ -74,7 +74,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
