@@ -10,7 +10,7 @@ public class AimShoot extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new SetShooterVelocity((closeShot ? Shooter.CLOSE_SHOOTING_SPEED_RPM : Shooter.SHOOTING_SPEED_RPM), false),
         new AutoAimShoulder(false),
-        new FaceSpeaker()
+        new FaceSpeaker().andThen(new FaceSpeaker())  // FIXME: Hack to fix close note aiming? No time wasted here.
       ),
       new ShootGamePiece(closeShot, true)
     );

@@ -16,6 +16,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -54,10 +56,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     )
   );
   
-  // Odometry.
+  // Odometry (stds are x, y, heading).
   private final SwerveDrivePoseEstimator m_odometry;
-  private static final double[] drivetrainStds = {0.01, 0.01, 0.005};  // x, y, heading.
-  private static final double[] visionStds = {0.1, 0.1, 0.05};
+  private static final Matrix<N3, N1> DRIVETRAIN_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.01, 0.01, 0.005});
+  private static final Matrix<N3, N1> SINGLE_VISION_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.1, 0.1, 0.05});
+  private static final Matrix<N3, N1> MULTI_VISION_STDS = new Matrix<>(Nat.N3(), Nat.N1(), new double[] {0.025, 0.025, 0.0125});
 
   private Pose2d m_pose;
   private final PigeonIMU m_gyro;
@@ -66,9 +69,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   private double m_fieldOrientedHeadingOffsetDegrees = 0.0;
 
   // Pose facing.
-  private Optional<AprilTag> m_targetAprilTag = Optional.empty();
+  private Optional<Pose2d> m_targetFacingPose = Optional.empty();
+  private boolean m_faceAway = false;
+  
   private final PIDController m_poseFacingPIDController = new PIDController(0.015, 0.05, 0.0);
-  private static final double POSE_FACING_kS = -0.15;
+  private static final double POSE_FACING_kS = -0.12;
   private static final double POSE_FACING_IZONE = 4.0;
   public static final double POSE_FACING_ALLOWABLE_ERROR_DEGREES = 0.5;
 
@@ -96,8 +101,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
       Rotation2d.fromDegrees(getHeadingDegrees()),
       getSwerveModulePositions(),
       new Pose2d(),
-      new Matrix<>(Nat.N3(), Nat.N1(), drivetrainStds),
-      new Matrix<>(Nat.N3(), Nat.N1(), visionStds)
+      DRIVETRAIN_STDS,
+      SINGLE_VISION_STDS
     );
 
     m_field = new Field2d();
@@ -136,7 +141,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
   public void drive(double leftStickX, double leftStickY, double rightStickX) {
     // Override rotation command if targeting pose.
-    if (m_targetAprilTag.isPresent()) {
+    if (m_targetFacingPose.isPresent()) {
       rightStickX = getPoseFacingRightStickX();
     }
     
@@ -163,11 +168,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
   }
 
   private double getPoseFacingRightStickX() {
-    Rotation2d targetRotation = getRobotToPoseRotation(getAprilTagPose(getAprilTagID(m_targetAprilTag.get())));
+    Rotation2d targetRotation = getRobotToPoseRotation(m_targetFacingPose.get());
     Rotation2d robotToTargetRotationError = getRobotPose2d().getRotation().minus(targetRotation).unaryMinus();
 
-    // Face away from amp and trap.
-    if (m_targetAprilTag.get().equals(AprilTag.AMP) || m_targetAprilTag.get().equals(AprilTag.TRAP)) {
+    if (m_faceAway) {
       robotToTargetRotationError = robotToTargetRotationError.plus(Rotation2d.fromDegrees(180.0));
     }
 
@@ -180,8 +184,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     return rightStickX;
   }
 
-  public void setTargetAprilTag(Optional<AprilTag> targetAprilTag) {
-    m_targetAprilTag = targetAprilTag;
+  public void setTargetFacingPose(AprilTag targetAprilTag, boolean faceAway) {
+    setTargetFacingPose(Optional.of(getAprilTagPose(getAprilTagID(targetAprilTag))), faceAway);
+  }
+
+  public void setTargetFacingPose(Optional<Pose2d> targetFacingPose, boolean faceAway) {
+    m_targetFacingPose = targetFacingPose;
+    m_faceAway = faceAway;
   }
 
   private double deadbandSquareStickInput(double value, double absDeadbandThreshold) {
@@ -241,8 +250,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     );
   }
   
-  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds) {
-    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds);
+  public void addVisionMeaurement(Pose2d visionEstimatedRobotPose2d, double timestampSeconds, boolean singleTarget) {
+    Matrix<N3, N1> visionStds = singleTarget ? SINGLE_VISION_STDS : MULTI_VISION_STDS;
+    m_odometry.addVisionMeasurement(visionEstimatedRobotPose2d, timestampSeconds, visionStds);
 
     double visionToDrivetrainPoseDistMeters = visionEstimatedRobotPose2d.getTranslation().getDistance(m_pose.getTranslation());
     SmartDashboard.putNumber("Dist to vision measurement", visionToDrivetrainPoseDistMeters);

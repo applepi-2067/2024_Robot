@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -17,6 +19,7 @@ public class PickupPiece extends SequentialCommandGroup {
       ),
 
       new WaitUntilCommand(Feeder.getInstance()::gamePieceDetected),
+      new InstantCommand(() -> CommandScheduler.getInstance().schedule(new Rumble(0.5))),
 
       new ParallelCommandGroup(
         new SetFeederVelocity(0.0),

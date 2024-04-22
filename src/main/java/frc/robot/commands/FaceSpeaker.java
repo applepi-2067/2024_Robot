@@ -18,7 +18,7 @@ public class FaceSpeaker extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.setTargetAprilTag(Optional.of(AprilTag.SPEAKER));
+    drivetrain.setTargetFacingPose(AprilTag.SPEAKER, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +30,7 @@ public class FaceSpeaker extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setTargetAprilTag(Optional.empty());
+    drivetrain.setTargetFacingPose(Optional.empty(), false);
     drivetrain.driveRobotRelative(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
