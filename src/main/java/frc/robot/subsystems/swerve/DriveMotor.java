@@ -22,9 +22,9 @@ public class DriveMotor {
 
     // Motor settings.
     private static final CurrentLimitsConfigs CURRENT_LIMITS_CONFIGS = new CurrentLimitsConfigs()
-        .withSupplyCurrentThreshold(80)
+        .withSupplyCurrentThreshold(75)
         .withSupplyTimeThreshold(4.5)
-        .withSupplyCurrentLimit(40);
+        .withSupplyCurrentLimit(60);
     private static final double PERCENT_DEADBAND = 0.001;
     
     // Conversion constants.
@@ -33,7 +33,7 @@ public class DriveMotor {
 
     // PID.
     private static final int K_TIMEOUT_MS = 10;
-    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.0).withKV(0.8);
+    private static final Slot0Configs PID_GAINS = new Slot0Configs().withKP(2.5).withKV(0.4);
 
     private static final double FALCON_500_MAX_SPEED_RPS = 6380.0 / 60.0;
     private static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
