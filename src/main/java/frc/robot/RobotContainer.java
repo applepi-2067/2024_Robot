@@ -77,8 +77,8 @@ public class RobotContainer {
       m_drivetrain::getRobotRelativeChassisSpeeds,
       m_drivetrain::driveRobotRelative,
       new HolonomicPathFollowerConfig(
-        new PIDConstants(3.0),
-        new PIDConstants(11.0),
+        new PIDConstants(2.65),
+        new PIDConstants(8.2),
         DriveMotor.MAX_SPEED_METERS_PER_SEC,
         Drivetrain.CENTER_TO_WHEEL_OFFSET_METERS,
         new ReplanningConfig()
@@ -99,6 +99,7 @@ public class RobotContainer {
     autoChooser.addOption("Jim auto", new PathPlannerAuto("Jim auto"));
     autoChooser.addOption("Center 4 note close", new PathPlannerAuto("Close 4 note"));
     autoChooser.addOption("Close shot", new ZeroShoulder().andThen(new AimShoot(true)));
+    autoChooser.addOption("Anti Aces auto", new PathPlannerAuto("Anti-Aces Auto"));
 
     SmartDashboard.putData("Auto chooser", autoChooser); 
 
