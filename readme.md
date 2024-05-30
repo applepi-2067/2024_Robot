@@ -35,10 +35,10 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
 
 ### Drivetrain
 
-The motors that move the robot chassis around the field.
+The modules that move the robot chassis around the field.
 
-  * Motors
-    * 4x - Falcon500 swere modules (2 Falcon500s per module) 
+  * Modules
+    * 4x SDS MK4I L3 (1x Kraken X60 as drive and 1x Falcon 500 as steer) 
   * Sensors
     * Pigeon IMU for measuring robot heading and pitch
 
@@ -63,7 +63,7 @@ Motors at the front of the shooter assembly that allow game pieces to be fired o
 Brings in game pieces from the intake. Stores them until the shooter is ready to be fired.
 
   * Motors
-    * 1x - Falcon 500
+    * 1x - Kraken X60
       * `tbd` - Velocity closed loop control 
 
 ### Linear Lift
@@ -81,6 +81,8 @@ Rotates the shooter assembly to change pitch angle
   * Motors
     * 1x - Falcon 500
       * Motion Magic - position closed loop control
+  * Sensors
+    * 1x Hall-effect sensor and 1x magnet
 
 ## Getting Started
 
