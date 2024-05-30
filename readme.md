@@ -35,7 +35,7 @@ Code for FRC 2067's 2024 Robot for the game [CRESCENDO](https://www.youtube.com/
 
 ### Drivetrain
 
-The motors that move the robot chassis around the field.
+The modules that move the robot chassis around the field.
 
   * Modules
     * 4x SDS MK4I L3 (1x Kraken X60 as drive and 1x Falcon 500 as steer) 
