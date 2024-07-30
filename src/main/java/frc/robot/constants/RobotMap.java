@@ -28,6 +28,7 @@ public final class RobotMap {
         public static class Intake {
             public static final int RIGHT = 14;
             public static final int LEFT = 15;
+            public static final int WIDE = 20;
         }
         
         public static final int SHOULDER = 16;

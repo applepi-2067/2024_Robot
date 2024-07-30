@@ -40,6 +40,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
     private final TalonFX m_rightMotor;
     private final TalonFX m_leftMotor;
+    private final TalonFX m_wideMotor;
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -51,9 +52,11 @@ public class Intake extends SubsystemBase implements Loggable {
     private Intake() {
         m_rightMotor = new TalonFX(RobotMap.canIDs.Intake.RIGHT);
         m_leftMotor = new TalonFX(RobotMap.canIDs.Intake.LEFT);
+        m_wideMotor = new TalonFX(RobotMap.canIDs.Intake.WIDE);
 
         setUpMotor(m_rightMotor, InvertedValue.Clockwise_Positive);
         setUpMotor(m_leftMotor, InvertedValue.CounterClockwise_Positive);
+        setUpMotor(m_wideMotor, InvertedValue.Clockwise_Positive);
     }
 
     private void setUpMotor(TalonFX motor, InvertedValue invert) { 
@@ -71,15 +74,17 @@ public class Intake extends SubsystemBase implements Loggable {
     public void setPercentOutput(double percentOutput) {
         m_rightMotor.setControl(new DutyCycleOut(percentOutput));
         m_leftMotor.setControl(new DutyCycleOut(percentOutput));
+        m_wideMotor.setControl(new DutyCycleOut(percentOutput));
     }
 
     public void setTargetVelocityRPM(double rpm) {
         double rps = rpm / 60.0;
         m_rightMotor.setControl(new MotionMagicVelocityVoltage(rps));
         m_leftMotor.setControl(new MotionMagicVelocityVoltage(rps));
+        m_wideMotor.setControl(new MotionMagicVelocityVoltage(rps));
     }
 
-    @Log (name="Right v (rpm))")
+    @Log (name="Right motor v (rpm))")
     public double getRightVelocityRPM() {
         return m_rightMotor.getVelocity().getValueAsDouble() * 60.0;
     }
@@ -87,6 +92,11 @@ public class Intake extends SubsystemBase implements Loggable {
     @Log (name="Left motor v (rpm))")
     public double getLeftVelocityRPM() {
         return m_leftMotor.getVelocity().getValueAsDouble() * 60.0;
+    }
+
+    @Log (name="Wide motor v (rpm))")
+    public double getWideVelocityRPM() {
+        return m_wideMotor.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Log (name="Right Current (A)")
@@ -97,6 +107,11 @@ public class Intake extends SubsystemBase implements Loggable {
     @Log (name="Left Current (A)")
     public double getleftCurrent() {
         return m_leftMotor.getSupplyCurrent().getValueAsDouble();
+    }
+
+    @Log (name="Wide Current (A)")
+    public double getWideCurrent() {
+        return m_wideMotor.getSupplyCurrent().getValueAsDouble();
     }
 
     // @Config (name="PIDs")
